@@ -8,16 +8,6 @@
 <script>
 export default {
   name: "App",
-  created() {
-    const api = "https://be-sp-0001-kapitan.herokuapp.com/api/store.php";
-    const vm = this;
-
-    console.log(this);
-
-    this.$http.get(api).then((response) => {
-      console.log(response.data);
-    });
-  },
 };
 </script>
 
