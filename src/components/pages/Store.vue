@@ -1,25 +1,30 @@
 <template>
-  <main class="container">
+  <main class="container py-5">
     <div class="row">
-      <div id="asideBarColumn" class="col-3">
+      <div id="asideBarColumn" class="col-2">
         <aside>
           <div>123</div>
         </aside>
       </div>
-      <div id="cardsContainerColumn" class="col-9">
+      <div id="cardsContainerColumn" class="col-10">
         <div class="row">
-          <div class="col">
-            <div class="card" style="width: 18rem" v-for="item in response">
+          <div
+            class="col-4 my-4"
+            v-for="(project, index) in response"
+            v-if="index < 9"
+          >
+            <div class="card">
               <img
                 class="card-img-top"
                 src="https://picsum.photos/286/180"
                 alt="Card image cap"
               />
               <div class="card-body">
-                <h5 class="card-title">{{ item["0"] }}</h5>
+                <h5 class="card-title">{{ project["PROJECTS_ID"] }}</h5>
                 <p class="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
+                  {{ project["PROJECTS_NAME"] }} 是：Some quick example text to
+                  build on the card title and make up the bulk of the card's
+                  content.
                 </p>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
               </div>
@@ -56,5 +61,11 @@ export default {
 #asideBarColumn,
 #cardsContainerColumn {
   border: 1px solid blue;
+}
+.row {
+  border: 1px solid green;
+}
+.col {
+  border: 1px solid yellow;
 }
 </style>
