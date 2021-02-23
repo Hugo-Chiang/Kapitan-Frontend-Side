@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class=".container-fluid">
     <i class="fab fa-facebook"></i>
     <i class="fab fa-twitter"></i>
     <i class="fab fa-instagram"></i>
