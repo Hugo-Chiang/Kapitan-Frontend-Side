@@ -1,46 +1,46 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <router-link class="nav-link mr-2" to="/">
-        <img id="logoImg" src="../assets/img/logo.png" alt="" />
-      </router-link>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <router-link class="nav-link mr-2" to="/">
+      <img id="logoImg" src="../assets/img/logo.png" alt="" />
+    </router-link>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/about">關於甲必丹</router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/store">挑選航程</router-link>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            type="search"
-            placeholder="請輸入搜尋內容..."
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-            搜尋
-          </button>
-        </form>
-        <ul class="navbar-nav ml-4">
-          <i class="fas fa-shopping-cart fa-lg"></i>
-          <i class="fas fa-user fa-lg ml-3 mr-2"></i>
-        </ul>
-      </div>
-    </nav>
-  </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <router-link class="nav-link" to="/about">關於甲必丹</router-link>
+        </li>
+        <li class="nav-item active">
+          <router-link class="nav-link" to="/store">挑選航程</router-link>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="請輸入搜尋內容..."
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          搜尋
+        </button>
+      </form>
+      <ul class="navbar-nav ml-4">
+        <i class="fas fa-shopping-cart fa-lg"></i>
+        <i class="fas fa-user fa-lg ml-3 mr-2"></i>
+      </ul>
+    </div>
+  </nav>
 </template>
 
 <script>
-/* global $ */
 export default {};
 </script>
 
 <style lang="scss" scoped>
-#logoImg {
-  width: 70px;
+nav {
+  background-color: #189ebb;
+  #logoImg {
+    width: 70px;
+  }
 }
 </style>
