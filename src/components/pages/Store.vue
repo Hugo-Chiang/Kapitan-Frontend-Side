@@ -10,8 +10,7 @@
         <div class="row">
           <div
             class="col-4 my-4"
-            v-for="(project, index) in response"
-            v-if="index < 9"
+            v-for="(project, index) in currentPageContentArr"
           >
             <div class="card">
               <img
@@ -33,15 +32,46 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div
+        class="col d-flex justify-content-md-center"
+        id="paginationContainer"
+      >
+        <Pagination
+          :totalPagination="Math.ceil(allProjectsArr.length / 9)"
+          @emitPageNum="updateProjectsList"
+        ></Pagination>
+      </div>
+    </div>
   </main>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination";
+
 export default {
   data() {
     return {
-      response: [],
+      allProjectsArr: [],
+      currentPageNum: 1,
+      currentPageContentArr: [],
     };
+  },
+  methods: {
+    updateProjectsList(newPageNum = 1) {
+      this.currentPageContentArr = [];
+
+      let startIndex = (newPageNum - 1) * 9;
+
+      for (let i = 0; i < 9; i++) {
+        if (!!this.allProjectsArr[startIndex]) {
+          this.currentPageContentArr.push(this.allProjectsArr[startIndex]);
+          startIndex++;
+        } else {
+          return;
+        }
+      }
+    },
   },
   created() {
     const api = "https://be-sp-0001-kapitan.herokuapp.com/api/store.php";
@@ -51,21 +81,18 @@ export default {
 
     this.$http.get(api).then((response) => {
       console.log(response.data);
-      vm.response = response.data;
+      vm.allProjectsArr = response.data;
+      this.updateProjectsList();
     });
+  },
+  components: {
+    Pagination: Pagination,
   },
 };
 </script>
 
-<style lang="scss">
-#asideBarColumn,
-#cardsContainerColumn {
-  border: 1px solid blue;
-}
-.row {
-  border: 1px solid green;
-}
-.col {
-  border: 1px solid yellow;
+<style lang="scss" scope>
+aside {
+  border: 1px solid grey;
 }
 </style>
