@@ -38,7 +38,7 @@
         id="paginationContainer"
       >
         <Pagination
-          :totalPagination="Math.ceil(allProjectsArr.length / 9)"
+          :totalPagination="totalPagination"
           @emitPageNum="updateProjectsList"
         ></Pagination>
       </div>
@@ -53,22 +53,29 @@ export default {
   data() {
     return {
       allProjectsArr: [],
-      currentPageNum: 1,
+      totalPagination: 1,
       currentPageContentArr: [],
+      currentPageNum: 1,
     };
   },
   methods: {
     updateProjectsList(newPageNum = 1) {
-      this.currentPageContentArr = [];
+      if (newPageNum == 0) {
+        alert("已經是第一頁了！");
+      } else if (newPageNum > this.totalPagination) {
+        alert("已經是最後一頁了！");
+      } else {
+        this.currentPageContentArr = [];
 
-      let startIndex = (newPageNum - 1) * 9;
+        let startIndex = (newPageNum - 1) * 9;
 
-      for (let i = 0; i < 9; i++) {
-        if (!!this.allProjectsArr[startIndex]) {
-          this.currentPageContentArr.push(this.allProjectsArr[startIndex]);
-          startIndex++;
-        } else {
-          return;
+        for (let i = 0; i < 9; i++) {
+          if (!!this.allProjectsArr[startIndex]) {
+            this.currentPageContentArr.push(this.allProjectsArr[startIndex]);
+            startIndex++;
+          } else {
+            return;
+          }
         }
       }
     },
@@ -82,6 +89,7 @@ export default {
     this.$http.get(api).then((response) => {
       console.log(response.data);
       vm.allProjectsArr = response.data;
+      vm.totalPagination = Math.ceil(vm.allProjectsArr.length / 9);
       this.updateProjectsList();
     });
   },
