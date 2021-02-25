@@ -12,20 +12,32 @@
             class="col-4 my-4"
             v-for="(project, index) in currentPageContentArr"
           >
-            <div class="card">
+            <div class="card" :data-id="project['PROJECT_ID']">
               <img
                 class="card-img-top"
                 src="https://picsum.photos/286/180"
                 alt="Card image cap"
               />
               <div class="card-body">
-                <h5 class="card-title">{{ project["PROJECTS_ID"] }}</h5>
+                <h5 class="card-title">
+                  {{ project["PROJECT_ID"] }}
+                </h5>
                 <p class="card-text">
-                  {{ project["PROJECTS_NAME"] }} 是：Some quick example text to
+                  {{ project["PROJECT_NAME"] }} 是：Some quick example text to
                   build on the card title and make up the bulk of the card's
                   content.
                 </p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <router-link
+                  :to="{
+                    name: '方案',
+                    params: {
+                      selectedProjectId:
+                        currentPageContentArr[index]['PROJECT_ID'],
+                    },
+                  }"
+                  class="btn btn-primary"
+                  >Go somewhere</router-link
+                >
               </div>
             </div>
           </div>
