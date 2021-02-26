@@ -177,7 +177,7 @@ export default {
       selectedProjectId: this.$route.params.selectedProjectId,
       selectedProjectContent: {},
       bookingDate: null,
-      bookedDate: ["2021-02-25", "2021-02-28"],
+      bookedDate: ["2021-02-25", "2021-03-01"],
       lang: {
         formatLocale: {
           months: [
@@ -239,8 +239,23 @@ export default {
   },
   methods: {
     checkBookedDate(date) {
-      let strArr = this.bookedDate.map((x) => new Date(x).toDateString());
-      return strArr.find((item) => item == date.toDateString());
+      let bookedDateArr = this.bookedDate.map((x) =>
+        new Date(x).toLocaleDateString()
+      );
+      let timeNow = new Date();
+      let todayMidnight = new Date(
+        timeNow.getFullYear(),
+        timeNow.getMonth(),
+        timeNow.getDate()
+      );
+      console.log(date, todayMidnight);
+
+      return (
+        date < todayMidnight ||
+        bookedDateArr.find(
+          (bookedDate) => bookedDate == date.toLocaleDateString()
+        )
+      );
     },
   },
   // 目前用不到
