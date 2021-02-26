@@ -3,6 +3,10 @@ import Router from 'vue-router';
 import Home from '@/components/pages/Home';
 import Store from '@/components/pages/Store';
 import Project from '@/components/pages/Project';
+import Cart from '@/components/pages/Cart';
+import MemberCentre from '@/components/pages/MemberCentre';
+
+
 
 Vue.use(Router);
 
@@ -14,14 +18,24 @@ export default new Router({
       component: Home
     },
     {
-      path: '/store',
+      path: '/Store',
       name: '商城',
       component: Store
     },
     {
-      path: '/project/:selectedProjectId',
+      path: '/Store/Projects/:selectedProjectId',
       name: '方案',
       component: Project
+    },
+    {
+      path: '/Cart',
+      name: '購物車',
+      component: Cart
+    },
+    {
+      path: '/Member-Centre',
+      name: '會員中心',
+      component: MemberCentre
     }
   ]
 })

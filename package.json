@@ -21,7 +21,8 @@
     "serve-static": "^1.14.1",
     "vue": "^2.5.2",
     "vue-axios": "^3.2.4",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue2-datepicker": "^3.9.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",

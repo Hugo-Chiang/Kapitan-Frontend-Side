@@ -7,10 +7,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <router-link class="nav-link" to="/about">關於甲必丹</router-link>
+          <router-link class="nav-link" to="/About">關於甲必丹</router-link>
         </li>
         <li class="nav-item active">
-          <router-link class="nav-link" to="/store">挑選航程</router-link>
+          <router-link class="nav-link" to="/Store">挑選航程</router-link>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -25,8 +25,12 @@
         </button>
       </form>
       <ul class="navbar-nav ml-4">
-        <i class="fas fa-shopping-cart fa-lg"></i>
-        <i class="fas fa-user fa-lg ml-3 mr-2"></i>
+        <router-link class="nav-link" to="/Store/Cart"
+          ><i class="fas fa-shopping-cart fa-lg"></i>
+        </router-link>
+        <router-link class="nav-link" to="/Member-Centre">
+          <i class="fas fa-user fa-lg"></i>
+        </router-link>
       </ul>
     </div>
   </nav>
@@ -41,6 +45,16 @@ nav {
   background-color: #189ebb;
   #logoImg {
     width: 70px;
+  }
+  router-link {
+    color: white;
+  }
+  .fa-shopping-cart,
+  .fa-user {
+    cursor: pointer;
+    &:hover {
+      color: white;
+    }
   }
 }
 </style>
