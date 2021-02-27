@@ -6,8 +6,6 @@ import Project from '@/components/pages/Project';
 import Cart from '@/components/pages/Cart';
 import MemberCentre from '@/components/pages/MemberCentre';
 
-
-
 Vue.use(Router);
 
 export default new Router({
@@ -36,6 +34,6 @@ export default new Router({
       path: '/Member-Centre',
       name: '會員中心',
       component: MemberCentre
-    }
+    },
   ]
 })

@@ -84,7 +84,7 @@
               content.
             </p>
             <router-link class="btn btn-primary" to="/cart"
-              >立即預約</router-link
+              >選擇方案</router-link
             >
           </div>
         </div>
@@ -97,23 +97,19 @@
         <div class="card text-center">
           <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">選擇方案</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">會合地點</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#">使用條款</a>
+              <li class="nav-item" v-for="tab in tabs">
+                <a
+                  class="nav-link"
+                  href="#"
+                  @click.prevent="currentTab = tab"
+                  >{{ tab }}</a
+                >
               </li>
             </ul>
           </div>
-          <div class="card-body">
+          <div class="card-body" v-if="currentTab == '選擇方案'">
             <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">
-              With supporting text below as a natural lead-in to additional
-              content.
-            </p>
+            <p class="card-text">第一頁籤。</p>
             <div>
               <date-picker
                 v-model="bookingDate"
@@ -122,7 +118,20 @@
                 :disabled-date="checkBookedDate"
               ></date-picker>
             </div>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <router-link class="btn btn-primary" to="/Cart"
+              >放入購物車</router-link
+            >
+            <router-link class="btn btn-primary" to="/Cart"
+              >立即預約</router-link
+            >
+          </div>
+          <div class="card-body" v-else-if="currentTab == '會合地點'">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">第二頁籤。</p>
+          </div>
+          <div class="card-body" v-else>
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">第三頁籤。</p>
           </div>
         </div>
       </div>
@@ -176,6 +185,8 @@ export default {
     return {
       selectedProjectId: this.$route.params.selectedProjectId,
       selectedProjectContent: {},
+      tabs: ["選擇方案", "會合地點", "使用條款"],
+      currentTab: "選擇方案",
       bookingDate: null,
       bookedDate: ["2021-02-25", "2021-03-01"],
       lang: {
