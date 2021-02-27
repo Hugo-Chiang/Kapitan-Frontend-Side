@@ -92,7 +92,7 @@
     </section>
     <section id="projectPurchaseArea" class="row mb-5">
       <div class="col-12">
-        <h3>標題1</h3>
+        <h3>方案確認</h3>
         <hr />
         <div class="card text-center">
           <div class="card-header">
@@ -100,6 +100,7 @@
               <li class="nav-item" v-for="tab in tabs">
                 <a
                   class="nav-link"
+                  :class="currentTab == tab ? 'active' : ''"
                   href="#"
                   @click.prevent="currentTab = tab"
                   >{{ tab }}</a
@@ -107,38 +108,15 @@
               </li>
             </ul>
           </div>
-          <div class="card-body" v-if="currentTab == '選擇方案'">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">第一頁籤。</p>
-            <div>
-              <date-picker
-                v-model="bookingDate"
-                valueType="format"
-                :lang="lang"
-                :disabled-date="checkBookedDate"
-              ></date-picker>
-            </div>
-            <router-link class="btn btn-primary" to="/Cart"
-              >放入購物車</router-link
-            >
-            <router-link class="btn btn-primary" to="/Cart"
-              >立即預約</router-link
-            >
-          </div>
-          <div class="card-body" v-else-if="currentTab == '會合地點'">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">第二頁籤。</p>
-          </div>
-          <div class="card-body" v-else>
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">第三頁籤。</p>
-          </div>
+          <TabDefault v-if="currentTab == '選擇方案'"></TabDefault>
+          <TabLocation v-else-if="currentTab == '會合地點'"></TabLocation>
+          <TabTerms v-else></TabTerms>
         </div>
       </div>
     </section>
     <section id="projectDetailsArea" class="row mb-5">
       <div class="col-12">
-        <h3>標題2</h3>
+        <h3>服務內容</h3>
         <hr />
         <article>
           <p>
@@ -147,15 +125,15 @@
             pariatur provident, accusamus qui impedit maxime quia libero porro
             nisi rem possimus?
           </p>
-          <img src="" alt="" />
+          <img src="https://fakeimg.pl/440x320/" alt="" />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
             veniam commodi quam dicta accusamus, voluptas ab? Nihil cupiditate
             pariatur provident, accusamus qui impedit maxime quia libero porro
             nisi rem possimus?
           </p>
-          <img src="" alt="" />
-          <img src="" alt="" />
+          <img src="https://fakeimg.pl/440x320/" alt="" />
+          <img src="https://fakeimg.pl/440x320/" alt="" />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
             veniam commodi quam dicta accusamus, voluptas ab? Nihil cupiditate
@@ -167,7 +145,7 @@
     </section>
     <section id="commentsArea" class="row mb-5">
       <div class="col-12">
-        <h3>標題3</h3>
+        <h3>旅客評價</h3>
         <hr />
         <div class="commentsContainer"></div>
       </div>
@@ -176,9 +154,10 @@
 </template>
 
 <script>
-// import Store from "@/components/pages/Store";
 import Breadcrumb from "@/components/Breadcrumb";
-import DatePicker from "vue2-datepicker";
+import TabDefault from "@/components/pages/sub-components/TabDefault";
+import TabLocation from "@/components/pages/sub-components/TabLocation";
+import TabTerms from "@/components/pages/sub-components/TabTerms";
 
 export default {
   data() {
@@ -186,97 +165,15 @@ export default {
       selectedProjectId: this.$route.params.selectedProjectId,
       selectedProjectContent: {},
       tabs: ["選擇方案", "會合地點", "使用條款"],
-      currentTab: "選擇方案",
-      bookingDate: null,
-      bookedDate: ["2021-02-25", "2021-03-01"],
-      lang: {
-        formatLocale: {
-          months: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ],
-          // MMM
-          monthsShort: [
-            "一月",
-            "二月",
-            "三月",
-            "四月",
-            "五月",
-            "六月",
-            "七月",
-            "八月",
-            "九月",
-            "十月",
-            "十一月",
-            "十二月",
-          ],
-          // dddd
-          weekdays: [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-          ],
-          weekdaysShort: [
-            "週日",
-            "週一",
-            "週二",
-            "週三",
-            "週四",
-            "週五",
-            "週六",
-          ],
-          weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"],
-        },
-      },
+      currentTab: "會合地點",
     };
   },
   components: {
     Breadcrumb: Breadcrumb,
-    DatePicker: DatePicker,
+    TabDefault: TabDefault,
+    TabLocation: TabLocation,
+    TabTerms: TabTerms,
   },
-  methods: {
-    checkBookedDate(date) {
-      let bookedDateArr = this.bookedDate.map((x) =>
-        new Date(x).toLocaleDateString()
-      );
-      let timeNow = new Date();
-      let todayMidnight = new Date(
-        timeNow.getFullYear(),
-        timeNow.getMonth(),
-        timeNow.getDate()
-      );
-      console.log(date, todayMidnight);
-
-      return (
-        date < todayMidnight ||
-        bookedDateArr.find(
-          (bookedDate) => bookedDate == date.toLocaleDateString()
-        )
-      );
-    },
-  },
-  // 目前用不到
-  // computed: {
-  //   projectIdChanged() {
-  //     return Store.currentPageContentArr.find(
-  //       (project) => project["PROJECT_ID"] == this.selectedProjectId
-  //     );
-  //   },
-  // },
   created() {
     const api = "https://be-sp-0001-kapitan.herokuapp.com/api/store.php";
     const vm = this;

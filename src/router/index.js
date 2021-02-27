@@ -23,7 +23,7 @@ export default new Router({
     {
       path: '/Store/Projects/:selectedProjectId',
       name: '方案',
-      component: Project
+      component: Project,
     },
     {
       path: '/Cart',

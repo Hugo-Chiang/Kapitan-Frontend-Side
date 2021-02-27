@@ -8,13 +8,15 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import * as Vue2Leaflet from 'vue2-leaflet';
+import 'leaflet/dist/leaflet.css';
 import Vue from 'vue';
 import App from './App';
 import router from './router';
 
 window.$ = $;
 
-Vue.use(VueAxios, axios, $, Bootstrap, DatePicker);
+Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
