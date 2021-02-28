@@ -8,12 +8,11 @@
           <div class="card">
             <div class="card-header">Featured</div>
             <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">
-                With supporting text below as a natural lead-in to additional
-                content.
-              </p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <div v-for="project in confirmProjectsArr">
+                {{ project.bookingProjectID }} ,
+                {{ project.bookingProjectDate }},
+                <NumberInput></NumberInput>
+              </div>
             </div>
           </div>
         </div>
@@ -24,9 +23,19 @@
 </template>
 
 <script>
+import NumberInput from "@/components/pages/sub-components/NumberInput";
+
 export default {
   data() {
-    return {};
+    return {
+      confirmProjectsArr: [],
+    };
+  },
+  components: { NumberInput },
+  created() {
+    this.confirmProjectsArr = JSON.parse(
+      localStorage.getItem("savingProjects")
+    );
   },
 };
 </script>

@@ -25,7 +25,7 @@
         </button>
       </form>
       <ul class="navbar-nav ml-4">
-        <router-link class="nav-link" to="/Store/Cart"
+        <router-link class="nav-link" to="/Cart"
           ><i class="fas fa-shopping-cart fa-lg"></i>
         </router-link>
         <router-link class="nav-link" to="/Member-Centre">
