@@ -36,8 +36,16 @@ export default {
       number: 1,
     };
   },
+  methods: {
+    confirmPurchaseData() {
+      this.$emit("emitNumber", Number(this.number));
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+input {
+  text-align: center;
+}
 </style>

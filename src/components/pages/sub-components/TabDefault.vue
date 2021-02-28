@@ -10,8 +10,13 @@
         :disabled-date="checkBookedDate"
       ></date-picker>
     </div>
-    <NumberInput></NumberInput>
-    <router-link class="btn btn-primary" to="/Cart">放入購物車</router-link>
+    <NumberInput ref="numberInput" @emitNumber="saveInCart"></NumberInput>
+    <button
+      class="btn btn-primary"
+      @click.prevent="$refs.numberInput.confirmPurchaseData"
+    >
+      放入購物車
+    </button>
     <router-link class="btn btn-primary" to="/Cart">立即預約</router-link>
   </div>
 </template>
@@ -78,8 +83,11 @@ export default {
           weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"],
         },
       },
+      selectedProject: [],
+      confirmId: this.projectId,
     };
   },
+  props: ["projectId"],
   components: {
     DatePicker,
     NumberInput,
@@ -101,6 +109,16 @@ export default {
         bookedDateArr.find(
           (bookedDate) => bookedDate == date.toLocaleDateString()
         )
+      );
+    },
+    saveInCart(number) {
+      let confirmDate = document.querySelector('input[name="date"]').value;
+      let confirmNumOfPeople = number;
+      this.selectedProject = [this.confirmId, confirmDate, confirmNumOfPeople];
+
+      localStorage.setItem(
+        "savingProjects",
+        JSON.stringify(this.selectedProject)
       );
     },
   },

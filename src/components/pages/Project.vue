@@ -1,6 +1,9 @@
 <template>
   <main class="container">
+    <!-- 網站麵包屑開始 -->
     <Breadcrumb></Breadcrumb>
+    <!-- 網站麵包屑結束 -->
+    <!-- 方案輪播章節開始 -->
     <section id="carouselArea" class="row">
       <div id="carouselContainer" class="col-12">
         <div
@@ -61,6 +64,8 @@
         </div>
       </div>
     </section>
+    <!-- 方案輪播章節結束 -->
+    <!-- 方案摘要章節開始 -->
     <section id="summaryArea" class="row my-4">
       <div class="col-8">
         <h1>
@@ -90,6 +95,8 @@
         </div>
       </div>
     </section>
+    <!-- 方案摘要章節結束 -->
+    <!-- 方案購買章節開始 -->
     <section id="projectPurchaseArea" class="row mb-5">
       <div class="col-12">
         <h3>方案確認</h3>
@@ -108,12 +115,17 @@
               </li>
             </ul>
           </div>
-          <TabDefault v-if="currentTab == '選擇方案'"></TabDefault>
+          <TabDefault
+            :project-id="selectedProjectId"
+            v-if="currentTab == '選擇方案'"
+          ></TabDefault>
           <TabLocation v-else-if="currentTab == '會合地點'"></TabLocation>
           <TabTerms v-else></TabTerms>
         </div>
       </div>
     </section>
+    <!-- 方案購買章節結束 -->
+    <!-- 方案細節章節開始 -->
     <section id="projectDetailsArea" class="row mb-5">
       <div class="col-12">
         <h3>服務內容</h3>
@@ -143,6 +155,8 @@
         </article>
       </div>
     </section>
+    <!-- 方案細節章節結束 -->
+    <!-- 方案評價章節開始 -->
     <section id="commentsArea" class="row mb-5">
       <div class="col-12">
         <h3>旅客評價</h3>
@@ -150,11 +164,14 @@
         <div class="commentsContainer"></div>
       </div>
     </section>
+    <!-- 方案評價章節結束 -->
   </main>
 </template>
 
 <script>
+// 導入麵包屑元件
 import Breadcrumb from "@/components/Breadcrumb";
+// 導入方案摘要章節的3個頁籤元件
 import TabDefault from "@/components/pages/sub-components/TabDefault";
 import TabLocation from "@/components/pages/sub-components/TabLocation";
 import TabTerms from "@/components/pages/sub-components/TabTerms";

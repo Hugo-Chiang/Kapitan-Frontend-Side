@@ -10,6 +10,7 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import * as Vue2Leaflet from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
+import './components/eventBus'
 import Vue from 'vue';
 import App from './App';
 import router from './router';
