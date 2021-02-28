@@ -10,6 +10,7 @@
         :disabled-date="checkBookedDate"
       ></date-picker>
     </div>
+    <NumberInput></NumberInput>
     <router-link class="btn btn-primary" to="/Cart">放入購物車</router-link>
     <router-link class="btn btn-primary" to="/Cart">立即預約</router-link>
   </div>
@@ -17,6 +18,7 @@
 
 <script>
 import DatePicker from "vue2-datepicker";
+import NumberInput from "@/components/pages/sub-components/NumberInput";
 
 export default {
   data() {
@@ -79,7 +81,8 @@ export default {
     };
   },
   components: {
-    DatePicker: DatePicker,
+    DatePicker,
+    NumberInput,
   },
   methods: {
     checkBookedDate(date) {
