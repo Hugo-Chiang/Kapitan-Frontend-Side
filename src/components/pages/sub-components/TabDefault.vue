@@ -17,7 +17,9 @@
     >
       放入購物車
     </button>
-    <router-link class="btn btn-primary" to="/Cart">立即預約</router-link>
+    <button class="btn btn-primary" @click.prevent="bookingNow">
+      立即預約
+    </button>
   </div>
 </template>
 
@@ -145,6 +147,12 @@ export default {
 
         localStorage.setItem("savingProjects", JSON.stringify(storageArr));
       }
+    },
+    bookingNow() {
+      let confirmDate = document.querySelector('input[name="date"]').value;
+
+      this.$refs.numberInput.confirmPurchaseData();
+      if (confirmDate != "") this.$router.push({ name: "購物車" });
     },
   },
 };
