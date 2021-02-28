@@ -83,7 +83,7 @@ export default {
           weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"],
         },
       },
-      selectedProject: [],
+      confirmProject: {},
       confirmId: this.projectId,
     };
   },
@@ -113,13 +113,38 @@ export default {
     },
     saveInCart(number) {
       let confirmDate = document.querySelector('input[name="date"]').value;
-      let confirmNumOfPeople = number;
-      this.selectedProject = [this.confirmId, confirmDate, confirmNumOfPeople];
 
-      localStorage.setItem(
-        "savingProjects",
-        JSON.stringify(this.selectedProject)
-      );
+      if (confirmDate == "") {
+        alert("請輸入預約日期！");
+      } else {
+        let confirmNumOfPeople = number;
+
+        this.confirmProject = {
+          bookingProjectID: this.confirmId,
+          bookingProjectDate: confirmDate,
+          bookingProjectNumOfPeople: confirmNumOfPeople,
+        };
+
+        let storageArr =
+          JSON.parse(localStorage.getItem("savingProjects")) || [];
+        let storageChecking = false;
+
+        for (let i = 0; i < storageArr.length; i++) {
+          if (
+            this.confirmProject.bookingProjectID ==
+              storageArr[i].bookingProjectID &&
+            this.confirmProject.bookingProjectDate ==
+              storageArr[i].bookingProjectDate
+          ) {
+            storageArr[i] = this.confirmProject;
+            storageChecking = true;
+          }
+        }
+
+        if (!storageChecking) storageArr.push(this.confirmProject);
+
+        localStorage.setItem("savingProjects", JSON.stringify(storageArr));
+      }
     },
   },
 };
