@@ -122,9 +122,7 @@ export default {
         let confirmNumOfPeople = number;
 
         this.confirmProject = {
-          localstorageId: `${this.confirmId}-${new Date(
-            confirmDate
-          ).getTime()}`,
+          localstorageId: `${this.confirmId}-${confirmDate}`,
           bookingProjectId: this.confirmId,
           bookingProjectDate: confirmDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,

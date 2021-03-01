@@ -14,11 +14,13 @@
                 :data-id="project.bookingProjectId"
               >
                 <span class="id">{{ project.bookingProjectId }}</span
-                >, <span class="date"> {{ project.bookingProjectDate }},</span>
+                >, <span class="date">{{ project.bookingProjectDate }}</span
+                >,
                 <NumberInput
                   ref="numberInput"
                   class="people"
                   :uniqueKey="project.bookingProjectId"
+                  :setDefaultValue="project.bookingProjectNumOfPeople"
                   @emitNumber="updateCart"
                 ></NumberInput>
               </div>
@@ -51,36 +53,37 @@ export default {
     );
   },
   methods: {
+    // 方法：更新購物車，覆寫 localStorage，並帶往結帳頁
     updateCart() {
-      let storageArr = JSON.parse(localStorage.getItem("savingProjects")) || [];
+      let newConfirmProjectsArr = [];
       let projectBlocks = document.querySelectorAll(".projectBlock");
 
       for (let i = 0; i < projectBlocks.length; i++) {
-        let confirmProjectId = projectBlocks[i].querySelector(".id")
-          .textContent;
-        let confirmProjectDate = projectBlocks[i].querySelector(".date")
-          .textContent;
+        let confirmProjectId = projectBlocks[i]
+          .querySelector(".id")
+          .textContent.trim();
+        let confirmProjectDate = projectBlocks[i]
+          .querySelector(".date")
+          .textContent.trim();
         let confirmNumOfPeople = projectBlocks[i]
           .querySelector(".people")
-          .querySelector("input").value;
+          .querySelector("input")
+          .value.trim();
         let confirmProject = {
-          localstorageId: `${confirmProjectId}-${new Date(
-            confirmProjectDate
-          ).getTime()}`,
+          localstorageId: `${confirmProjectId}-${confirmProjectDate}`,
           bookingProjectId: confirmProjectId,
           bookingProjectDate: confirmProjectDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
         };
-
-        console.log(confirmProject);
-
-        this.confirmProjectsArr.push(confirmProject);
+        newConfirmProjectsArr.push(confirmProject);
       }
 
-      storageArr = this.confirmProjectsArr;
-      localStorage.setItem("savingProjects", JSON.stringify(storageArr));
-
-      this.$router.push({ name: "首頁" });
+      localStorage.removeItem("savingProjects");
+      localStorage.setItem(
+        "savingProjects",
+        JSON.stringify(newConfirmProjectsArr)
+      );
+      this.$router.push({ name: "結帳" });
     },
   },
 };

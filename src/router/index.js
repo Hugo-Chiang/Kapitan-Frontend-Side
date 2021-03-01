@@ -4,6 +4,7 @@ import Home from '@/components/pages/Home';
 import Store from '@/components/pages/Store';
 import Project from '@/components/pages/Project';
 import Cart from '@/components/pages/Cart';
+import Checkout from '@/components/pages/Checkout';
 import MemberCentre from '@/components/pages/MemberCentre';
 
 Vue.use(Router);
@@ -28,7 +29,12 @@ export default new Router({
     {
       path: '/Cart',
       name: '購物車',
-      component: Cart
+      component: Cart,
+    },
+    {
+      path: '/Cart/Checkout',
+      name: '結帳',
+      component: Checkout
     },
     {
       path: '/Member-Centre',

@@ -33,10 +33,10 @@
 export default {
   data() {
     return {
-      number: 1,
+      number: this.setDefaultValue || 1,
     };
   },
-  props: ["uniqueKey"],
+  props: ["uniqueKey", "setDefaultValue"],
   methods: {
     confirmPurchaseData() {
       this.$emit("emitNumber", Number(this.number));
