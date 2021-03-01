@@ -122,7 +122,10 @@ export default {
         let confirmNumOfPeople = number;
 
         this.confirmProject = {
-          bookingProjectID: this.confirmId,
+          localstorageId: `${this.confirmId}-${new Date(
+            confirmDate
+          ).getTime()}`,
+          bookingProjectId: this.confirmId,
           bookingProjectDate: confirmDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
         };
@@ -133,8 +136,8 @@ export default {
 
         for (let i = 0; i < storageArr.length; i++) {
           if (
-            this.confirmProject.bookingProjectID ==
-              storageArr[i].bookingProjectID &&
+            this.confirmProject.bookingProjectId ==
+              storageArr[i].bookingProjectId &&
             this.confirmProject.bookingProjectDate ==
               storageArr[i].bookingProjectDate
           ) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="input-group my-3">
+  <div class="input-group my-3" :data-id="uniqueKey" :key="uniqueKey">
     <div class="input-group-prepend">
       <button
         class="btn btn-outline-secondary"
@@ -36,6 +36,7 @@ export default {
       number: 1,
     };
   },
+  props: ["uniqueKey"],
   methods: {
     confirmPurchaseData() {
       this.$emit("emitNumber", Number(this.number));
