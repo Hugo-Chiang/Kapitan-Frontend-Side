@@ -7,12 +7,17 @@
         <hr />
       </div>
     </div>
+    <!-- 購物車區域開始 -->
     <section id="cartArea" class="row mb-5">
+      <!-- 訂單列表部分開始 -->
       <div id="orderDetailsContainer" class="col-9">
         <div class="card">
           <div class="card-header">
-            <h5>已選方案</h5>
-            <button @click.prevent="clearCart">清空購物車</button>
+            <h5 v-if="currentPage == '購物車'">已選方案</h5>
+            <h5 v-else>第一步：確認方案內容</h5>
+            <button @click.prevent="clearCart" v-if="currentPage == '購物車'">
+              清空購物車
+            </button>
           </div>
           <div class="card-body">
             <div
@@ -36,13 +41,20 @@
                 @emitNumber="updateCart"
                 v-if="currentPage == '購物車'"
               ></NumberInput>
-              <a href="" @click.prevent="deleteSingleProject">刪除</a>
+              <a
+                href=""
+                @click.prevent="deleteSingleProject"
+                v-if="currentPage == '購物車'"
+                >刪除</a
+              >
               <hr v-if="index < confirmProjectsArr.length - 1" />
             </div>
             <div v-if="confirmProjectsArr.length == 0">請選擇方案～</div>
           </div>
         </div>
       </div>
+      <!-- 訂單列表部分結束 -->
+      <!-- 訂單總額部分開始 -->
       <div id="orderAmountCardContainer" class="col-3">
         <div class="card text-center" style="width: 18rem">
           <div class="card-body">
@@ -61,8 +73,12 @@
           </div>
         </div>
       </div>
+      <!-- 訂單總額部分結束 -->
     </section>
-    <router-view></router-view>
+    <!-- 購物車區域結束 -->
+    <!-- 結帳區域開始 -->
+    <router-view :confirmProjectsArr="confirmProjectsArr"></router-view>
+    <!-- 結帳區域結束 -->
     <section id="recommendArea" class="row mb-5"></section>
   </main>
 </template>
@@ -134,6 +150,7 @@ export default {
     },
   },
   computed: {
+    // 方法：藉由動態路由自動回傳所在頁面名稱
     currentPage() {
       return this.$route.name;
     },
