@@ -30,12 +30,17 @@ export default new Router({
       path: '/Cart',
       name: '購物車',
       component: Cart,
+      children: [{
+        path: '/Cart/Checkout',
+        name: '結帳',
+        component: Checkout
+      }]
     },
-    {
-      path: '/Cart/Checkout',
-      name: '結帳',
-      component: Checkout
-    },
+    // {
+    //   path: '/Cart/Checkout',
+    //   name: '結帳',
+    //   component: Checkout
+    // },
     {
       path: '/Member-Centre',
       name: '會員中心',

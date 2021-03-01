@@ -1,39 +1,62 @@
 <template>
   <main class="container">
-    <section id="castArea" class="row">
-      <div class="col-12 my-5">
-        <h2>您的購物車</h2>
+    <div class="row mt-5">
+      <div class="col-12">
+        <h2 v-if="$router.currentRoute.name == '購物車'">您的購物車</h2>
+        <h2 v-else>進行結帳</h2>
         <hr />
-        <div id="orderDetailsContainer" class="">
-          <div class="card">
-            <div class="card-header">Featured</div>
-            <div class="card-body">
-              <div
-                class="projectBlock"
-                v-for="project in confirmProjectsArr"
-                :data-id="project.bookingProjectId"
-              >
-                <span class="id">{{ project.bookingProjectId }}</span
-                >, <span class="date">{{ project.bookingProjectDate }}</span
-                >,
-                <NumberInput
-                  ref="numberInput"
-                  class="people"
-                  :uniqueKey="project.bookingProjectId"
-                  :setDefaultValue="project.bookingProjectNumOfPeople"
-                  @emitNumber="updateCart"
-                ></NumberInput>
-              </div>
-              <hr />
-              <button class="btn btn-primary" @click.prevent="updateCart">
-                進行結帳
-              </button>
+      </div>
+    </div>
+    <section id="cartArea" class="row mb-5">
+      <div id="orderDetailsContainer" class="col-9">
+        <div class="card">
+          <div class="card-header">
+            <h5>已選方案</h5>
+          </div>
+          <div class="card-body">
+            <div
+              class="projectBlock"
+              v-for="project in confirmProjectsArr"
+              :data-id="project.bookingProjectId"
+            >
+              <span class="id">{{ project.bookingProjectId }}</span
+              >, <span class="date">{{ project.bookingProjectDate }}</span
+              >,
+              <NumberInput
+                ref="numberInput"
+                class="people"
+                :uniqueKey="project.bookingProjectId"
+                :setDefaultValue="project.bookingProjectNumOfPeople"
+                @emitNumber="updateCart"
+              ></NumberInput>
+              <a href="">刪除</a>
             </div>
+            <hr v-if="$router.currentRoute.name == '購物車'" />
+            <button
+              class="btn btn-primary"
+              @click.prevent="updateCart"
+              v-if="$router.currentRoute.name == '購物車'"
+            >
+              進行結帳
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="orderAmountCardContainer" class="col-3">
+        <div class="card text-center" style="width: 18rem">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">
+              With supporting text below as a natural lead-in to additional
+              content.
+            </p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
           </div>
         </div>
       </div>
     </section>
-    <section id="recommendArea" class="row"></section>
+    <router-view></router-view>
+    <section id="recommendArea" class="row mb-5"></section>
   </main>
 </template>
 
@@ -83,6 +106,9 @@ export default {
         "savingProjects",
         JSON.stringify(newConfirmProjectsArr)
       );
+
+      // console.log(this.$router.currentRoute);
+
       this.$router.push({ name: "結帳" });
     },
   },
