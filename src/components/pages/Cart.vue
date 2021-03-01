@@ -21,16 +21,20 @@
               :data-id="
                 project.bookingProjectId + '-' + project.bookingProjectDate
               "
+              :key="index"
             >
               <span class="id">{{ project.bookingProjectId }}</span
               >, <span class="date">{{ project.bookingProjectDate }}</span
-              >,
+              >,<span class="people2" v-if="currentPage != '購物車'">{{
+                project.bookingProjectNumOfPeople
+              }}</span>
               <NumberInput
                 ref="numberInput"
                 class="people"
                 :uniqueKey="project.bookingProjectId"
                 :setDefaultValue="project.bookingProjectNumOfPeople"
                 @emitNumber="updateCart"
+                v-if="currentPage == '購物車'"
               ></NumberInput>
               <a href="" @click.prevent="deleteSingleProject">刪除</a>
               <hr v-if="index < confirmProjectsArr.length - 1" />
@@ -50,10 +54,7 @@
             <button
               class="btn btn-primary"
               @click.prevent="updateCart"
-              v-if="
-                $router.currentRoute.name == '購物車' &&
-                confirmProjectsArr.length > 0
-              "
+              v-if="currentPage == '購物車' && confirmProjectsArr.length > 0"
             >
               進行結帳
             </button>
@@ -72,7 +73,6 @@ import NumberInput from "@/components/pages/sub-components/NumberInput";
 export default {
   data() {
     return {
-      currentPage: this.$router.currentRoute.name,
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
   },
@@ -111,7 +111,7 @@ export default {
         JSON.stringify(newConfirmProjectsArr)
       );
 
-      this.$router.push({ name: "結帳" });
+      this.$router.push("/Cart/Checkout");
     },
     // 方法：刪除單一方案，覆寫 localStorage
     deleteSingleProject(e) {
@@ -131,6 +131,11 @@ export default {
     clearCart() {
       localStorage.removeItem("savingProjects");
       this.confirmProjectsArr = [];
+    },
+  },
+  computed: {
+    currentPage() {
+      return this.$route.name;
     },
   },
 };

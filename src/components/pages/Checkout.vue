@@ -14,14 +14,12 @@
 </template>
 
 <script>
-// import Cart from "@/components/Pages/Cart";
-
 export default {
   data() {
     return {};
   },
   created() {
-    console.log();
+    console.log(this.$router.currentRoute);
   },
 };
 </script>

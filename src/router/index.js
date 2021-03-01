@@ -36,11 +36,6 @@ export default new Router({
         component: Checkout
       }]
     },
-    // {
-    //   path: '/Cart/Checkout',
-    //   name: '結帳',
-    //   component: Checkout
-    // },
     {
       path: '/Member-Centre',
       name: '會員中心',
