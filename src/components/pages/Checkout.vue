@@ -12,6 +12,7 @@
                 type="checkbox"
                 id="inlineCheckbox1"
                 value="option1"
+                v-model="syncMemberContactInfo"
               />
               <label class="form-check-label" for="inlineCheckbox1"
                 >同登入會員資訊</label
@@ -27,6 +28,11 @@
                   id="inputMainName"
                   class="form-control"
                   placeholder="訂購人姓名"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ordererName
+                      : ''
+                  "
                 />
               </div>
               <div class="form-group col-md-2">
@@ -36,6 +42,11 @@
                   id="inputMainPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ordererPhone
+                      : ''
+                  "
                 />
               </div>
               <div class="form-group col-md-4">
@@ -45,6 +56,11 @@
                   class="form-control"
                   id="inputMainEmail"
                   placeholder="範例：Hello-World@email.com"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ordererEmail
+                      : ''
+                  "
                 />
               </div>
             </div>
@@ -56,6 +72,11 @@
                   id="inputSubName"
                   class="form-control"
                   placeholder="緊急聯絡人姓名"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ECname
+                      : ''
+                  "
                 />
               </div>
               <div class="form-group col-md-2">
@@ -65,6 +86,11 @@
                   id="inputSubPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ECphone
+                      : ''
+                  "
                 />
               </div>
               <div class="form-group col-md-4">
@@ -74,6 +100,11 @@
                   class="form-control"
                   id="inputSubEmail"
                   placeholder="範例：Hello-World@email.com"
+                  :value="
+                    syncMemberContactInfo == true
+                      ? memberInformation.ECemail
+                      : ''
+                  "
                 />
               </div>
             </div>
@@ -246,11 +277,63 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      memberInformation: {},
+      syncMemberContactInfo: false,
+      // checkOutArr: [],
+    };
   },
   props: ["confirmProjectsArr"],
   created() {
-    console.log(this.$router.currentRoute);
+    // this.checkOutArr = JSON.parse(localStorage.getItem("savingProjects"));
+    // console.log(this.checkOutArr);
+    this.queryMemberContactInfo();
+  },
+  methods: {
+    queryMemberContactInfo() {
+      const api = `${process.env.LOCAL_HOST_PATH}/API/QueryMemberContactInfo.php`;
+      const vm = this;
+
+      this.$http
+        .get(api)
+        .then((response) => {
+          let memberContactInfo = response.data[0];
+
+          vm.memberInformation = {
+            ordererName: memberContactInfo.MEMBER_NAME || "",
+            ordererPhone: memberContactInfo.MEMBER_PHONE || "",
+            ordererEmail: memberContactInfo.MEMBER_ACCOUNT,
+            ECname: memberContactInfo.MEMBER_EC_NAME || "",
+            ECphone: memberContactInfo.MEMBER_EC_PHONE || "",
+            ECemail: memberContactInfo.MEMBER_EC_EMAIL || "",
+          };
+        })
+        .catch((response) => {
+          console.log(response);
+          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
+        });
+    },
+    checkOut() {
+      let projectMCname;
+      let projectMCphone;
+      let projectMCemail;
+      let projectECname;
+      let projectECphone;
+      let projectECemail;
+
+      const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
+      const vm = this;
+
+      this.$http
+        .post(api, JSON.stringify({ text: HelloWorld }))
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((response) => {
+          console.log(response);
+          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
+        });
+    },
   },
 };
 </script>

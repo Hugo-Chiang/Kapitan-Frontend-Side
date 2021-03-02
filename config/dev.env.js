@@ -3,5 +3,7 @@ const merge = require('webpack-merge')
 const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
-  NODE_ENV: '"development"'
+  NODE_ENV: '"development"',
+  LOCAL_HOST_PATH: '"http://localhost:8087/Backend/Backend-Side-Projects-0001-Kapitan"',
+  REMOTE_HOST_PATH: '"https://be-sp-0001-kapitan.herokuapp.com"'
 })
