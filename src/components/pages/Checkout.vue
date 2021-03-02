@@ -39,6 +39,8 @@
                   id="inputMainPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
+                  v-model="inputOrdererInformation.ordererPhone"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
               <div class="form-group col-md-4">
@@ -48,6 +50,8 @@
                   class="form-control"
                   id="inputMainEmail"
                   placeholder="範例：Hello-World@email.com"
+                  v-model="inputOrdererInformation.ordererEmail"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
             </div>
@@ -59,6 +63,8 @@
                   id="inputSubName"
                   class="form-control"
                   placeholder="緊急聯絡人姓名"
+                  v-model="inputOrdererInformation.ECname"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
               <div class="form-group col-md-2">
@@ -68,6 +74,8 @@
                   id="inputSubPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
+                  v-model="inputOrdererInformation.ECphone"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
               <div class="form-group col-md-4">
@@ -77,6 +85,8 @@
                   class="form-control"
                   id="inputSubEmail"
                   placeholder="範例：Hello-World@email.com"
+                  v-model="inputOrdererInformation.ECemail"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
             </div>
@@ -141,7 +151,7 @@
           </div>
           <div class="card-body">
             <div
-              class="projectBlock"
+              class="projectBlockInStepThree"
               v-for="(project, index) in confirmProjectsArr"
               :data-id="
                 project.bookingProjectId + '-' + project.bookingProjectDate
@@ -176,17 +186,19 @@
                     :id="'inputMainName' + (index + 1)"
                     class="form-control"
                     placeholder="主要聯絡人姓名"
+                    v-model="testingObjs[index].ordererName"
                   />
                 </div>
                 <div class="form-group col-md-2">
                   <label :for="'inputMainPhoneNumber' + (index + 1)"
-                    >訂購人手機號碼</label
+                    >主要聯絡人手機號碼</label
                   >
                   <input
                     type="number"
                     :id="'inputMainPhoneNumber' + (index + 1)"
                     class="form-control"
                     placeholder="範例：0933128872"
+                    v-model="testingObjs[index].ordererPhone"
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -198,6 +210,7 @@
                     class="form-control"
                     :id="'inputMainEmail' + (index + 1)"
                     placeholder="範例：Hello-World@email.com"
+                    v-model="testingObjs[index].ordererEmail"
                   />
                 </div>
               </div>
@@ -211,6 +224,7 @@
                     :id="'inputSubName' + (index + 2)"
                     class="form-control"
                     placeholder="緊急聯絡人姓名"
+                    v-model="testingObjs[index].ECname"
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -222,6 +236,7 @@
                     :id="'inputSubPhoneNumber' + (index + 2)"
                     class="form-control"
                     placeholder="範例：0933128872"
+                    v-model="testingObjs[index].ECphone"
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -233,6 +248,7 @@
                     class="form-control"
                     :id="'inputSubEmail' + (index + 2)"
                     placeholder="範例：Hello-World@email.com"
+                    v-model="testingObjs[index].ECemail"
                   />
                 </div>
               </div>
@@ -257,15 +273,21 @@ export default {
   data() {
     return {
       syncMemberInformation: {},
-      inputOrdererInformation: {},
       syncMemberContactInfo: false,
-      // ordererInformation: {},
+      inputOrdererInformation: {},
       syncordererContactInfoAll: false,
+      testingObjs: [],
     };
   },
   props: ["confirmProjectsArr"],
   created() {
     this.queryMemberContactInfo();
+
+    let projectsNum = JSON.parse(localStorage.getItem("savingProjects")).length;
+
+    for (let i = 0; i < projectsNum; i++) {
+      this.testingObjs.push({});
+    }
   },
   methods: {
     // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
@@ -292,16 +314,16 @@ export default {
           console.log(response);
         });
     },
-    getOrdererContactInfo() {
-      let ordererName = document.querySelector("#inputMainName").value;
-      let ordererPhone = document.querySelector("#inputMainPhoneNumber").value;
-      let ordererEmail = document.querySelector("#inputMainEmail").value;
-      let ECname = document.querySelector("#inputSubName").value;
-      let ECphone = document.querySelector("#inputSubPhoneNumber").value;
-      let ECemail = document.querySelector("#inputSubEmail").value;
+    // getOrdererContactInfo() {
+    //   let ordererName = document.querySelector("#inputMainName").value;
+    //   let ordererPhone = document.querySelector("#inputMainPhoneNumber").value;
+    //   let ordererEmail = document.querySelector("#inputMainEmail").value;
+    //   let ECname = document.querySelector("#inputSubName").value;
+    //   let ECphone = document.querySelector("#inputSubPhoneNumber").value;
+    //   let ECemail = document.querySelector("#inputSubEmail").value;
 
-      return ordererInformation;
-    },
+    //   return ordererInformation;
+    // },
     // 方法：結帳
     checkOut() {
       // const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
@@ -319,15 +341,37 @@ export default {
   },
   watch: {
     // 監看（方法）：確認同步會員資訊時，複製會員資訊予輸入欄
-    syncMemberContactInfo: function (boolean) {
+    syncMemberContactInfo(boolean) {
       if (boolean) {
         this.inputOrdererInformation = { ...this.syncMemberInformation };
       } else {
+        // 增進使用者體驗：取消同步會員資訊時，欄位內容完全沒有更改過才會清除
         let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInformation);
         let syncMemberInfoStr = JSON.stringify(this.syncMemberInformation);
 
         if (inputOrdererInfoStr == syncMemberInfoStr)
           this.inputOrdererInformation = {};
+      }
+    },
+    syncordererContactInfoAll(boolean) {
+      if (boolean) {
+        let projectBlocks = document.querySelectorAll(
+          ".projectBlockInStepThree"
+        );
+
+        for (let i = 0; i < projectBlocks.length; i++) {
+          this.testingObjs[i] = { ...this.inputOrdererInformation };
+        }
+      } else {
+        let projectBlocks = document.querySelectorAll(
+          ".projectBlockInStepThree"
+        );
+        let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInformation);
+
+        for (let i = 0; i < projectBlocks.length; i++) {
+          let testingObjStr = JSON.stringify(this.testingObjs[i]);
+          if (inputOrdererInfoStr == testingObjStr) this.testingObjs[i] = {};
+        }
       }
     },
   },
