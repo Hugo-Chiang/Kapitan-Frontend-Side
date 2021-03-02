@@ -140,11 +140,10 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                id="inlineCheckbox1"
+                id="inlineCheckbox2"
                 value="option1"
-                v-model="syncordererContactInfoAll"
               />
-              <label class="form-check-label" for="inlineCheckbox1"
+              <label class="form-check-label" for="inlineCheckbox2"
                 >同訂購人資訊（全部）</label
               >
             </div>
@@ -168,10 +167,14 @@
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  id="inlineCheckbox1"
+                  :id="'inlineCheckbox' + (index + 3)"
+                  :data-id="index"
+                  v-model="syncOrdererContactInfoArr[index]"
                   value="option1"
                 />
-                <label class="form-check-label" for="inlineCheckbox1"
+                <label
+                  class="form-check-label"
+                  :for="'inlineCheckbox' + (index + 3)"
                   >同訂購資訊（個案）</label
                 >
               </div>
@@ -186,7 +189,8 @@
                     :id="'inputMainName' + (index + 1)"
                     class="form-control"
                     placeholder="主要聯絡人姓名"
-                    v-model="testingObjs[index].ordererName"
+                    v-model="inputContantInfoArr[index].ordererName"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -198,7 +202,8 @@
                     :id="'inputMainPhoneNumber' + (index + 1)"
                     class="form-control"
                     placeholder="範例：0933128872"
-                    v-model="testingObjs[index].ordererPhone"
+                    v-model="inputContantInfoArr[index].ordererPhone"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -210,7 +215,8 @@
                     class="form-control"
                     :id="'inputMainEmail' + (index + 1)"
                     placeholder="範例：Hello-World@email.com"
-                    v-model="testingObjs[index].ordererEmail"
+                    v-model="inputContantInfoArr[index].ordererEmail"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
               </div>
@@ -224,7 +230,8 @@
                     :id="'inputSubName' + (index + 2)"
                     class="form-control"
                     placeholder="緊急聯絡人姓名"
-                    v-model="testingObjs[index].ECname"
+                    v-model="inputContantInfoArr[index].ECname"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -236,7 +243,8 @@
                     :id="'inputSubPhoneNumber' + (index + 2)"
                     class="form-control"
                     placeholder="範例：0933128872"
-                    v-model="testingObjs[index].ECphone"
+                    v-model="inputContantInfoArr[index].ECphone"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -248,7 +256,8 @@
                     class="form-control"
                     :id="'inputSubEmail' + (index + 2)"
                     placeholder="範例：Hello-World@email.com"
-                    v-model="testingObjs[index].ECemail"
+                    v-model="inputContantInfoArr[index].ECemail"
+                    @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
               </div>
@@ -275,19 +284,14 @@ export default {
       syncMemberInformation: {},
       syncMemberContactInfo: false,
       inputOrdererInformation: {},
-      syncordererContactInfoAll: false,
-      testingObjs: [],
+      syncOrdererContactInfoArr: [],
+      inputContantInfoArr: [],
     };
   },
   props: ["confirmProjectsArr"],
   created() {
     this.queryMemberContactInfo();
-
-    let projectsNum = JSON.parse(localStorage.getItem("savingProjects")).length;
-
-    for (let i = 0; i < projectsNum; i++) {
-      this.testingObjs.push({});
-    }
+    this.establishSyncOrdererContactInfoArr();
   },
   methods: {
     // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
@@ -313,6 +317,16 @@ export default {
           console.log("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
           console.log(response);
         });
+    },
+    // 方法：建立「第三步：填寫聯絡資訊」同步訂購資訊用的工具陣列
+    establishSyncOrdererContactInfoArr() {
+      let projectsNum = JSON.parse(localStorage.getItem("savingProjects"))
+        .length;
+
+      for (let i = 0; i < projectsNum; i++) {
+        this.syncOrdererContactInfoArr.push(false);
+        this.inputContantInfoArr.push({});
+      }
     },
     // getOrdererContactInfo() {
     //   let ordererName = document.querySelector("#inputMainName").value;
@@ -340,9 +354,9 @@ export default {
     },
   },
   watch: {
-    // 監看（方法）：確認同步會員資訊時，複製會員資訊予輸入欄
-    syncMemberContactInfo(boolean) {
-      if (boolean) {
+    // 監看（方法）：確認同步會員資訊時，複製會員資訊予「第二步：填寫訂購資訊」的輸入欄
+    syncMemberContactInfo(watchingBoolean) {
+      if (watchingBoolean) {
         this.inputOrdererInformation = { ...this.syncMemberInformation };
       } else {
         // 增進使用者體驗：取消同步會員資訊時，欄位內容完全沒有更改過才會清除
@@ -353,24 +367,20 @@ export default {
           this.inputOrdererInformation = {};
       }
     },
-    syncordererContactInfoAll(boolean) {
-      if (boolean) {
-        let projectBlocks = document.querySelectorAll(
-          ".projectBlockInStepThree"
-        );
-
-        for (let i = 0; i < projectBlocks.length; i++) {
-          this.testingObjs[i] = { ...this.inputOrdererInformation };
-        }
-      } else {
-        let projectBlocks = document.querySelectorAll(
-          ".projectBlockInStepThree"
-        );
-        let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInformation);
-
-        for (let i = 0; i < projectBlocks.length; i++) {
-          let testingObjStr = JSON.stringify(this.testingObjs[i]);
-          if (inputOrdererInfoStr == testingObjStr) this.testingObjs[i] = {};
+    // 監看（方法）：確認同步訂購資訊時，複製訂購資訊予「第三步：填寫聯絡資訊」的個別輸入欄
+    syncOrdererContactInfoArr(watchingArr) {
+      for (let i = 0; i < watchingArr.length; i++) {
+        if (watchingArr[i]) {
+          this.inputContantInfoArr[i] = { ...this.inputOrdererInformation };
+        } else {
+          // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
+          let inputContactInfoStr = JSON.stringify(this.inputContantInfoArr[i]);
+          let inputOrdererInfoStr = JSON.stringify(
+            this.inputOrdererInformation
+          );
+          if (inputContactInfoStr == inputOrdererInfoStr) {
+            this.inputContantInfoArr[i] = {};
+          }
         }
       }
     },
