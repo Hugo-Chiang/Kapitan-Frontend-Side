@@ -28,11 +28,8 @@
                   id="inputMainName"
                   class="form-control"
                   placeholder="訂購人姓名"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ordererName
-                      : ''
-                  "
+                  v-model="inputOrdererInformation.ordererName"
+                  @keyup="syncMemberContactInfo = false"
                 />
               </div>
               <div class="form-group col-md-2">
@@ -42,11 +39,6 @@
                   id="inputMainPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ordererPhone
-                      : ''
-                  "
                 />
               </div>
               <div class="form-group col-md-4">
@@ -56,11 +48,6 @@
                   class="form-control"
                   id="inputMainEmail"
                   placeholder="範例：Hello-World@email.com"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ordererEmail
-                      : ''
-                  "
                 />
               </div>
             </div>
@@ -72,11 +59,6 @@
                   id="inputSubName"
                   class="form-control"
                   placeholder="緊急聯絡人姓名"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ECname
-                      : ''
-                  "
                 />
               </div>
               <div class="form-group col-md-2">
@@ -86,11 +68,6 @@
                   id="inputSubPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ECphone
-                      : ''
-                  "
                 />
               </div>
               <div class="form-group col-md-4">
@@ -100,11 +77,6 @@
                   class="form-control"
                   id="inputSubEmail"
                   placeholder="範例：Hello-World@email.com"
-                  :value="
-                    syncMemberContactInfo == true
-                      ? memberInformation.ECemail
-                      : ''
-                  "
                 />
               </div>
             </div>
@@ -160,6 +132,7 @@
                 type="checkbox"
                 id="inlineCheckbox1"
                 value="option1"
+                v-model="syncordererContactInfoAll"
               />
               <label class="form-check-label" for="inlineCheckbox1"
                 >同訂購人資訊（全部）</label
@@ -267,7 +240,12 @@
             </div>
           </div>
         </div>
-        <input type="submit" value="立即結帳" class="btn btn-primary mt-5" />
+        <input
+          type="submit"
+          value="立即結帳"
+          class="btn btn-primary mt-5"
+          @click.prevent="checkOut"
+        />
       </form>
     </div>
   </section>
@@ -278,18 +256,19 @@
 export default {
   data() {
     return {
-      memberInformation: {},
+      syncMemberInformation: {},
+      inputOrdererInformation: {},
       syncMemberContactInfo: false,
-      // checkOutArr: [],
+      // ordererInformation: {},
+      syncordererContactInfoAll: false,
     };
   },
   props: ["confirmProjectsArr"],
   created() {
-    // this.checkOutArr = JSON.parse(localStorage.getItem("savingProjects"));
-    // console.log(this.checkOutArr);
     this.queryMemberContactInfo();
   },
   methods: {
+    // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
     queryMemberContactInfo() {
       const api = `${process.env.LOCAL_HOST_PATH}/API/QueryMemberContactInfo.php`;
       const vm = this;
@@ -299,7 +278,7 @@ export default {
         .then((response) => {
           let memberContactInfo = response.data[0];
 
-          vm.memberInformation = {
+          vm.syncMemberInformation = {
             ordererName: memberContactInfo.MEMBER_NAME || "",
             ordererPhone: memberContactInfo.MEMBER_PHONE || "",
             ordererEmail: memberContactInfo.MEMBER_ACCOUNT,
@@ -309,30 +288,47 @@ export default {
           };
         })
         .catch((response) => {
+          console.log("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
           console.log(response);
-          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
         });
     },
+    getOrdererContactInfo() {
+      let ordererName = document.querySelector("#inputMainName").value;
+      let ordererPhone = document.querySelector("#inputMainPhoneNumber").value;
+      let ordererEmail = document.querySelector("#inputMainEmail").value;
+      let ECname = document.querySelector("#inputSubName").value;
+      let ECphone = document.querySelector("#inputSubPhoneNumber").value;
+      let ECemail = document.querySelector("#inputSubEmail").value;
+
+      return ordererInformation;
+    },
+    // 方法：結帳
     checkOut() {
-      let projectMCname;
-      let projectMCphone;
-      let projectMCemail;
-      let projectECname;
-      let projectECphone;
-      let projectECemail;
+      // const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
+      // const vm = this;
+      // this.$http
+      //   .post(api, JSON.stringify({ text: HelloWorld }))
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
+      //   .catch((response) => {
+      //     console.log(response);
+      //     alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
+      //   });
+    },
+  },
+  watch: {
+    // 監看（方法）：確認同步會員資訊時，複製會員資訊予輸入欄
+    syncMemberContactInfo: function (boolean) {
+      if (boolean) {
+        this.inputOrdererInformation = { ...this.syncMemberInformation };
+      } else {
+        let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInformation);
+        let syncMemberInfoStr = JSON.stringify(this.syncMemberInformation);
 
-      const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
-      const vm = this;
-
-      this.$http
-        .post(api, JSON.stringify({ text: HelloWorld }))
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((response) => {
-          console.log(response);
-          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
-        });
+        if (inputOrdererInfoStr == syncMemberInfoStr)
+          this.inputOrdererInformation = {};
+      }
     },
   },
 };
