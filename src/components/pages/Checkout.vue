@@ -13,6 +13,7 @@
                 id="inlineCheckbox1"
                 value="option1"
                 v-model="syncMemberContactInfo"
+                required
               />
               <label class="form-check-label" for="inlineCheckbox1"
                 >同登入會員資訊</label
@@ -30,6 +31,7 @@
                   placeholder="訂購人姓名"
                   v-model="inputOrdererInfo.MCname"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
               <div class="form-group col-md-2">
@@ -41,6 +43,7 @@
                   placeholder="範例：0933128872"
                   v-model="inputOrdererInfo.MCphone"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -52,6 +55,7 @@
                   placeholder="範例：Hello-World@email.com"
                   v-model="inputOrdererInfo.MCemail"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
             </div>
@@ -65,6 +69,7 @@
                   placeholder="緊急聯絡人姓名"
                   v-model="inputOrdererInfo.ECname"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
               <div class="form-group col-md-2">
@@ -76,6 +81,7 @@
                   placeholder="範例：0933128872"
                   v-model="inputOrdererInfo.ECphone"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -87,6 +93,7 @@
                   placeholder="範例：Hello-World@email.com"
                   v-model="inputOrdererInfo.ECemail"
                   @keyup="syncMemberContactInfo = false"
+                  required
                 />
               </div>
             </div>
@@ -99,6 +106,7 @@
                   id="inputCardName"
                   class="form-control"
                   placeholder="持卡人姓名"
+                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -108,6 +116,7 @@
                   id="inputCardNumber"
                   class="form-control"
                   placeholder="0000-0000-0000-0000"
+                  required
                 />
               </div>
             </div>
@@ -119,6 +128,7 @@
                   id="inputCardNumber"
                   class="form-control"
                   placeholder="範例：08/25"
+                  required
                 />
               </div>
               <div class="form-group col-md-2">
@@ -128,6 +138,7 @@
                   id="inputCardCVV"
                   class="form-control"
                   placeholder="卡片背面三碼"
+                  required
                 />
               </div>
             </div>
@@ -143,6 +154,7 @@
                 id="inlineCheckbox2"
                 value="option1"
                 v-model="syncOrdererContactInfoAll"
+                required
               />
               <label class="form-check-label" for="inlineCheckbox2"
                 >同訂購人資訊（全部）</label
@@ -172,6 +184,7 @@
                   :key="'inlineCheckbox' + (index + 3)"
                   v-model="syncOrdererContactInfoArr[index]"
                   value="option1"
+                  required
                 />
                 <label
                   class="form-check-label"
@@ -192,7 +205,8 @@
                     class="form-control"
                     placeholder="主要聯絡人姓名"
                     v-model="inputContantInfoArr[index].MCname"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -206,7 +220,8 @@
                     class="form-control"
                     placeholder="範例：0933128872"
                     v-model="inputContantInfoArr[index].MCphone"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -220,7 +235,8 @@
                     :key="'inputMainEmail' + (index + 1)"
                     placeholder="範例：Hello-World@email.com"
                     v-model="inputContantInfoArr[index].MCemail"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
               </div>
@@ -236,7 +252,8 @@
                     class="form-control"
                     placeholder="緊急聯絡人姓名"
                     v-model="inputContantInfoArr[index].ECname"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -250,7 +267,8 @@
                     class="form-control"
                     placeholder="範例：0933128872"
                     v-model="inputContantInfoArr[index].ECphone"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -264,7 +282,8 @@
                     :key="'inputSubEmail' + (index + 2)"
                     placeholder="範例：Hello-World@email.com"
                     v-model="inputContantInfoArr[index].ECemail"
-                    @keyup="syncOrdererContactInfoArr[index] = false"
+                    @keyup="unsyncOrdererContactInfo(index)"
+                    required
                   />
                 </div>
               </div>
@@ -332,7 +351,7 @@ export default {
         .length;
 
       for (let i = 0; i < projectsNum; i++) {
-        this.syncOrdererContactInfoArr.push(false);
+        this.$set(this.syncOrdererContactInfoArr, i, false);
         this.$set(this.inputContantInfoArr, i, {
           MCname: "",
           MCphone: "",
@@ -343,25 +362,26 @@ export default {
         });
       }
     },
+    // 方法：解除任一同步訂購資訊的 chexbox 時，同時解除「全部同步訂購資訊」的 chexbox
+    unsyncOrdererContactInfo(index) {
+      this.syncOrdererContactInfoArr[index] = false;
+      this.syncOrdererContactInfoAll = false;
+    },
     // 方法：結帳
     checkOut() {
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
-      // const vm = this;
-      // this.$http
-      //   .post(api, JSON.stringify({ text: HelloWorld }))
-      //   .then((response) => {
-      //     console.log(response);
-      //   })
-      //   .catch((response) => {
-      //     console.log(response);
-      //     alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
-      //   });
+      const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
+      const vm = this;
+      
+      this.$http
+        .post(api, JSON.stringify({ text: HelloWorld }))
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((response) => {
+          console.log(response);
+          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
+        });
     },
-  },
-  computed: {
-    // aa() {
-    //   return this.syncOrdererContactInfoArr.every((boolean) => boolean == true);
-    // },
   },
   watch: {
     // 監看（方法）：確認同步會員資訊時，複製會員資訊予「第二步：填寫訂購資訊」的輸入欄
@@ -385,6 +405,7 @@ export default {
           });
       }
     },
+    // 監看（方法）：選擇全部同步訂購資訊與否，將決定個別同步訂購資訊的 checkbox 勾選與否
     syncOrdererContactInfoAll(watchingBoolean) {
       let ifAllSelected = this.syncOrdererContactInfoArr.every(
         (boolean) => boolean == true
@@ -428,38 +449,6 @@ export default {
           }
         }
       });
-
-      // for (let i = 0; i < this.inputContantInfoArr.length; i++) {
-      //   if (this.inputContantInfoArr[i]) {
-      //     this.$set(this.inputContantInfoArr, i, {
-      //       ...this.inputOrdererInfo,
-      //     });
-      //   } else {
-      //     // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
-      //     let inputContactInfoStr = JSON.stringify(
-      //       this.inputContantInfoArr[index]
-      //     );
-      //     let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInfo);
-
-      //     if (inputContactInfoStr == inputOrdererInfoStr) {
-      //       this.$set(this.inputContantInfoArr, i, {
-      //         MCname: "",
-      //         MCphone: "",
-      //         MCemail: "",
-      //         ECname: "",
-      //         ECphone: "",
-      //         ECemail: "",
-      //       });
-      //     }
-      //   }
-      // }
-
-      let ifAllSelected = this.syncOrdererContactInfoArr.every(
-        (boolean) => boolean == true
-      );
-
-      if (ifAllSelected) this.syncOrdererContactInfoAll = true;
-      else this.syncOrdererContactInfoAll = false;
     },
   },
 };
