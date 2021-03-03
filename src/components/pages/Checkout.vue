@@ -28,7 +28,7 @@
                   id="inputMainName"
                   class="form-control"
                   placeholder="訂購人姓名"
-                  v-model="inputOrdererInformation.ordererName"
+                  v-model="inputOrdererInfo.MCname"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -39,7 +39,7 @@
                   id="inputMainPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
-                  v-model="inputOrdererInformation.ordererPhone"
+                  v-model="inputOrdererInfo.MCphone"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -50,7 +50,7 @@
                   class="form-control"
                   id="inputMainEmail"
                   placeholder="範例：Hello-World@email.com"
-                  v-model="inputOrdererInformation.ordererEmail"
+                  v-model="inputOrdererInfo.MCemail"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -63,7 +63,7 @@
                   id="inputSubName"
                   class="form-control"
                   placeholder="緊急聯絡人姓名"
-                  v-model="inputOrdererInformation.ECname"
+                  v-model="inputOrdererInfo.ECname"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -74,7 +74,7 @@
                   id="inputSubPhoneNumber"
                   class="form-control"
                   placeholder="範例：0933128872"
-                  v-model="inputOrdererInformation.ECphone"
+                  v-model="inputOrdererInfo.ECphone"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -85,7 +85,7 @@
                   class="form-control"
                   id="inputSubEmail"
                   placeholder="範例：Hello-World@email.com"
-                  v-model="inputOrdererInformation.ECemail"
+                  v-model="inputOrdererInfo.ECemail"
                   @keyup="syncMemberContactInfo = false"
                 />
               </div>
@@ -166,7 +166,7 @@
 
               <div class="col">
                 <input
-                  class="form-check-input"
+                  class="form-check-input checkboxForProject"
                   type="checkbox"
                   :id="'inlineCheckbox' + (index + 3)"
                   :key="'inlineCheckbox' + (index + 3)"
@@ -191,7 +191,7 @@
                     :key="'inputMainName' + (index + 1)"
                     class="form-control"
                     placeholder="主要聯絡人姓名"
-                    v-model="inputContantInfoArr[index].ordererName"
+                    v-model="inputContantInfoArr[index].MCname"
                     @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
@@ -205,7 +205,7 @@
                     :key="'inputMainPhoneNumber' + (index + 1)"
                     class="form-control"
                     placeholder="範例：0933128872"
-                    v-model="inputContantInfoArr[index].ordererPhone"
+                    v-model="inputContantInfoArr[index].MCphone"
                     @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
@@ -219,7 +219,7 @@
                     :id="'inputMainEmail' + (index + 1)"
                     :key="'inputMainEmail' + (index + 1)"
                     placeholder="範例：Hello-World@email.com"
-                    v-model="inputContantInfoArr[index].ordererEmail"
+                    v-model="inputContantInfoArr[index].MCemail"
                     @keyup="syncOrdererContactInfoArr[index] = false"
                   />
                 </div>
@@ -288,9 +288,9 @@
 export default {
   data() {
     return {
-      syncMemberInformation: {},
+      syncMemberInfo: {},
       syncMemberContactInfo: false,
-      inputOrdererInformation: {},
+      inputOrdererInfo: {},
       syncOrdererContactInfoAll: false,
       syncOrdererContactInfoArr: [],
       inputContantInfoArr: [],
@@ -312,10 +312,10 @@ export default {
         .then((response) => {
           let memberContactInfo = response.data[0];
 
-          vm.syncMemberInformation = {
-            ordererName: memberContactInfo.MEMBER_NAME || "",
-            ordererPhone: memberContactInfo.MEMBER_PHONE || "",
-            ordererEmail: memberContactInfo.MEMBER_ACCOUNT,
+          vm.syncMemberInfo = {
+            MCname: memberContactInfo.MEMBER_NAME || "",
+            MCphone: memberContactInfo.MEMBER_PHONE || "",
+            MCemail: memberContactInfo.MEMBER_ACCOUNT,
             ECname: memberContactInfo.MEMBER_EC_NAME || "",
             ECphone: memberContactInfo.MEMBER_EC_PHONE || "",
             ECemail: memberContactInfo.MEMBER_EC_EMAIL || "",
@@ -333,19 +333,16 @@ export default {
 
       for (let i = 0; i < projectsNum; i++) {
         this.syncOrdererContactInfoArr.push(false);
-        this.inputContantInfoArr.push({});
+        this.$set(this.inputContantInfoArr, i, {
+          MCname: "",
+          MCphone: "",
+          MCemail: "",
+          ECname: "",
+          ECphone: "",
+          ECemail: "",
+        });
       }
     },
-    // getOrdererContactInfo() {
-    //   let ordererName = document.querySelector("#inputMainName").value;
-    //   let ordererPhone = document.querySelector("#inputMainPhoneNumber").value;
-    //   let ordererEmail = document.querySelector("#inputMainEmail").value;
-    //   let ECname = document.querySelector("#inputSubName").value;
-    //   let ECphone = document.querySelector("#inputSubPhoneNumber").value;
-    //   let ECemail = document.querySelector("#inputSubEmail").value;
-
-    //   return ordererInformation;
-    // },
     // 方法：結帳
     checkOut() {
       // const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
@@ -361,29 +358,46 @@ export default {
       //   });
     },
   },
+  computed: {
+    // aa() {
+    //   return this.syncOrdererContactInfoArr.every((boolean) => boolean == true);
+    // },
+  },
   watch: {
     // 監看（方法）：確認同步會員資訊時，複製會員資訊予「第二步：填寫訂購資訊」的輸入欄
     syncMemberContactInfo(watchingBoolean) {
+      console.log(this.inputOrdererInfo);
       if (watchingBoolean) {
-        this.inputOrdererInformation = { ...this.syncMemberInformation };
+        this.inputOrdererInfo = { ...this.syncMemberInfo };
       } else {
         // 增進使用者體驗：取消同步會員資訊時，欄位內容完全沒有更改過才會清除
-        let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInformation);
-        let syncMemberInfoStr = JSON.stringify(this.syncMemberInformation);
+        let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInfo);
+        let syncMemberInfoStr = JSON.stringify(this.syncMemberInfo);
 
         if (inputOrdererInfoStr == syncMemberInfoStr)
-          this.inputOrdererInformation = {};
+          this.$set(this, "inputOrdererInfo", {
+            MCname: "",
+            MCphone: "",
+            MCemail: "",
+            ECname: "",
+            ECphone: "",
+            ECemail: "",
+          });
       }
     },
     syncOrdererContactInfoAll(watchingBoolean) {
-      if (watchingBoolean) {
-        for (let i = 0; i < this.syncOrdererContactInfoArr.length; i++) {
-          this.syncOrdererContactInfoArr[i] = true;
-        }
-      } else {
-        for (let i = 0; i < this.syncOrdererContactInfoArr.length; i++) {
-          this.syncOrdererContactInfoArr[i] = false;
-        }
+      let ifAllSelected = this.syncOrdererContactInfoArr.every(
+        (boolean) => boolean == true
+      );
+
+      if (watchingBoolean && !ifAllSelected) {
+        this.syncOrdererContactInfoArr = this.syncOrdererContactInfoArr.map(
+          (boolean) => true
+        );
+      } else if (!watchingBoolean && ifAllSelected) {
+        this.syncOrdererContactInfoArr = this.syncOrdererContactInfoArr.map(
+          (boolean) => false
+        );
       }
     },
     // 監看（方法）：確認同步訂購資訊時，複製訂購資訊予「第三步：填寫聯絡資訊」的個別輸入欄
@@ -392,22 +406,61 @@ export default {
 
       watchingArr.forEach(function (boolean, index) {
         if (boolean) {
-          vm.inputContantInfoArr[index] = { ...vm.inputOrdererInformation };
+          vm.$set(vm.inputContantInfoArr, index, {
+            ...vm.inputOrdererInfo,
+          });
         } else {
           // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
           let inputContactInfoStr = JSON.stringify(
             vm.inputContantInfoArr[index]
           );
-          let inputOrdererInfoStr = JSON.stringify(vm.inputOrdererInformation);
+          let inputOrdererInfoStr = JSON.stringify(vm.inputOrdererInfo);
+
           if (inputContactInfoStr == inputOrdererInfoStr) {
-            vm.inputContantInfoArr[index] = {};
+            vm.$set(vm.inputContantInfoArr, index, {
+              MCname: "",
+              MCphone: "",
+              MCemail: "",
+              ECname: "",
+              ECphone: "",
+              ECemail: "",
+            });
           }
         }
       });
+
+      // for (let i = 0; i < this.inputContantInfoArr.length; i++) {
+      //   if (this.inputContantInfoArr[i]) {
+      //     this.$set(this.inputContantInfoArr, i, {
+      //       ...this.inputOrdererInfo,
+      //     });
+      //   } else {
+      //     // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
+      //     let inputContactInfoStr = JSON.stringify(
+      //       this.inputContantInfoArr[index]
+      //     );
+      //     let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInfo);
+
+      //     if (inputContactInfoStr == inputOrdererInfoStr) {
+      //       this.$set(this.inputContantInfoArr, i, {
+      //         MCname: "",
+      //         MCphone: "",
+      //         MCemail: "",
+      //         ECname: "",
+      //         ECphone: "",
+      //         ECemail: "",
+      //       });
+      //     }
+      //   }
+      // }
+
+      let ifAllSelected = this.syncOrdererContactInfoArr.every(
+        (boolean) => boolean == true
+      );
+
+      if (ifAllSelected) this.syncOrdererContactInfoAll = true;
+      else this.syncOrdererContactInfoAll = false;
     },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
