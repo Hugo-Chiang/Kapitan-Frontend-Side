@@ -371,9 +371,12 @@ export default {
     checkOut() {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
       const vm = this;
-      
+      let json = JSON.stringify({ text: "HelloWorld", number: "123" });
+
+      console.log(json);
+
       this.$http
-        .post(api, JSON.stringify({ text: HelloWorld }))
+        .post(api, json)
         .then((response) => {
           console.log(response);
         })
