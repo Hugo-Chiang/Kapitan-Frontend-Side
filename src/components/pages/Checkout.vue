@@ -24,7 +24,7 @@
             </div>
             <div class="card-body">
               <!-- 填寫訂購人資訊開始 -->
-              <div class="form-row">
+              <div class="form-row ordererContactInfoInputBlock">
                 <div class="form-group col-md-2">
                   <ValidationProvider
                     rules="required"
@@ -46,17 +46,18 @@
                 </div>
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    rules="required|regex:/^09[0-9]{8}$/"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputMainPhoneNumber">訂購人手機號碼</label>
                     <input
-                      type="number"
+                      type="text"
+                      maxlength="10"
                       id="inputMainPhoneNumber"
                       name="訂購人手機號碼"
                       class="form-control"
                       :class="classes"
-                      placeholder="範例：0933128872"
+                      placeholder="例：0933128872"
                       v-model="inputOrdererInfo.MCphone"
                       @keyup="syncMemberContactInfo = false"
                     />
@@ -75,7 +76,7 @@
                       :class="classes"
                       id="inputMainEmail"
                       name="訂購人電子信箱"
-                      placeholder="範例：Hello-World@email.com"
+                      placeholder="例：Hello-World@email.com"
                       v-model="inputOrdererInfo.MCemail"
                       @keyup="syncMemberContactInfo = false"
                     />
@@ -83,20 +84,22 @@
                   </ValidationProvider>
                 </div>
               </div>
-              <div class="form-row">
+              <div class="form-row ordererContactInfoInputBlock">
                 <div class="form-group col-md-2">
                   <ValidationProvider
                     rules="required"
                     v-slot="{ errors, classes }"
                   >
-                    <label for="inputSubName">緊急聯絡人姓名</label>
+                    <label for="inputSubName">{{
+                      requiredInputTtile.ECname
+                    }}</label>
                     <input
                       type="text"
                       id="inputSubName"
-                      name="緊急聯絡人姓名"
+                      :name="requiredInputTtile.ECname"
                       class="form-control"
                       :class="classes"
-                      placeholder="緊急聯絡人姓名"
+                      :placeholder="requiredInputTtile.ECname"
                       v-model="inputOrdererInfo.ECname"
                       @keyup="syncMemberContactInfo = false"
                     />
@@ -105,17 +108,20 @@
                 </div>
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    rules="required|regex:/^09[0-9]{8}$/"
                     v-slot="{ errors, classes }"
                   >
-                    <label for="inputSubPhoneNumber">緊急聯絡人手機號碼</label>
+                    <label for="inputSubPhoneNumber">{{
+                      requiredInputTtile.ECphone
+                    }}</label>
                     <input
-                      type="number"
+                      type="text"
+                      maxlength="10"
                       id="inputSubPhoneNumber"
-                      name="緊急聯絡人手機號碼"
+                      :name="requiredInputTtile.ECphone"
                       class="form-control"
                       :class="classes"
-                      placeholder="範例：0933128872"
+                      placeholder="例：0933128872"
                       v-model="inputOrdererInfo.ECphone"
                       @keyup="syncMemberContactInfo = false"
                     />
@@ -127,14 +133,16 @@
                     rules="required|email"
                     v-slot="{ errors, classes }"
                   >
-                    <label for="inputSubEmail">緊急聯絡人電子信箱</label>
+                    <label for="inputSubEmail">{{
+                      requiredInputTtile.ECemail
+                    }}</label>
                     <input
                       type="email"
                       class="form-control"
                       :class="classes"
                       id="inputSubEmail"
-                      name="緊急聯絡人電子信箱"
-                      placeholder="範例：Hello-World@email.com"
+                      :name="requiredInputTtile.ECemail"
+                      placeholder="例：Hello-World@email.com"
                       v-model="inputOrdererInfo.ECemail"
                       @keyup="syncMemberContactInfo = false"
                     />
@@ -196,7 +204,7 @@
                       name="有效期"
                       class="form-control"
                       :class="classes"
-                      placeholder="範例：08/25"
+                      placeholder="例：08/25"
                       v-model="creditCardData.date"
                     />
                     <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -245,7 +253,7 @@
             </div>
             <div class="card-body">
               <div
-                class="projectBlockInStepThree"
+                class="projectBlockInCheckOutStep03"
                 v-for="(project, index) in confirmProjectsArr"
                 :data-id="
                   project.bookingProjectId + '-' + project.bookingProjectDate
@@ -266,6 +274,7 @@
                     :key="'inlineCheckbox' + (index + 3)"
                     v-model="syncOrdererContactInfoArr[index]"
                     value="option1"
+                    @change="simulateBlurEvt(index)"
                   />
                   <label
                     class="form-check-label"
@@ -274,23 +283,26 @@
                   >
                 </div>
 
-                <div class="form-row">
+                <div
+                  class="form-row contactInfoInputBlock"
+                  :id="'contactInfoInputBlock' + index"
+                >
                   <div class="form-group col-md-2">
                     <ValidationProvider
                       rules="required"
                       v-slot="{ errors, classes }"
                     >
-                      <label :for="'inputMainName' + (index + 1)"
-                        >主要聯絡人姓名</label
-                      >
+                      <label :for="'inputMainName' + (index + 1)">{{
+                        requiredInputTtile.MCname
+                      }}</label>
                       <input
                         type="text"
                         :id="'inputMainName' + (index + 1)"
-                        name="主要聯絡人姓名"
+                        :name="requiredInputTtile.MCname"
                         :key="'inputMainName' + (index + 1)"
                         class="form-control"
                         :class="classes"
-                        placeholder="主要聯絡人姓名"
+                        :placeholder="requiredInputTtile.MCname"
                         v-model="inputContantInfoArr[index].MCname"
                         @keyup="unsyncOrdererContactInfo(index)"
                       />
@@ -299,20 +311,21 @@
                   </div>
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required"
+                      rules="required|regex:/^09\d{8}$/"
                       v-slot="{ errors, classes }"
                     >
-                      <label :for="'inputMainPhoneNumber' + (index + 1)"
-                        >主要聯絡人手機號碼</label
-                      >
+                      <label :for="'inputMainPhoneNumber' + (index + 1)">{{
+                        requiredInputTtile.MCphone
+                      }}</label>
                       <input
-                        type="number"
+                        type="text"
+                        maxlength="10"
                         :id="'inputMainPhoneNumber' + (index + 1)"
-                        name="主要聯絡人手機號碼"
+                        :name="requiredInputTtile.MCphone"
                         :key="'inputMainPhoneNumber' + (index + 1)"
                         class="form-control"
                         :class="classes"
-                        placeholder="範例：0933128872"
+                        placeholder="例：0933128872"
                         v-model="inputContantInfoArr[index].MCphone"
                         @keyup="unsyncOrdererContactInfo(index)"
                       />
@@ -324,17 +337,17 @@
                       rules="required|email"
                       v-slot="{ errors, classes }"
                     >
-                      <label :for="'inputMainEmail' + (index + 1)"
-                        >主要聯絡人電子信箱</label
-                      >
+                      <label :for="'inputMainEmail' + (index + 1)">{{
+                        requiredInputTtile.MCemail
+                      }}</label>
                       <input
                         type="email"
                         class="form-control"
                         :class="classes"
                         :id="'inputMainEmail' + (index + 1)"
-                        name="主要聯絡人電子信箱"
+                        :name="requiredInputTtile.ECemeal"
                         :key="'inputMainEmail' + (index + 1)"
-                        placeholder="範例：Hello-World@email.com"
+                        placeholder="例：Hello-World@email.com"
                         v-model="inputContantInfoArr[index].MCemail"
                         @keyup="unsyncOrdererContactInfo(index)"
                       />
@@ -342,7 +355,10 @@
                     </ValidationProvider>
                   </div>
                 </div>
-                <div class="form-row">
+                <div
+                  class="form-row contactInfoInputBlock"
+                  :id="'contactInfoInputBlock' + (index + 1)"
+                >
                   <div class="form-group col-md-2">
                     <ValidationProvider
                       rules="required"
@@ -367,20 +383,21 @@
                   </div>
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required"
+                      rules="required|regex:/^09\d{8}$/"
                       v-slot="{ errors, classes }"
                     >
-                      <label :for="'inputSubPhoneNumber' + (index + 2)"
-                        >緊急聯絡人手機號碼</label
-                      >
+                      <label :for="'inputSubPhoneNumber' + (index + 2)">{{
+                        requiredInputTtile.ECphone
+                      }}</label>
                       <input
-                        type="number"
+                        type="text"
+                        maxlength="10"
                         :id="'inputSubPhoneNumber' + (index + 2)"
-                        name="緊急聯絡人手機號碼"
+                        :name="requiredInputTtile.ECphone"
                         :key="'inputSubPhoneNumber' + (index + 2)"
                         class="form-control"
                         :class="classes"
-                        placeholder="範例：0933128872"
+                        placeholder="例：0933128872"
                         v-model="inputContantInfoArr[index].ECphone"
                         @keyup="unsyncOrdererContactInfo(index)"
                       />
@@ -392,17 +409,17 @@
                       rules="required|email"
                       v-slot="{ errors, classes }"
                     >
-                      <label :for="'inputSubEmail' + (index + 2)"
-                        >緊急聯絡人電子信箱</label
-                      >
+                      <label :for="'inputSubEmail' + (index + 2)">{{
+                        requiredInputTtile.ECemail
+                      }}</label>
                       <input
                         type="email"
                         class="form-control"
                         :class="classes"
                         :id="'inputSubEmail' + (index + 2)"
-                        name="緊急聯絡人電子信箱"
+                        :name="requiredInputTtile.ECemail"
                         :key="'inputSubEmail' + (index + 2)"
-                        placeholder="範例：Hello-World@email.com"
+                        placeholder="例：Hello-World@email.com"
                         v-model="inputContantInfoArr[index].ECemail"
                         @keyup="unsyncOrdererContactInfo(index)"
                       />
@@ -434,6 +451,14 @@
 export default {
   data() {
     return {
+      requiredInputTtile: {
+        MCname: "主要聯絡人姓名",
+        MCphone: "主要聯絡人手機號碼",
+        MCemail: "主要聯絡人電子信箱",
+        ECname: "緊急聯絡人姓名",
+        ECphone: "緊急聯絡人手機號碼",
+        ECemail: "緊急聯絡人電子信箱",
+      },
       syncMemberInfo: {},
       syncMemberContactInfo: false,
       inputOrdererInfo: {},
@@ -500,6 +525,16 @@ export default {
       this.syncOrdererContactInfoArr[index] = false;
       this.syncOrdererContactInfoAll = false;
     },
+    // 方法：個別方案模擬 blur 事件以觸發表單驗證
+    simulateBlurEvt(index) {
+      let targetProject = document.querySelectorAll(
+        ".projectBlockInCheckOutStep03"
+      )[index];
+      console.log(targetProject);
+      let targetInputs = targetProject.querySelectorAll("input");
+
+      targetInputs.forEach((input) => input.dispatchEvent(new Event("blur")));
+    },
     // 方法：結帳
     checkOut() {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
@@ -522,14 +557,12 @@ export default {
   watch: {
     // 監看（方法）：確認同步會員資訊時，複製會員資訊予「第二步：填寫訂購資訊」的輸入欄
     syncMemberContactInfo(watchingBoolean) {
-      console.log(this.inputOrdererInfo);
       if (watchingBoolean) {
         this.inputOrdererInfo = { ...this.syncMemberInfo };
       } else {
         // 增進使用者體驗：取消同步會員資訊時，欄位內容完全沒有更改過才會清除
         let inputOrdererInfoStr = JSON.stringify(this.inputOrdererInfo);
         let syncMemberInfoStr = JSON.stringify(this.syncMemberInfo);
-
         if (inputOrdererInfoStr == syncMemberInfoStr)
           this.$set(this, "inputOrdererInfo", {
             MCname: "",
@@ -540,9 +573,23 @@ export default {
             ECemail: "",
           });
       }
+
+      // 模擬 blur 事件以觸發表單驗證
+      let ordererContactInfoInputBlocks = document.querySelectorAll(
+        ".ordererContactInfoInputBlock"
+      );
+      let inputsArr = [];
+
+      ordererContactInfoInputBlocks.forEach((block) =>
+        block
+          .querySelectorAll("input")
+          .forEach((input) => inputsArr.push(input))
+      );
+      inputsArr.forEach((input) => input.dispatchEvent(new Event("blur")));
     },
     // 監看（方法）：選擇全部同步訂購資訊與否，將決定個別同步訂購資訊的 checkbox 勾選與否
     syncOrdererContactInfoAll(watchingBoolean) {
+      const vm = this;
       let ifAllSelected = this.syncOrdererContactInfoArr.every(
         (boolean) => boolean == true
       );
@@ -556,6 +603,10 @@ export default {
           (boolean) => false
         );
       }
+
+      // 模擬 blur 事件以觸發表單驗證
+      let Projects = document.querySelectorAll(".projectBlockInCheckOutStep03");
+      Projects.forEach((project, index) => vm.simulateBlurEvt(index));
     },
     // 監看（方法）：確認同步訂購資訊時，複製訂購資訊予「第三步：填寫聯絡資訊」的個別輸入欄
     syncOrdererContactInfoArr(watchingArr) {

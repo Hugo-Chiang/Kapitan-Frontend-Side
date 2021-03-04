@@ -43,8 +43,9 @@ localize('zh_TW', zhTW);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 
-// 驗證套件 vee-validate 的 class-name 設定檔
+// 驗證套件 vee-validate 的設定檔
 configure({
+  events: 'input|blur|change',
   classes: {
     valid: 'is-valid',
     invalid: 'is-invalid'
