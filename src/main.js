@@ -4,12 +4,18 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import $ from 'jquery';
 import Bootstrap from 'bootstrap';
+// 導入圖標套件 fontawesome 相關內容開始
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
+// 導入圖標套件 fontawesome 相關內容結束
+// 導入月曆套件 vue2-datepicker 相關內容開始
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+// 導入月曆套件 vue2-datepicker 相關內容結束
+// 導入地圖套件 vue2-leaflet 相關內容開始 
 import * as Vue2Leaflet from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
+// 導入地圖套件 vue2-leaflet 相關內容結束 
 import './components/eventBus';
 import Vue from 'vue';
 // 導入驗證套件 vee-validate 相關內容開始
