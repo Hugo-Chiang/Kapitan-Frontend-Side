@@ -13,7 +13,6 @@
                 id="inlineCheckbox1"
                 value="option1"
                 v-model="syncMemberContactInfo"
-                required
               />
               <label class="form-check-label" for="inlineCheckbox1"
                 >同登入會員資訊</label
@@ -23,16 +22,19 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-2">
-                <label for="inputMainName">訂購人姓名</label>
-                <input
-                  type="text"
-                  id="inputMainName"
-                  class="form-control"
-                  placeholder="訂購人姓名"
-                  v-model="inputOrdererInfo.MCname"
-                  @keyup="syncMemberContactInfo = false"
-                  required
-                />
+                <ValidationProvider rules="required|emal" v-slot="{ errors }">
+                  <label for="inputMainName">訂購人姓名</label>
+                  <input
+                    type="text"
+                    id="inputMainName"
+                    name="inputMainName"
+                    class="form-control"
+                    placeholder="訂購人姓名"
+                    v-model="inputOrdererInfo.MCname"
+                    @keyup="syncMemberContactInfo = false"
+                  />
+                  <span class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
               </div>
               <div class="form-group col-md-2">
                 <label for="inputMainPhoneNumber">訂購人手機號碼</label>
@@ -43,7 +45,6 @@
                   placeholder="範例：0933128872"
                   v-model="inputOrdererInfo.MCphone"
                   @keyup="syncMemberContactInfo = false"
-                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -55,7 +56,6 @@
                   placeholder="範例：Hello-World@email.com"
                   v-model="inputOrdererInfo.MCemail"
                   @keyup="syncMemberContactInfo = false"
-                  required
                 />
               </div>
             </div>
@@ -69,7 +69,6 @@
                   placeholder="緊急聯絡人姓名"
                   v-model="inputOrdererInfo.ECname"
                   @keyup="syncMemberContactInfo = false"
-                  required
                 />
               </div>
               <div class="form-group col-md-2">
@@ -81,7 +80,6 @@
                   placeholder="範例：0933128872"
                   v-model="inputOrdererInfo.ECphone"
                   @keyup="syncMemberContactInfo = false"
-                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -93,7 +91,6 @@
                   placeholder="範例：Hello-World@email.com"
                   v-model="inputOrdererInfo.ECemail"
                   @keyup="syncMemberContactInfo = false"
-                  required
                 />
               </div>
             </div>
@@ -106,7 +103,6 @@
                   id="inputCardName"
                   class="form-control"
                   placeholder="持卡人姓名"
-                  required
                 />
               </div>
               <div class="form-group col-md-4">
@@ -116,7 +112,6 @@
                   id="inputCardNumber"
                   class="form-control"
                   placeholder="0000-0000-0000-0000"
-                  required
                 />
               </div>
             </div>
@@ -128,7 +123,6 @@
                   id="inputCardNumber"
                   class="form-control"
                   placeholder="範例：08/25"
-                  required
                 />
               </div>
               <div class="form-group col-md-2">
@@ -138,7 +132,6 @@
                   id="inputCardCVV"
                   class="form-control"
                   placeholder="卡片背面三碼"
-                  required
                 />
               </div>
             </div>
@@ -154,7 +147,6 @@
                 id="inlineCheckbox2"
                 value="option1"
                 v-model="syncOrdererContactInfoAll"
-                required
               />
               <label class="form-check-label" for="inlineCheckbox2"
                 >同訂購人資訊（全部）</label
@@ -184,7 +176,6 @@
                   :key="'inlineCheckbox' + (index + 3)"
                   v-model="syncOrdererContactInfoArr[index]"
                   value="option1"
-                  required
                 />
                 <label
                   class="form-check-label"
@@ -206,7 +197,6 @@
                     placeholder="主要聯絡人姓名"
                     v-model="inputContantInfoArr[index].MCname"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -221,7 +211,6 @@
                     placeholder="範例：0933128872"
                     v-model="inputContantInfoArr[index].MCphone"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -236,7 +225,6 @@
                     placeholder="範例：Hello-World@email.com"
                     v-model="inputContantInfoArr[index].MCemail"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
               </div>
@@ -253,7 +241,6 @@
                     placeholder="緊急聯絡人姓名"
                     v-model="inputContantInfoArr[index].ECname"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
                 <div class="form-group col-md-2">
@@ -268,7 +255,6 @@
                     placeholder="範例：0933128872"
                     v-model="inputContantInfoArr[index].ECphone"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
                 <div class="form-group col-md-4">
@@ -283,7 +269,6 @@
                     placeholder="範例：Hello-World@email.com"
                     v-model="inputContantInfoArr[index].ECemail"
                     @keyup="unsyncOrdererContactInfo(index)"
-                    required
                   />
                 </div>
               </div>
@@ -295,7 +280,7 @@
           type="submit"
           value="立即結帳"
           class="btn btn-primary mt-5"
-          @click.prevent="checkOut"
+          @click="checkOut"
         />
       </form>
     </div>
