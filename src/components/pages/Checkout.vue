@@ -447,7 +447,7 @@
             value="立即結帳"
             class="btn btn-primary mt-5"
             :disabled="invalid"
-            @click="checkOut"
+            @click.prevent="checkOut"
           />
         </form>
       </ValidationObserver>
@@ -607,9 +607,23 @@ export default {
     checkOut() {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
       const vm = this;
-      let json = JSON.stringify({ text: "HelloWorld", number: "123" });
+      let orderDetailsArr = [];
+      let confirmProjectsArr = JSON.parse(
+        localStorage.getItem("savingProjects")
+      );
 
-      console.log(json);
+      confirmProjectsArr.forEach((project) => orderDetailsArr.push(project));
+
+      orderDetailsArr.forEach((project, index, orderDetailsArr) => {
+        let combineProject = { ...project, ...vm.inputContantInfoArr[index] };
+        orderDetailsArr[index] = combineProject;
+      });
+
+      let json = JSON.stringify({
+        memberID: "MB0000001",
+        ordererContactInfo: this.inputOrdererInfo,
+        oderDetails: orderDetailsArr,
+      });
 
       this.$http
         .post(api, json)
