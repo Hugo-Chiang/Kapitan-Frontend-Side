@@ -8,7 +8,11 @@
           <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
           <section id="checkoutStep02" class="card mb-5">
             <div class="card-header">
-              <h5>第二步：填寫訂購資訊</h5>
+              <h5>
+                <!-- 標題處藏有供演示用的自動填入信用卡資料方法 -->
+                第二步：<span @click="autofilledCreditCardData">填寫</span
+                >訂購資訊
+              </h5>
               <div class="form-check form-check-inline">
                 <input
                   class="form-check-input"
@@ -198,20 +202,19 @@
                   <ValidationProvider
                     :rules="{
                       required: true,
-                      max: 5,
                     }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputCardNumber">有效期</label>
                     <input
                       type="text"
-                      maxlength="4"
                       id="inputCardNumber"
                       name="有效期"
                       class="form-control"
                       :class="classes"
-                      placeholder="例：0825"
+                      placeholder="例：08/2025"
                       v-model="creditCardData.date"
+                      @input="formatCreditCardExpDate"
                     />
                     <span class="invalid-feedback">{{ errors[0] }}</span>
                   </ValidationProvider>
@@ -231,6 +234,7 @@
                       placeholder="卡片背面三碼"
                       v-model="creditCardData.cvv"
                       maxlength="3"
+                      @input="formatCreditCardCVV"
                     />
                     <span class="invalid-feedback">{{ errors[0] }}</span>
                   </ValidationProvider>
@@ -509,6 +513,15 @@ export default {
           console.log(response);
         });
     },
+    // 方法：（演示用）自動填入信用卡資訊
+    autofilledCreditCardData() {
+      this.creditCardData = {
+        name: "測試者",
+        number: "1234 2234 3234 4234",
+        date: "04/2028",
+        cvv: "168",
+      };
+    },
     // 方法：建立「第三步：填寫聯絡資訊」同步訂購資訊用的工具陣列
     establishSyncOrdererContactInfoArr() {
       let projectsNum = JSON.parse(localStorage.getItem("savingProjects"))
@@ -544,6 +557,36 @@ export default {
       } else {
         this.creditCardData.number = removeSpaceAndChar;
       }
+    },
+    // 方法：使信用卡有效期格式標準化，採 MM／YY 呈現
+    formatCreditCardExpDate() {
+      let removeSpaceAndChar = this.creditCardData.date
+        .replace(/\s+/g, "")
+        .replace(/[^0-9]/gi, "");
+      let limitLength = removeSpaceAndChar.match(/\d{2,6}/g);
+      console.log(limitLength);
+      let twoToSixNumbers = (limitLength && limitLength[0]) || "";
+      let creditCardExpDateArr = [];
+
+      creditCardExpDateArr.push(twoToSixNumbers.substring(0, 2));
+      creditCardExpDateArr.push(twoToSixNumbers.substring(2));
+
+      console.log(creditCardExpDateArr);
+
+      if (creditCardExpDateArr.length > 0) {
+        if (creditCardExpDateArr[0] != "" && creditCardExpDateArr[1] != "") {
+          this.creditCardData.date = creditCardExpDateArr.join("/");
+        }
+      } else {
+        this.creditCardData.date = removeSpaceAndChar;
+        console.log(this.creditCardData.date);
+      }
+    },
+    // 方法：限制信用卡安全碼輸入的內容，需趨向 3 個整數
+    formatCreditCardCVV() {
+      this.creditCardData.cvv = this.creditCardData.cvv
+        .replace(/\s+/g, "")
+        .replace(/[^0-9]/gi, "");
     },
     // 方法：解除任一同步訂購資訊的 chexbox 時，同時解除「全部同步訂購資訊」的 chexbox
     unsyncOrdererContactInfo(index) {
