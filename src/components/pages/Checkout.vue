@@ -27,7 +27,7 @@
               <div class="form-row ordererContactInfoInputBlock">
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    :rules="{ required: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputMainName">訂購人姓名</label>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required|regex:/^09[0-9]{8}$/"
+                    :rules="{ required: true, length: 10, regex: /^09\d{8}$/ }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputMainPhoneNumber">訂購人手機號碼</label>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <ValidationProvider
-                    rules="required|email"
+                    :rules="{ required: true, email: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputMainEmail">訂購人電子信箱</label>
@@ -87,7 +87,7 @@
               <div class="form-row ordererContactInfoInputBlock">
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    :rules="{ required: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputSubName">{{
@@ -108,7 +108,7 @@
                 </div>
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required|regex:/^09[0-9]{8}$/"
+                    :rules="{ required: true, length: 10, regex: /^09\d{8}$/ }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputSubPhoneNumber">{{
@@ -130,7 +130,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <ValidationProvider
-                    rules="required|email"
+                    :rules="{ required: true, email: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputSubEmail">{{
@@ -156,7 +156,7 @@
               <div class="form-row">
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    :rules="{ required: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputCardName">持卡人姓名</label>
@@ -174,18 +174,20 @@
                 </div>
                 <div class="form-group col-md-4">
                   <ValidationProvider
-                    rules="required"
+                    :rules="{ required: true }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputCardNumber">信用卡卡號</label>
                     <input
                       type="text"
+                      maxlength="19"
                       id="inputCardNumber"
                       name="信用卡卡號"
                       class="form-control"
                       :class="classes"
-                      placeholder="0000-0000-0000-0000"
+                      placeholder="0000 0000 0000 0000"
                       v-model="creditCardData.number"
+                      @input="formatCreditCardNum"
                     />
                     <span class="invalid-feedback">{{ errors[0] }}</span>
                   </ValidationProvider>
@@ -194,17 +196,21 @@
               <div class="form-row">
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required"
+                    :rules="{
+                      required: true,
+                      max: 5,
+                    }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputCardNumber">有效期</label>
                     <input
                       type="text"
+                      maxlength="4"
                       id="inputCardNumber"
                       name="有效期"
                       class="form-control"
                       :class="classes"
-                      placeholder="例：08/25"
+                      placeholder="例：0825"
                       v-model="creditCardData.date"
                     />
                     <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -212,7 +218,7 @@
                 </div>
                 <div class="form-group col-md-2">
                   <ValidationProvider
-                    rules="required|length:3|regex:/\d{3}$/"
+                    :rules="{ required: true, length: 3, regex: /\d{3}$/ }"
                     v-slot="{ errors, classes }"
                   >
                     <label for="inputCardCVV">安全碼（CVV）</label>
@@ -289,7 +295,7 @@
                 >
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required"
+                      :rules="{ required: true }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputMainName' + (index + 1)">{{
@@ -311,7 +317,7 @@
                   </div>
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required|regex:/^09\d{8}$/"
+                      :rules="{ required: true, regex: /^09\d{8}$/ }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputMainPhoneNumber' + (index + 1)">{{
@@ -334,7 +340,7 @@
                   </div>
                   <div class="form-group col-md-4">
                     <ValidationProvider
-                      rules="required|email"
+                      :rules="{ required: true, email: true }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputMainEmail' + (index + 1)">{{
@@ -361,7 +367,7 @@
                 >
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required"
+                      :rules="{ required: true }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputSubName' + (index + 2)"
@@ -383,7 +389,7 @@
                   </div>
                   <div class="form-group col-md-2">
                     <ValidationProvider
-                      rules="required|regex:/^09\d{8}$/"
+                      :rules="{ required: true, regex: /^09\d{8}$/ }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputSubPhoneNumber' + (index + 2)">{{
@@ -406,7 +412,7 @@
                   </div>
                   <div class="form-group col-md-4">
                     <ValidationProvider
-                      rules="required|email"
+                      :rules="{ required: true, email: true }"
                       v-slot="{ errors, classes }"
                     >
                       <label :for="'inputSubEmail' + (index + 2)">{{
@@ -518,6 +524,25 @@ export default {
           ECphone: "",
           ECemail: "",
         });
+      }
+    },
+    // 方法：使信用卡卡號格式標準化，每 4 碼以空格區間彼此
+    formatCreditCardNum() {
+      let removeSpaceAndChar = this.creditCardData.number
+        .replace(/\s+/g, "")
+        .replace(/[^0-9]/gi, "");
+      let limitLength = removeSpaceAndChar.match(/\d{4,16}/g);
+      let fourToSixteenNumbers = (limitLength && limitLength[0]) || "";
+      let creditCardNumArr = [];
+
+      for (let i = 0; i < fourToSixteenNumbers.length; i += 4) {
+        creditCardNumArr.push(fourToSixteenNumbers.substring(i, i + 4));
+      }
+
+      if (creditCardNumArr.length > 0) {
+        this.creditCardData.number = creditCardNumArr.join(" ");
+      } else {
+        this.creditCardData.number = removeSpaceAndChar;
       }
     },
     // 方法：解除任一同步訂購資訊的 chexbox 時，同時解除「全部同步訂購資訊」的 chexbox
