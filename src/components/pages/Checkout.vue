@@ -452,6 +452,9 @@
         </form>
       </ValidationObserver>
       <!-- 驗證套件 vee-validate 監看區域結束 -->
+      <div class="my-5">
+        {{ aa }}
+      </div>
     </div>
   </div>
   <!-- 結帳區域結束 -->
@@ -481,6 +484,7 @@ export default {
         date: "",
         cvv: "",
       },
+      aa: "",
     };
   },
   props: ["confirmProjectsArr"],
@@ -603,7 +607,7 @@ export default {
 
       targetInputs.forEach((input) => input.dispatchEvent(new Event("blur")));
     },
-    // 方法：結帳
+    // 方法：進行結帳
     checkOut() {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
       const vm = this;
@@ -622,13 +626,14 @@ export default {
       let json = JSON.stringify({
         memberID: "MB0000001",
         ordererContactInfo: this.inputOrdererInfo,
-        oderDetails: orderDetailsArr,
+        orderDetails: orderDetailsArr,
       });
 
       this.$http
         .post(api, json)
         .then((response) => {
           console.log(response);
+          this.aa = response.data;
         })
         .catch((response) => {
           console.log(response);
