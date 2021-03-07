@@ -13,6 +13,7 @@
       <div id="orderDetailsContainer" class="col-9">
         <div class="card">
           <div class="card-header">
+            <!-- 判定是否切換為結帳頁面 -->
             <h5 v-if="currentPage == '購物車'">已選方案</h5>
             <h5 v-else>第一步：確認方案內容</h5>
             <button @click.prevent="clearCart" v-if="currentPage == '購物車'">
@@ -84,6 +85,7 @@
 </template>
 
 <script>
+// 導入數字調控元件
 import NumberInput from "@/components/pages/sub-components/NumberInput";
 
 export default {
@@ -157,6 +159,3 @@ export default {
   },
 };
 </script>
-
-<style lang="sass" scoped>
-</style>

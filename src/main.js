@@ -16,7 +16,6 @@ import 'vue2-datepicker/index.css';
 import * as Vue2Leaflet from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 // 導入地圖套件 vue2-leaflet 相關內容結束 
-import './components/eventBus';
 import Vue from 'vue';
 // 導入驗證套件 vee-validate 相關內容開始
 import { ValidationObserver, ValidationProvider, extend, localize, configure } from 'vee-validate';
@@ -25,11 +24,12 @@ import * as rules from 'vee-validate/dist/rules';
 // 導入驗證套件 vee-validate 相關內容結束
 import App from './App';
 import router from './router';
+import eventBus from "./eventBus"
 
 window.$ = $;
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet);
+Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus);
 
 // 導出驗證套件 vee-validate 的所有規則
 Object.keys(rules).forEach((rule) => {
