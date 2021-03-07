@@ -52,10 +52,29 @@ configure({
   }
 });
 
-/* eslint-disable no-new */
+// 我們熟悉的 Vue 實體
 new Vue({
   el: '#app',
   router,
   components: { App },
   template: '<App/>'
+});
+
+// 使用 Vue router 的全局前置守衛，以利建設登入驗證
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    // const api = `${process.env.APIPATH}/api/user/check`;
+
+    // axios.post(api).then((response) => {
+    //   if (response.data.success) next();
+    //   else next({ path: '/Admin/SignIn', });
+    // });
+
+    let api = false;
+
+    if (api) next();
+    else next({ path: '/Admin/SignIn', });
+  } else {
+    next();
+  }
 });

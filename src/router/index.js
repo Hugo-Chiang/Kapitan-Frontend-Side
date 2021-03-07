@@ -9,6 +9,7 @@ import Cart from '@/components/pages/Cart';
 import Checkout from '@/components/pages/Checkout';
 import MemberCentre from '@/components/pages/MemberCentre';
 import Backstage from '@/components/Backstage';
+import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
 import Dashboard from '@/components/pages/admin/Dashboard';
 
 Vue.use(Router);
@@ -60,9 +61,15 @@ export default new Router({
       component: Backstage,
       children: [
         {
-          path: '/admin',
+          path: '/Admin/SignIn',
+          name: '管理系統：登入頁',
+          component: BackstageSingIn
+        },
+        {
+          path: '/Admin',
           name: '管理系統：首頁',
           component: Dashboard,
+          meta: { requiresAuth: true }
         }
       ]
     }
