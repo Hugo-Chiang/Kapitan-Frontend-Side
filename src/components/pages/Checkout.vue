@@ -2,6 +2,12 @@
   <!-- 結帳區域開始 -->
   <div class="row">
     <div class="col-12">
+      <!-- 提示視窗元件開始 -->
+      <Modal
+        :situation="situation"
+        :deleteInvalidProjects="deleteInvalidProjects"
+      ></Modal>
+      <!-- 提示視窗元件結束 -->
       <!-- 驗證套件 vee-validate 監看區域開始 -->
       <ValidationObserver v-slot="{ invalid }">
         <form action="" method="post">
@@ -25,6 +31,9 @@
             class="btn btn-primary mt-5"
             :disabled="invalid"
             @click.prevent="$refs.formContactInfo.emitCheckOutData"
+            data-toggle="modal"
+            data-target="#checkOutModel"
+            data-backdrop="static"
           />
         </form>
       </ValidationObserver>
@@ -38,10 +47,11 @@
 </template>
 
 <script>
-// 導入訂購資訊表單元件
+// 導入訂購與聯絡資訊表單元件
 import FormOrderInfo from "@/components/pages/sub-components/FormOrderInfo";
-// 導入聯絡資訊表單元件
 import FormContactInfo from "@/components/pages/sub-components/FormContactInfo";
+// 導入提示視窗元件
+import Modal from "@/components/pages/sub-components/Modal";
 
 export default {
   data() {
@@ -54,7 +64,11 @@ export default {
         ECphone: "緊急聯絡人手機號碼",
         ECemail: "緊急聯絡人電子信箱",
       },
-      bb: {},
+      situation: {
+        event: "",
+        message: "",
+        data: {},
+      },
       aa: "",
     };
   },
@@ -62,9 +76,10 @@ export default {
   components: {
     FormOrderInfo,
     FormContactInfo,
+    Modal,
   },
   methods: {
-    // 方法：進行結帳
+    // 方法：進行結帳，透過 Ajax 與後端溝通，獲悉訂購成敗
     checkOut(inputOrdererInfo, inputContantInfoArr) {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
       let orderDetailsArr = [];
@@ -87,17 +102,24 @@ export default {
           console.log(response);
           this.aa = response.data;
           if (response.data.status == "訂購成功") {
-            alert("讚讚～");
-          } else if (response.data.status == "訂購失敗") {
-            this.deleteInvalidProjects(response.data.invalidAProjects);
+            this.situation.event = "訂購成功";
+            this.situation.message = response.data.message;
+            localStorage.removeItem("savingProjects");
+          } else if (response.data.status == "重複訂購") {
+            this.situation.event = "重複訂購";
+            this.situation.message = response.data.message;
+            this.situation.data = response.data.invalidAProjects;
           }
         })
         .catch((response) => {
           console.log(response);
-          alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
+          this.situation.event = "伺服器異常";
+          this.situation.message =
+            "伺服器異常，請稍後再試。系統現將引導您回到首頁。<br>造成您的不便，敬請見諒！";
+          this.situation.data = response;
         });
     },
-    // 方法： 刪除特定方案，用於後端發現有重複預訂的情況
+    // 方法： 刪除特定或全部方案，用於後端發現有重複預訂的情況
     deleteInvalidProjects(invalidProjectsArr) {
       invalidProjectsArr.forEach((invalidProject) => {
         this.confirmProjectsArr.forEach((originalProject, originalIndex) => {
@@ -110,6 +132,15 @@ export default {
           }
         });
       });
+
+      if (this.confirmProjectsArr.length > 0) {
+        localStorage.setItem(
+          "savingProjects",
+          JSON.stringify(this.confirmProjectsArr)
+        );
+      } else {
+        localStorage.removeItem("savingProjects");
+      }
     },
   },
 };
