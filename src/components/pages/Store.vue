@@ -11,6 +11,7 @@
           <div
             class="col-4 my-4"
             v-for="(project, index) in currentPageContentArr"
+            :key="index"
           >
             <div class="card" :data-id="project['PROJECT_ID']">
               <img
@@ -59,7 +60,7 @@
 </template>
 
 <script>
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/pages/sub-components/Pagination";
 
 export default {
   data() {

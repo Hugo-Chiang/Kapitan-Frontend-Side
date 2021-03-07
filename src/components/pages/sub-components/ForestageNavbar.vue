@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light .container-fluid">
     <router-link class="nav-link mr-2" to="/">
-      <img id="logoImg" src="../assets/img/logo.png" alt="" />
+      <img id="logoImg" src="../../../assets/img/logo.png" alt="" />
     </router-link>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">

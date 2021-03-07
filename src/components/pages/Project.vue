@@ -170,7 +170,7 @@
 
 <script>
 // 導入麵包屑元件
-import Breadcrumb from "@/components/Breadcrumb";
+import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入方案摘要章節的3個頁籤元件
 import TabDefault from "@/components/pages/sub-components/TabDefault";
 import TabLocation from "@/components/pages/sub-components/TabLocation";
