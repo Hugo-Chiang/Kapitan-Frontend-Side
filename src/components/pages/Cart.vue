@@ -24,11 +24,11 @@
               class="projectBlock"
               v-for="(project, index) in confirmProjectsArr"
               :data-id="
-                project.bookingProjectId + '-' + project.bookingProjectDate
+                project.bookingProjectID + '-' + project.bookingProjectDate
               "
               :key="index"
             >
-              <span class="id">{{ project.bookingProjectId }}</span
+              <span class="id">{{ project.bookingProjectID }}</span
               >, <span class="date">{{ project.bookingProjectDate }}</span
               >,<span class="people2" v-if="currentPage != '購物車'">{{
                 project.bookingProjectNumOfPeople
@@ -36,7 +36,7 @@
               <NumberInput
                 ref="numberInput"
                 class="people"
-                :uniqueKey="project.bookingProjectId"
+                :uniqueKey="project.bookingProjectID"
                 :setDefaultValue="project.bookingProjectNumOfPeople"
                 @emitNumber="updateCart"
                 v-if="currentPage == '購物車'"
@@ -103,7 +103,7 @@ export default {
       let projectBlocks = document.querySelectorAll(".projectBlock");
 
       for (let i = 0; i < projectBlocks.length; i++) {
-        let confirmProjectId = projectBlocks[i]
+        let confirmProjectID = projectBlocks[i]
           .querySelector(".id")
           .textContent.trim();
         let confirmProjectDate = projectBlocks[i]
@@ -114,8 +114,8 @@ export default {
           .querySelector("input")
           .value.trim();
         let confirmProject = {
-          localstorageId: `${confirmProjectId}-${confirmProjectDate}`,
-          bookingProjectId: confirmProjectId,
+          localstorageID: `${confirmProjectID}-${confirmProjectDate}`,
+          bookingProjectID: confirmProjectID,
           bookingProjectDate: confirmProjectDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
         };
@@ -133,9 +133,9 @@ export default {
     deleteSingleProject(e) {
       let storageArr = JSON.parse(localStorage.getItem("savingProjects"));
       let deleteProjectElement = e.target.closest("div.projectBlock");
-      let deleteStorageId = deleteProjectElement.dataset.id;
+      let deleteStorageID = deleteProjectElement.dataset.ID;
       let deleteStorageIndex = storageArr.findIndex(
-        (project) => project.localstorageId == deleteStorageId
+        (project) => project.localstorageID == deleteStorageID
       );
 
       storageArr.splice(deleteStorageIndex, 1);

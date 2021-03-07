@@ -31,7 +31,7 @@
                   :to="{
                     name: '方案',
                     params: {
-                      selectedProjectId:
+                      selectedProjectID:
                         currentPageContentArr[index]['PROJECT_ID'],
                     },
                   }"

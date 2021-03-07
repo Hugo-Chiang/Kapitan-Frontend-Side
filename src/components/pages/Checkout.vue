@@ -266,11 +266,11 @@
                 class="projectBlockInCheckOutStep03"
                 v-for="(project, index) in confirmProjectsArr"
                 :data-id="
-                  project.bookingProjectId + '-' + project.bookingProjectDate
+                  project.bookingProjectID + '-' + project.bookingProjectDate
                 "
                 :key="index"
               >
-                <span class="id">{{ project.bookingProjectId }}</span
+                <span class="id">{{ project.bookingProjectID }}</span
                 >, <span class="date">{{ project.bookingProjectDate }}</span
                 >,<span class="people2">{{
                   project.bookingProjectNumOfPeople
@@ -634,11 +634,28 @@ export default {
         .then((response) => {
           console.log(response);
           this.aa = response.data;
+          if (response.data.status == "訂購失敗") {
+            this.deleteInvalidProjects(response.data.invalidAProjects);
+          }
         })
         .catch((response) => {
           console.log(response);
           alert("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
         });
+    },
+    // 方法： 刪除特定方案，用於後端發現有重複預訂的情況
+    deleteInvalidProjects(invalidProjectsArr) {
+      invalidProjectsArr.forEach((invalidProject) => {
+        this.confirmProjectsArr.forEach((originalProject, originalIndex) => {
+          let combineID =
+            invalidProject.FK_PROJECT_ID_for_BK +
+            "-" +
+            invalidProject.BOOKING_DATE;
+          if (combineID == originalProject.localstorageID) {
+            this.confirmProjectsArr.splice(originalIndex, 1);
+          }
+        });
+      });
     },
   },
   watch: {

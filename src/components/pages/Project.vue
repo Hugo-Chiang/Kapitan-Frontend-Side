@@ -116,7 +116,7 @@
             </ul>
           </div>
           <TabDefault
-            :project-id="selectedProjectId"
+            :projectID="selectedProjectID"
             v-if="currentTab == '選擇方案'"
           ></TabDefault>
           <TabLocation v-else-if="currentTab == '會合地點'"></TabLocation>
@@ -179,7 +179,7 @@ import TabTerms from "@/components/pages/sub-components/TabTerms";
 export default {
   data() {
     return {
-      selectedProjectId: this.$route.params.selectedProjectId,
+      selectedProjectID: this.$route.params.selectedProjectID,
       selectedProjectContent: {},
       tabs: ["選擇方案", "會合地點", "使用條款"],
       currentTab: "會合地點",
@@ -197,7 +197,7 @@ export default {
 
     this.$http.get(api).then((response) => {
       response.data.forEach((project) => {
-        if (project["PROJECT_ID"] == vm.selectedProjectId)
+        if (project["PROJECT_ID"] == vm.selectedProjectID)
           vm.selectedProjectContent = project;
       });
     });

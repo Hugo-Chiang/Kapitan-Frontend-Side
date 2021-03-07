@@ -86,10 +86,10 @@ export default {
         },
       },
       confirmProject: {},
-      confirmId: this.projectId,
+      confirmID: this.projectID,
     };
   },
-  props: ["projectId"],
+  props: ["projectID"],
   components: {
     DatePicker,
     NumberInput,
@@ -122,8 +122,8 @@ export default {
         let confirmNumOfPeople = number;
 
         this.confirmProject = {
-          localstorageId: `${this.confirmId}-${confirmDate}`,
-          bookingProjectId: this.confirmId,
+          localstorageID: `${this.confirmID}-${confirmDate}`,
+          bookingProjectID: this.confirmID,
           bookingProjectDate: confirmDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
         };
@@ -134,8 +134,8 @@ export default {
 
         for (let i = 0; i < storageArr.length; i++) {
           if (
-            this.confirmProject.bookingProjectId ==
-              storageArr[i].bookingProjectId &&
+            this.confirmProject.bookingProjectID ==
+              storageArr[i].bookingProjectID &&
             this.confirmProject.bookingProjectDate ==
               storageArr[i].bookingProjectDate
           ) {
