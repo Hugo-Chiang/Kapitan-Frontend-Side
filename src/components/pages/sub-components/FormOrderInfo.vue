@@ -37,7 +37,7 @@
               :class="classes"
               placeholder="訂購人姓名"
               v-model="inputOrdererInfo.MCname"
-              @input="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -58,6 +58,7 @@
               :class="classes"
               placeholder="例：0933128872"
               v-model="inputOrdererInfo.MCphone"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -77,6 +78,7 @@
               name="訂購人電子信箱"
               placeholder="例：Hello-World@email.com"
               v-model="inputOrdererInfo.MCemail"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -98,6 +100,7 @@
               :class="classes"
               :placeholder="requiredInputTtile.ECname"
               v-model="inputOrdererInfo.ECname"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -120,6 +123,7 @@
               :class="classes"
               placeholder="例：0933128872"
               v-model="inputOrdererInfo.ECphone"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
@@ -139,6 +143,7 @@
               :name="requiredInputTtile.ECemail"
               placeholder="例：Hello-World@email.com"
               v-model="inputOrdererInfo.ECemail"
+              @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>

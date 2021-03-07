@@ -13,8 +13,10 @@
           <!-- 進行結帳「第二步：填寫訂購資訊」章節結束 -->
           <!-- 進行結帳「第三步：填寫聯絡資訊」章節開始 -->
           <FormContactInfo
+            ref="formContactInfo"
             :confirmProjectsArr="confirmProjectsArr"
             :requiredInputTtile="requiredInputTtile"
+            @getCheckOutData="checkOut"
           ></FormContactInfo>
           <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
           <input
@@ -22,7 +24,7 @@
             value="立即結帳"
             class="btn btn-primary mt-5"
             :disabled="invalid"
-            @click.prevent="checkOut"
+            @click.prevent="$refs.formContactInfo.emitCheckOutData"
           />
         </form>
       </ValidationObserver>
@@ -52,6 +54,7 @@ export default {
         ECphone: "緊急聯絡人手機號碼",
         ECemail: "緊急聯絡人電子信箱",
       },
+      bb: {},
       aa: "",
     };
   },
@@ -62,27 +65,22 @@ export default {
   },
   methods: {
     // 方法：進行結帳
-    checkOut() {
+    checkOut(inputOrdererInfo, inputContantInfoArr) {
       const api = `${process.env.LOCAL_HOST_PATH}/API/CheckOut.php`;
-      const vm = this;
       let orderDetailsArr = [];
       let confirmProjectsArr = JSON.parse(
         localStorage.getItem("savingProjects")
       );
-
       confirmProjectsArr.forEach((project) => orderDetailsArr.push(project));
-
       orderDetailsArr.forEach((project, index, orderDetailsArr) => {
-        let combineProject = { ...project, ...vm.inputContantInfoArr[index] };
+        let combineProject = { ...project, ...inputContantInfoArr[index] };
         orderDetailsArr[index] = combineProject;
       });
-
       let json = JSON.stringify({
         memberID: "MB0000001",
-        ordererContactInfo: this.inputOrdererInfo,
+        ordererContactInfo: inputOrdererInfo,
         orderDetails: orderDetailsArr,
       });
-
       this.$http
         .post(api, json)
         .then((response) => {

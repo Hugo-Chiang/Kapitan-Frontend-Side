@@ -247,6 +247,14 @@ export default {
 
       targetInputs.forEach((input) => input.dispatchEvent(new Event("blur")));
     },
+    // 方法：透過參數 emit 結帳所需資料予父層結帳方法
+    emitCheckOutData() {
+      this.$emit(
+        "getCheckOutData",
+        this.inputOrdererInfo,
+        this.inputContantInfoArr
+      );
+    },
   },
   watch: {
     // 監看（方法）：選擇全部同步訂購資訊與否，將決定個別同步訂購資訊的 checkbox 勾選與否
