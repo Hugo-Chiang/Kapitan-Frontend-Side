@@ -122,7 +122,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// 函式：抓取存在 cookie 中的 token
+// 函式：抓取存在 cookie 中的 session
 function getKapitanSession() {
   let cookie = document.cookie;
   let strArr = cookie.split('');
