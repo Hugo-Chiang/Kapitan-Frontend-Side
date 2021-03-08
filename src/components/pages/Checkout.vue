@@ -96,6 +96,7 @@ export default {
         ordererContactInfo: inputOrdererInfo,
         orderDetails: orderDetailsArr,
       });
+
       this.$http
         .post(api, json)
         .then((response) => {

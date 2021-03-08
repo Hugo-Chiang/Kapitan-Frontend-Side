@@ -11,6 +11,7 @@
         placeholder="請輸入帳號"
         required
         autofocus
+        v-model="signInData.account"
       />
       <label for="inputPassword" class="sr-only">請輸入密碼</label>
       <input
@@ -19,6 +20,7 @@
         class="form-control"
         placeholder="請輸入密碼"
         required
+        v-model="signInData.password"
       />
       <div class="checkbox mb-3">
         <label> <input type="checkbox" value="remember-me" /> 記住我 </label>
@@ -26,7 +28,7 @@
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
-        @click.prevent="$router.push({ name: '管理系統：首頁' })"
+        @click.prevent="signIn"
       >
         登入
       </button>
@@ -35,13 +37,43 @@
   </main>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      signInData: {
+        account: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    // 方法：（搭配導航守衛）將帳密傳予後端 API 進行登入，並透過後端回傳的 token 保持登入驗證狀態
+    signIn() {
+      const api = `${process.env.LOCAL_HOST_PATH}/API/AdminSignIn.php`;
+      const vm = this;
+
+      this.$http
+        .post(api, JSON.stringify(this.signInData))
+        .then((response) => {
+          console.log(response);
+          if (response.data.singInStatus) {
+            const token = response.data.token;
+            const expDate = new Date(response.data.expDate);
+            document.cookie = `kapitanToken="${token}"; expires="${expDate}"`;
+            vm.$router.push({ name: "管理系統：首頁" });
+          }
+        })
+        .catch((response) => {
+          console.log(response);
+        });
+    },
+  },
+};
+</script>
+
 <style scoped>
 @import "../../../assets/css/bootstrap.min.css";
-
-html,
-body {
-  height: 100%;
-}
 
 body {
   display: -ms-flexbox;

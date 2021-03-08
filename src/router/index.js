@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Router from 'vue-router';
 import Forestage from '@/components/Forestage'
@@ -11,11 +12,19 @@ import MemberCentre from '@/components/pages/MemberCentre';
 import Backstage from '@/components/Backstage';
 import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
 import Dashboard from '@/components/pages/admin/Dashboard';
+import OrdersManager from '@/components/pages/admin/OrdersManager';
+import ProjectsManager from '@/components/pages/admin/ProjectsManager';
+import MembersManager from '@/components/pages/admin/MembersManager';
 
 Vue.use(Router);
 
-export default new Router({
+// 建立 router 實體，並定義各路由內容
+const router = new Router({
   routes: [
+    {
+      path: '*',
+      redirect: '/'
+    },
     {
       path: '/',
       component: Forestage,
@@ -69,9 +78,61 @@ export default new Router({
           path: '/Admin',
           name: '管理系統：首頁',
           component: Dashboard,
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: '/Admin/Orders-Manager',
+              name: '管理系統：訂單管理',
+              component: OrdersManager,
+              meta: { requiresAuth: true }
+            }, {
+              path: '/Admin/Projects-Manager',
+              name: '管理系統：方案管理',
+              component: ProjectsManager,
+              meta: { requiresAuth: true }
+            }, {
+              path: '/Admin/Members-Manager',
+              name: '管理系統：會員管理',
+              component: MembersManager,
+              meta: { requiresAuth: true }
+            }
+          ]
         }
       ]
     }
   ]
 })
+
+// 使用全局前置守衛，建立登入驗證機制
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const api = `${process.env.LOCAL_HOST_PATH}/API/AdminSignInAuthentication.php`;
+    const token = getkapitanToken();
+
+    console.log(token);
+
+    axios.post(api, token).then((response) => {
+      if (response.data.tokenCheck) next();
+      else next({ name: '管理系統：登入頁', });
+    }).catch((response) => {
+      console.log(response);
+    })
+  } else {
+    next();
+  }
+});
+
+// 函式：抓取存在 cookie 中的 token
+function getkapitanToken() {
+  let cookie = document.cookie;
+  let strArr = cookie.split('');
+  let equalSymbolIndex = strArr.indexOf('=');
+  let cookieLen = cookie.length;
+  let namePulsSymbolLen = equalSymbolIndex + 2;
+  let tokenLen = cookieLen - namePulsSymbolLen - 1;
+  let token = cookie.substr(namePulsSymbolLen, tokenLen);
+
+  return token;
+}
+
+export default router;
