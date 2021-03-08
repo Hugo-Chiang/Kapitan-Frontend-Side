@@ -58,9 +58,9 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.singInStatus) {
-            const token = response.data.token;
+            const session = response.data.session;
             const expDate = new Date(response.data.expDate);
-            document.cookie = `kapitanToken="${token}"; expires="${expDate}"`;
+            document.cookie = `kapitanSession="${session}"; expires="${expDate}"`;
             vm.$router.push({ name: "管理系統：首頁" });
           }
         })

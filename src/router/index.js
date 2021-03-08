@@ -107,12 +107,12 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const api = `${process.env.LOCAL_HOST_PATH}/API/AdminSignInAuthentication.php`;
-    const token = getkapitanToken();
+    const token = getKapitanSession();
 
     console.log(token);
 
     axios.post(api, token).then((response) => {
-      if (response.data.tokenCheck) next();
+      if (response.data.sessionCheck) next();
       else next({ name: '管理系統：登入頁', });
     }).catch((response) => {
       console.log(response);
@@ -123,16 +123,16 @@ router.beforeEach((to, from, next) => {
 });
 
 // 函式：抓取存在 cookie 中的 token
-function getkapitanToken() {
+function getKapitanSession() {
   let cookie = document.cookie;
   let strArr = cookie.split('');
   let equalSymbolIndex = strArr.indexOf('=');
   let cookieLen = cookie.length;
   let namePulsSymbolLen = equalSymbolIndex + 2;
-  let tokenLen = cookieLen - namePulsSymbolLen - 1;
-  let token = cookie.substr(namePulsSymbolLen, tokenLen);
+  let sessionLen = cookieLen - namePulsSymbolLen - 1;
+  let session = cookie.substr(namePulsSymbolLen, sessionLen);
 
-  return token;
+  return session;
 }
 
 export default router;
