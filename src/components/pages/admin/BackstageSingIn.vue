@@ -3,35 +3,55 @@
     <form class="form-signin">
       <img class="mb-4" src="../../../assets/img/logo.png" />
       <h3 class="h3 mb-3 font-weight-normal">請登入管理系統</h3>
-      <label for="inputEmail" class="sr-only">請輸入帳號</label>
-      <input
-        type="email"
-        id="inputEmail"
-        class="form-control"
-        placeholder="請輸入帳號"
-        required
-        autofocus
-        v-model="signInData.account"
-      />
-      <label for="inputPassword" class="sr-only">請輸入密碼</label>
-      <input
-        type="password"
-        id="inputPassword"
-        class="form-control"
-        placeholder="請輸入密碼"
-        required
-        v-model="signInData.password"
-      />
+      <div
+        class="inpitArea"
+        :class="{ shaking: signInFailedFeedback.signInFailedAnime }"
+      >
+        <label for="inputEmail" class="sr-only" key="emailLabel"
+          >請輸入帳號</label
+        >
+        <input
+          type="email"
+          id="inputEmail"
+          class="form-control"
+          :placeholder="signInForm.emailPlaceHolder"
+          required
+          autofocus
+          v-model="signInData.account"
+          key="inputEmail"
+        />
+        <label for="inputPassword" class="sr-only" key="passwordLabel"
+          >請輸入密碼</label
+        >
+        <input
+          type="password"
+          id="inputPassword"
+          class="form-control"
+          :placeholder="signInForm.passwordPlaceHolder"
+          required
+          v-model="signInData.password"
+          key="inputPassword"
+        />
+      </div>
       <div class="checkbox mb-3">
-        <label> <input type="checkbox" value="remember-me" /> 記住我 </label>
+        <label> <input type="checkbox" value="記住我" /> 記住我 </label>
       </div>
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
         @click.prevent="signIn"
       >
-        登入
+        <span>登入</span>
       </button>
+      <div class="position-relative">
+        <div
+          id="signInFailedWarning"
+          class="position-absolute"
+          v-if="signInFailedFeedback.signInFailedWarning"
+        >
+          帳號或密碼錯誤
+        </div>
+      </div>
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
     </form>
   </main>
@@ -41,9 +61,17 @@
 export default {
   data() {
     return {
+      signInForm: {
+        emailPlaceHolder: "請輸入帳號",
+        passwordPlaceHolder: "請輸入密碼",
+      },
       signInData: {
         account: "",
         password: "",
+      },
+      signInFailedFeedback: {
+        signInFailedWarning: false,
+        signInFailedAnime: false,
       },
     };
   },
@@ -62,6 +90,14 @@ export default {
             const expDate = new Date(response.data.expDate);
             document.cookie = `kapitanSession="${session}"; expires="${expDate}"`;
             vm.$router.push({ name: "管理系統：首頁" });
+          } else {
+            vm.signInData.account = "";
+            vm.signInData.password = "";
+            vm.signInFailedFeedback.signInFailedWarning = true;
+            vm.signInFailedFeedback.signInFailedAnime = true;
+            setTimeout(() => {
+              vm.signInFailedFeedback.signInFailedAnime = false;
+            }, 1200);
           }
         })
         .catch((response) => {
@@ -87,13 +123,11 @@ body {
   justify-content: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #f5f5f5;
 }
 
 main {
   padding-top: 120px;
   height: 100vh;
-  background-color: #f5f5f5;
 }
 
 .form-signin {
@@ -128,5 +162,36 @@ main {
 
 img {
   width: 150px;
+}
+
+#signInFailedWarning {
+  transform: translate(-50%, 15%);
+  left: 50%;
+  color: red;
+}
+
+@keyframes shaking {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.shaking {
+  animation: shaking 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
 }
 </style>

@@ -12,6 +12,7 @@ export default {
     return {};
   },
   methods: {
+    // 方法：登出，清除 cookie 中的 session 並回到登入頁
     signOut() {
       document.cookie = `kapitanSession= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
       setTimeout(() => {
