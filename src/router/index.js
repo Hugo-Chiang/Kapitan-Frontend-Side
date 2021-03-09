@@ -105,19 +105,33 @@ const router = new Router({
 
 // 使用全局前置守衛，建立登入驗證機制
 router.beforeEach((to, from, next) => {
+  const api = `${process.env.LOCAL_HOST_PATH}/API/AdminSignInAuthentication.php`;
+  const session = getKapitanSession();
+
   if (to.meta.requiresAuth) {
-    const api = `${process.env.LOCAL_HOST_PATH}/API/AdminSignInAuthentication.php`;
-    const token = getKapitanSession();
 
-    console.log(token);
-
-    axios.post(api, token).then((response) => {
+    axios.post(api, session).then((response) => {
       if (response.data.sessionCheck) next();
       else next({ name: '管理系統：登入頁', });
     }).catch((response) => {
       console.log(response);
     })
   } else {
+
+    // 在有登入狀況下進入登入頁，將自動被導回首頁
+    if (to.path == '/Admin/SignIn') {
+      axios.post(api, session).then((response) => {
+        if (response.data.sessionCheck) {
+          alert('你已登入。系統將引導您回首頁。');
+          setTimeout(() => {
+            router.push({ name: '管理系統：首頁', });
+          }, 500);
+        }
+      }).catch((response) => {
+        console.log(response);
+      });
+    }
+
     next();
   }
 });
