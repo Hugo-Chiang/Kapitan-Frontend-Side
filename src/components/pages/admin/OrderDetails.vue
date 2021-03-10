@@ -50,7 +50,7 @@
           <td colspan="7" class="order-details-editor">
             <OrderDetailsForm
               v-show="inEditingIndex != -1"
-              :currentPageContentArr="currentPageContentArr"
+              :currentPageContentArr.sync="currentPageContentArr"
               :inEditingIndex.sync="inEditingIndex"
             ></OrderDetailsForm>
           </td>
@@ -78,11 +78,7 @@ export default {
     return {
       selectedOrderID: "",
       breadCrumbData: {
-        pagesArr: [
-          "管理系統：訂單管理",
-          "管理系統：訂單細節清單",
-          "管理系統：編輯訂單細節",
-        ],
+        pagesArr: ["管理系統：訂單管理", "管理系統：編輯項目"],
         currentPage: 2,
       },
       allOrderDetailsArr: [],

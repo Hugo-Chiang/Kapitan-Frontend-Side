@@ -22,7 +22,9 @@
                 :class="classes"
                 :id="requiredInputTitle.MCname"
                 placeholder="聯絡人姓名"
-                v-model="editDetails.MCname"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_MC_NAME
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -43,7 +45,9 @@
                 :class="classes"
                 :id="requiredInputTitle.MCphone"
                 placeholder="例：0933128872"
-                v-model="editDetails.MCphone"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_MC_PHONE
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -64,7 +68,9 @@
                 :class="classes"
                 :id="requiredInputTitle.MCemail"
                 placeholder="例：Hello-World@email.com"
-                v-model="editDetails.MCemail"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_MC_EMAIL
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -87,7 +93,9 @@
                 :class="classes"
                 :id="requiredInputTitle.ECname"
                 placeholder="聯絡人姓名"
-                v-model="editDetails.ECname"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_EC_NAME
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -108,7 +116,9 @@
                 :class="classes"
                 :id="requiredInputTitle.ECphone"
                 placeholder="例：0933128872"
-                v-model="editDetails.ECphone"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_EC_PHONE
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -129,7 +139,9 @@
                 :class="classes"
                 :id="requiredInputTitle.ECemail"
                 placeholder="例：Hello-World@email.com"
-                v-model="editDetails.ECemail"
+                v-model="
+                  currentPageContentArr[inEditingIndex].ORDER_DETAIL_EC_EMAIL
+                "
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -152,7 +164,7 @@
                 :class="classes"
                 :id="requiredInputTitle.projectID"
                 placeholder="例：PJ0000001"
-                v-model="editDetails.projectID"
+                v-model="currentPageContentArr[inEditingIndex].PROJECT_ID"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -172,7 +184,7 @@
                 class="form-control"
                 :class="classes"
                 :id="requiredInputTitle.bookingDate"
-                v-model="editDetails.bookingDate"
+                v-model="currentPageContentArr[inEditingIndex].BOOKING_DATE"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -222,21 +234,66 @@ export default {
         bookingDate: "預約日期",
       },
       editDetails: {
+        orderDetailID: "",
         MCname: "",
         MCphone: "",
         MCemail: "",
         ECname: "",
         ECphone: "",
         ECemail: "",
+        projectID: "",
         bookingDate: "",
       },
     };
   },
   props: ["currentPageContentArr", "inEditingIndex"],
   methods: {
-    // 方法：透過語法糖同步父層的編輯項目索引
+    // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {
-      this.$emit("update:inEditingIndex", -1);
+      const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
+      const vm = this;
+      const session = vm.getKapitanSession();
+      let currentArr = this.currentPageContentArr;
+      let currentIndex = this.inEditingIndex;
+
+      vm.editDetails.orderDetailID = currentArr[currentIndex].ORDER_DETAIL_ID;
+      vm.editDetails.MCname = currentArr[currentIndex].ORDER_DETAIL_MC_NAME;
+      vm.editDetails.MCphone = currentArr[currentIndex].ORDER_DETAIL_MC_PHONE;
+      vm.editDetails.MCemail = currentArr[currentIndex].ORDER_DETAIL_MC_EMAIL;
+      vm.editDetails.ECname = currentArr[currentIndex].ORDER_DETAIL_EC_NAME;
+      vm.editDetails.ECphone = currentArr[currentIndex].ORDER_DETAIL_EC_PHONE;
+      vm.editDetails.ECemail = currentArr[currentIndex].ORDER_DETAIL_EC_EMAIL;
+      vm.editDetails.projectID = currentArr[currentIndex].PROJECT_ID;
+      vm.editDetails.bookingDate = currentArr[currentIndex].BOOKING_DATE;
+
+      let sendingObj = {
+        session: session,
+        editedDetails: vm.editDetails,
+      };
+
+      vm.$http
+        .post(api, JSON.stringify(sendingObj))
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((respponse) => {
+          console.log(respponse);
+        });
+
+      vm.$emit("update:currentPageContentArr", vm.currentPageContentArr);
+      vm.$emit("update:inEditingIndex", -1);
+    },
+    // 方法：抓取存在 cookie 中的 session
+    getKapitanSession() {
+      let cookie = document.cookie;
+      let strArr = cookie.split("");
+      let equalSymbolIndex = strArr.indexOf("=");
+      let cookieLen = cookie.length;
+      let namePulsSymbolLen = equalSymbolIndex + 2;
+      let sessionLen = cookieLen - namePulsSymbolLen - 1;
+      let session = cookie.substr(namePulsSymbolLen, sessionLen);
+
+      return session;
     },
   },
   watch: {
@@ -244,21 +301,9 @@ export default {
     currentPageContentArr() {
       this.currentPageContentArr = this.currentPageContentArr;
     },
-    // 監看（方法）：若欲編輯項目（索引）有變，便將新內容傳入 data
+    // 監看（方法）：若欲編輯項目索引有變，便將新內容傳入 data
     inEditingIndex() {
       this.inEditingIndex = this.inEditingIndex;
-
-      let currentArr = this.currentPageContentArr;
-      let currentIndex = this.inEditingIndex;
-
-      this.editDetails.MCname = currentArr[currentIndex].ORDER_DETAIL_MC_NAME;
-      this.editDetails.MCphone = currentArr[currentIndex].ORDER_DETAIL_MC_PHONE;
-      this.editDetails.MCemail = currentArr[currentIndex].ORDER_DETAIL_MC_EMAIL;
-      this.editDetails.ECname = currentArr[currentIndex].ORDER_DETAIL_EC_NAME;
-      this.editDetails.ECphone = currentArr[currentIndex].ORDER_DETAIL_EC_PHONE;
-      this.editDetails.ECemail = currentArr[currentIndex].ORDER_DETAIL_EC_EMAIL;
-      this.editDetails.projectID = currentArr[currentIndex].PROJECT_ID;
-      this.editDetails.bookingDate = currentArr[currentIndex].BOOKING_DATE;
     },
   },
 };
