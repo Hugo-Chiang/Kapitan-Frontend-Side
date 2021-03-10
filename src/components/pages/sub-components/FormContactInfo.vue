@@ -51,16 +51,16 @@
               v-slot="{ errors, classes }"
             >
               <label :for="'inputMainName' + (index + 1)">{{
-                requiredInputTtile.MCname
+                requiredInputTitle.MCname
               }}</label>
               <input
                 type="text"
                 :id="'inputMainName' + (index + 1)"
-                :name="requiredInputTtile.MCname"
+                :name="requiredInputTitle.MCname"
                 :key="'inputMainName' + (index + 1)"
                 class="form-control"
                 :class="classes"
-                :placeholder="requiredInputTtile.MCname"
+                :placeholder="requiredInputTitle.MCname"
                 v-model="inputContantInfoArr[index].MCname"
                 @keyup="unsyncOrdererContactInfo(index)"
               />
@@ -73,13 +73,13 @@
               v-slot="{ errors, classes }"
             >
               <label :for="'inputMainPhoneNumber' + (index + 1)">{{
-                requiredInputTtile.MCphone
+                requiredInputTitle.MCphone
               }}</label>
               <input
                 type="text"
                 maxlength="10"
                 :id="'inputMainPhoneNumber' + (index + 1)"
-                :name="requiredInputTtile.MCphone"
+                :name="requiredInputTitle.MCphone"
                 :key="'inputMainPhoneNumber' + (index + 1)"
                 class="form-control"
                 :class="classes"
@@ -96,14 +96,14 @@
               v-slot="{ errors, classes }"
             >
               <label :for="'inputMainEmail' + (index + 1)">{{
-                requiredInputTtile.MCemail
+                requiredInputTitle.MCemail
               }}</label>
               <input
                 type="email"
                 class="form-control"
                 :class="classes"
                 :id="'inputMainEmail' + (index + 1)"
-                :name="requiredInputTtile.ECemeal"
+                :name="requiredInputTitle.ECemeal"
                 :key="'inputMainEmail' + (index + 1)"
                 placeholder="例：Hello-World@email.com"
                 v-model="inputContantInfoArr[index].MCemail"
@@ -122,15 +122,17 @@
               :rules="{ required: true }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputSubName' + (index + 2)">緊急聯絡人姓名</label>
+              <label :for="'inputSubName' + (index + 2)">{{
+                requiredInputTitle.ECname
+              }}</label>
               <input
                 type="text"
                 :id="'inputSubName' + (index + 2)"
-                name="緊急聯絡人姓名"
+                :name="requiredInputTitle.ECname"
                 :key="'inputSubName' + (index + 2)"
                 class="form-control"
                 :class="classes"
-                placeholder="緊急聯絡人姓名"
+                :placeholder="requiredInputTitle.ECname"
                 v-model="inputContantInfoArr[index].ECname"
                 @keyup="unsyncOrdererContactInfo(index)"
               />
@@ -143,13 +145,13 @@
               v-slot="{ errors, classes }"
             >
               <label :for="'inputSubPhoneNumber' + (index + 2)">{{
-                requiredInputTtile.ECphone
+                requiredInputTitle.ECphone
               }}</label>
               <input
                 type="text"
                 maxlength="10"
                 :id="'inputSubPhoneNumber' + (index + 2)"
-                :name="requiredInputTtile.ECphone"
+                :name="requiredInputTitle.ECphone"
                 :key="'inputSubPhoneNumber' + (index + 2)"
                 class="form-control"
                 :class="classes"
@@ -166,14 +168,14 @@
               v-slot="{ errors, classes }"
             >
               <label :for="'inputSubEmail' + (index + 2)">{{
-                requiredInputTtile.ECemail
+                requiredInputTitle.ECemail
               }}</label>
               <input
                 type="email"
                 class="form-control"
                 :class="classes"
                 :id="'inputSubEmail' + (index + 2)"
-                :name="requiredInputTtile.ECemail"
+                :name="requiredInputTitle.ECemail"
                 :key="'inputSubEmail' + (index + 2)"
                 placeholder="例：Hello-World@email.com"
                 v-model="inputContantInfoArr[index].ECemail"
@@ -206,7 +208,7 @@ export default {
       inputContantInfoArr: [],
     };
   },
-  props: ["confirmProjectsArr", "requiredInputTtile"],
+  props: ["confirmProjectsArr", "requiredInputTitle"],
   created() {
     this.establishSyncOrdererContactInfoArr();
     this.$eventBus.$on("emitInputOrdererInfo", (infoObj) => {

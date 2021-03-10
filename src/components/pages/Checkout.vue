@@ -10,18 +10,18 @@
       <!-- 提示視窗元件結束 -->
       <!-- 驗證套件 vee-validate 監看區域開始 -->
       <ValidationObserver v-slot="{ invalid }">
-        <form action="" method="post">
+        <form>
           <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
           <FormOrderInfo
             :confirmProjectsArr="confirmProjectsArr"
-            :requiredInputTtile="requiredInputTtile"
+            :requiredInputTitle="requiredInputTitle"
           ></FormOrderInfo>
           <!-- 進行結帳「第二步：填寫訂購資訊」章節結束 -->
           <!-- 進行結帳「第三步：填寫聯絡資訊」章節開始 -->
           <FormContactInfo
             ref="formContactInfo"
             :confirmProjectsArr="confirmProjectsArr"
-            :requiredInputTtile="requiredInputTtile"
+            :requiredInputTitle="requiredInputTitle"
             @getCheckOutData="checkOut"
           ></FormContactInfo>
           <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
@@ -56,7 +56,7 @@ import Modal from "@/components/pages/sub-components/Modal";
 export default {
   data() {
     return {
-      requiredInputTtile: {
+      requiredInputTitle: {
         MCname: "主要聯絡人姓名",
         MCphone: "主要聯絡人手機號碼",
         MCemail: "主要聯絡人電子信箱",

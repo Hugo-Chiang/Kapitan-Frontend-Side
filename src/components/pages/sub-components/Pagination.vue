@@ -109,3 +109,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+li {
+  cursor: pointer;
+}
+</style>

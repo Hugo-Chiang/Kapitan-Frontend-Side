@@ -89,7 +89,7 @@ const router = new Router({
             },
             {
               path: '/Admin/Orders-Manager/Order-Details',
-              name: '管理系統：編輯訂單細節',
+              name: '管理系統：訂單細節清單',
               component: OrderDetails,
               meta: { requiresAuth: true }
             }, {

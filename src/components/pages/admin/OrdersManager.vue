@@ -92,14 +92,14 @@
       <table class="table table-striped queryResultsTable">
         <thead>
           <tr>
-            <th scope="col">序號</th>
-            <th scope="col">訂單編號</th>
-            <th scope="col">訂購人姓名</th>
-            <th scope="col">訂購人手機</th>
-            <th scope="col">訂購人電子信箱</th>
-            <th scope="col">訂購單日期</th>
-            <th scope="col">所屬會員編號</th>
-            <th scope="col">訂單總額</th>
+            <th class="text-center" scope="col">序號</th>
+            <th class="text-center" scope="col">訂單編號</th>
+            <th class="text-center" scope="col">訂購人姓名</th>
+            <th class="text-center" scope="col">訂購人手機</th>
+            <th class="text-center" scope="col">訂購人電子信箱</th>
+            <th class="text-center" scope="col">訂購單日期</th>
+            <th class="text-center" scope="col">會員編號</th>
+            <th class="text-center" scope="col">訂單總額</th>
           </tr>
         </thead>
         <tbody v-for="(order, index) in currentPageContentArr" :key="index">
@@ -109,14 +109,24 @@
               checkOrderDetails(currentPageContentArr[index].ORDER_ID)
             "
           >
-            <th scope="row">{{ index + 1 }}</th>
+            <th class="text-center" scope="row">{{ index + 1 }}</th>
             <td>{{ currentPageContentArr[index].ORDER_ID }}</td>
-            <td>{{ currentPageContentArr[index].ORDER_MC_NAME }}</td>
-            <td>{{ currentPageContentArr[index].ORDER_MC_PHONE }}</td>
-            <td>{{ currentPageContentArr[index].ORDER_MC_EMAIL }}</td>
-            <td>{{ currentPageContentArr[index].ORDER_DATE }}</td>
-            <td>{{ currentPageContentArr[index].FK_MEMBER_ID_for_OD }}</td>
-            <td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].ORDER_MC_NAME }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].ORDER_MC_PHONE }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].ORDER_MC_EMAIL }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].ORDER_DATE }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].FK_MEMBER_ID_for_OD }}
+            </td>
+            <td class="text-center">
               {{
                 currentPageContentArr[index].ORDER_TOTAL_CONSUMPTION -
                 currentPageContentArr[index].ORDER_TOTAL_DISCOUNT
@@ -188,7 +198,7 @@ export default {
     checkOrderDetails(selectedOrderID) {
       localStorage.removeItem("selectedOrderID");
       localStorage.setItem("selectedOrderID", selectedOrderID);
-      this.$router.push({ name: "管理系統：編輯訂單細節" });
+      this.$router.push({ name: "管理系統：訂單細節清單" });
     },
   },
 };

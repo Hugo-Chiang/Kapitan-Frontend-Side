@@ -91,14 +91,14 @@
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputSubName">{{ requiredInputTtile.ECname }}</label>
+            <label for="inputSubName">{{ requiredInputTitle.ECname }}</label>
             <input
               type="text"
               id="inputSubName"
-              :name="requiredInputTtile.ECname"
+              :name="requiredInputTitle.ECname"
               class="form-control"
               :class="classes"
-              :placeholder="requiredInputTtile.ECname"
+              :placeholder="requiredInputTitle.ECname"
               v-model="inputOrdererInfo.ECname"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
@@ -112,13 +112,13 @@
             v-slot="{ errors, classes }"
           >
             <label for="inputSubPhoneNumber">{{
-              requiredInputTtile.ECphone
+              requiredInputTitle.ECphone
             }}</label>
             <input
               type="text"
               maxlength="10"
               id="inputSubPhoneNumber"
-              :name="requiredInputTtile.ECphone"
+              :name="requiredInputTitle.ECphone"
               class="form-control"
               :class="classes"
               placeholder="例：0933128872"
@@ -134,13 +134,13 @@
             :rules="{ required: true, email: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputSubEmail">{{ requiredInputTtile.ECemail }}</label>
+            <label for="inputSubEmail">{{ requiredInputTitle.ECemail }}</label>
             <input
               type="email"
               class="form-control"
               :class="classes"
               id="inputSubEmail"
-              :name="requiredInputTtile.ECemail"
+              :name="requiredInputTitle.ECemail"
               placeholder="例：Hello-World@email.com"
               v-model="inputOrdererInfo.ECemail"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
@@ -256,7 +256,7 @@ export default {
       },
     };
   },
-  props: ["confirmProjectsArr", "requiredInputTtile"],
+  props: ["confirmProjectsArr", "requiredInputTitle"],
   created() {
     this.queryMemberContactInfo();
   },

@@ -59,8 +59,8 @@
               class="welcome-page d-flex flex-column align-items-center justify-content-center"
               v-if="$route.name == '管理系統：首頁'"
             >
-              <img src="../../../assets/img/logo.png" />
-              <h2 class="mt-4">乘載您的凌波壯志</h2>
+              <img class="fade-in" src="../../../assets/img/logo.png" />
+              <h2 class="mt-4 fade-in">乘載您的凌波壯志</h2>
             </section>
             <router-view></router-view>
             <!-- 項目切換內容結束 -->
@@ -224,5 +224,18 @@ export default {
       }
     }
   }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: 7s fade-in;
 }
 </style>
