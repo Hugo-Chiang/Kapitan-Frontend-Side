@@ -95,7 +95,7 @@ export default {
   },
   created() {
     // const api = `${process.env.REMOTE_HOST_PATH}/API/Store.php`;
-    const api = `${process.env.LOCAL_HOST_PATH}/API/Store.php`;
+    const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/Store.php`;
     const vm = this;
 
     this.$http.get(api).then((response) => {
