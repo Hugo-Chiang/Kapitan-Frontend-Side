@@ -13,6 +13,7 @@ import Backstage from '@/components/Backstage';
 import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
 import Dashboard from '@/components/pages/admin/Dashboard';
 import OrdersManager from '@/components/pages/admin/OrdersManager';
+import OrderDetails from '@/components/pages/admin/OrderDetails';
 import ProjectsManager from '@/components/pages/admin/ProjectsManager';
 import MembersManager from '@/components/pages/admin/MembersManager';
 
@@ -84,6 +85,12 @@ const router = new Router({
               path: '/Admin/Orders-Manager',
               name: '管理系統：訂單管理',
               component: OrdersManager,
+              meta: { requiresAuth: true }
+            },
+            {
+              path: '/Admin/Orders-Manager/Order-Details',
+              name: '管理系統：編輯訂單細節',
+              component: OrderDetails,
               meta: { requiresAuth: true }
             }, {
               path: '/Admin/Projects-Manager',

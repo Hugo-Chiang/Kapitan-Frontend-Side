@@ -208,7 +208,6 @@ export default {
   },
   props: ["confirmProjectsArr", "requiredInputTtile"],
   created() {
-    console.log(this);
     this.establishSyncOrdererContactInfoArr();
     this.$eventBus.$on("emitInputOrdererInfo", (infoObj) => {
       this.inputOrdererInfo = infoObj;

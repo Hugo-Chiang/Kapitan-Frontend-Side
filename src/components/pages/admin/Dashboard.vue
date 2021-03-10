@@ -14,7 +14,10 @@
           </div>
           <!-- 管理員大頭貼開始結束 -->
           <!-- 問候語開始 -->
-          <h6 class="text-center mb-5">您好，{{ adminInfo.name }}！</h6>
+          <h6 class="text-center mb-5">
+            您好，{{ adminInfo.name }}！<br />
+            <div class="mt-2">權限：{{ adminInfo.level }}</div>
+          </h6>
           <!-- 問候語結束 -->
           <!-- 側邊欄管理項目開始 -->
           <ul>
@@ -52,6 +55,13 @@
           </div>
           <div class="card-body">
             <!-- 項目切換內容開始 -->
+            <section
+              class="welcome-page d-flex flex-column align-items-center justify-content-center"
+              v-if="$route.name == '管理系統：首頁'"
+            >
+              <img src="../../../assets/img/logo.png" />
+              <h2 class="mt-4">乘載您的凌波壯志</h2>
+            </section>
             <router-view></router-view>
             <!-- 項目切換內容結束 -->
           </div>
@@ -69,6 +79,7 @@ export default {
       currentPage: "歡迎使用",
       adminInfo: {
         name: "",
+        level: "",
         avatarUrl: "",
       },
       managers: {
@@ -86,6 +97,7 @@ export default {
 
     this.$http.post(api, session).then((response) => {
       vm.adminInfo.name = response.data.adminName;
+      vm.adminInfo.level = response.data.adminLevel;
       vm.adminInfo.avatarUrl = response.data.adminAvatarUrl;
     });
   },
@@ -126,10 +138,10 @@ export default {
   background-image: url("../../../assets/img/backstage/dashboard-backgroud.jpg");
   opacity: 0.95;
   .container {
-    padding-top: 100px;
+    padding-top: 90px;
   }
   .dashboard {
-    height: 600px;
+    height: 700px;
     .side-bar {
       width: 20%;
       height: 100%;
@@ -159,10 +171,13 @@ export default {
       }
       h6 {
         color: #a5d8dd;
+        div {
+          font-size: 12px;
+        }
       }
       ul {
         padding: 0;
-        margin-bottom: 120px;
+        margin-bottom: 180px;
         li {
           width: 120px;
           margin: auto;
@@ -197,6 +212,14 @@ export default {
         border-radius: 0 calc(0.25rem - 1px) 0 0 !important;
         h5 {
           color: oldlace;
+        }
+      }
+      .card-body {
+        .welcome-page {
+          height: 550px;
+          img {
+            width: 250px;
+          }
         }
       }
     }

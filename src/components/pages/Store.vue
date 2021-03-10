@@ -51,8 +51,10 @@
         id="paginationContainer"
       >
         <Pagination
-          :totalPagination="totalPagination"
-          @emitPageNum="updateProjectsList"
+          v-show="currentPageContentArr.length > 0"
+          :allContentArr="allProjectsArr"
+          :itemsNumPerPage="itemsNumPerPage"
+          @emitCurrentPageContentArr="getCurrentPageContentArr"
         ></Pagination>
       </div>
     </div>
@@ -66,32 +68,13 @@ export default {
   data() {
     return {
       allProjectsArr: [],
-      totalPagination: 1,
       currentPageContentArr: [],
+      itemsNumPerPage: 9,
       currentPageNum: 1,
     };
   },
-  methods: {
-    updateProjectsList(newPageNum = 1) {
-      if (newPageNum == 0) {
-        alert("已經是第一頁了！");
-      } else if (newPageNum > this.totalPagination) {
-        alert("已經是最後一頁了！");
-      } else {
-        this.currentPageContentArr = [];
-
-        let startIndex = (newPageNum - 1) * 9;
-
-        for (let i = 0; i < 9; i++) {
-          if (!!this.allProjectsArr[startIndex]) {
-            this.currentPageContentArr.push(this.allProjectsArr[startIndex]);
-            startIndex++;
-          } else {
-            return;
-          }
-        }
-      }
-    },
+  components: {
+    Pagination: Pagination,
   },
   created() {
     // const api = `${process.env.REMOTE_HOST_PATH}/API/Store.php`;
@@ -99,14 +82,13 @@ export default {
     const vm = this;
 
     this.$http.get(api).then((response) => {
-      console.log(response.data);
       vm.allProjectsArr = response.data;
-      vm.totalPagination = Math.ceil(vm.allProjectsArr.length / 9);
-      this.updateProjectsList();
     });
   },
-  components: {
-    Pagination: Pagination,
+  methods: {
+    getCurrentPageContentArr(arr) {
+      this.currentPageContentArr = arr;
+    },
   },
 };
 </script>
