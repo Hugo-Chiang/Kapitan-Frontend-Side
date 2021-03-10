@@ -173,12 +173,14 @@ export default {
       this.$http
         .post(api, JSON.stringify(vm.queryData))
         .then((response) => {
+          console.log(response.data);
           vm.allOrdersArr = response.data;
         })
         .catch((respponse) => {
           console.log(respponse);
         });
     },
+    // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
       this.currentPageContentArr = arr;
     },

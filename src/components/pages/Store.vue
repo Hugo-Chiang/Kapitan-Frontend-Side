@@ -86,6 +86,7 @@ export default {
     });
   },
   methods: {
+    // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
       this.currentPageContentArr = arr;
     },

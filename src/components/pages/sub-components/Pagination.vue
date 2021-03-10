@@ -45,6 +45,7 @@ export default {
       currentPageContentArr: [],
     };
   },
+
   created() {
     // 根據總內容陣列渲染頁碼樣式及回傳當前頁面內容
     if (this.allContentArr.length <= 0) {
