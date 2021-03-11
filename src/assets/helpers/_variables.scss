@@ -17,6 +17,17 @@ $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 $black:    #000 !default;
 
+// 自定義顏色
+$kapitan-logo: #152A69;
+$kapitan-header: #189EBB;
+$kapitan-footer: #446da3;
+$kapitan-white: #f9f7f0;
+$tangerine: #feb75d;
+$scuba-blue: #55c9ea;
+$prussian: #013b63;
+$midnight: #000e2b;
+
+
 $grays: () !default;
 $grays: map-merge(
   (
