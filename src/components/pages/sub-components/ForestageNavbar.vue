@@ -57,7 +57,7 @@ export default {
 @import "../../../assets/all.scss";
 
 nav {
-  background-color: $kapitan-header;
+  background-color: $tiffany-blue;
   #logo-img {
     width: 70px;
   }

@@ -33,6 +33,7 @@
           <!-- 聯絡資訊清單結束 -->
         </div>
         <div class="col-7">
+          <!-- 企業格言開始 -->
           <div class="about-kapitan mb-5">
             <h5>甲必丹的使命</h5>
             <p>
@@ -40,7 +41,9 @@
               ── 甲必丹執行長 · 鄭賢之
             </p>
           </div>
+          <!-- 企業格言結束 -->
           <div class="row">
+            <!-- 社群連結開始 -->
             <div class="col-6">
               <h6 class="mb-3">在社群網站上追蹤甲必丹</h6>
               <ul class="community-link-list d-flex flex-row">
@@ -54,6 +57,8 @@
                 </li>
               </ul>
             </div>
+            <!-- 社群連結結束 -->
+            <!-- 訂閱電子報開始 -->
             <div class="col-6">
               <h6 class="mb-3">或訂閱我們的電子報</h6>
               <div class="input-group mb-3">
@@ -65,15 +70,17 @@
                   aria-describedby="basic-addon2"
                 />
                 <div class="input-group-append">
-                  <button class="btn" type="button">點擊訂閱</button>
+                  <button class="btn" type="button">訂閱</button>
                 </div>
               </div>
             </div>
+            <!-- 訂閱電子報結束 -->
           </div>
         </div>
       </div>
       <hr />
       <div class="row px-4">
+        <!-- 版權宣言開始 -->
         <div class="col-6 d-flex align-items-center">
           <h6
             class="fake-copy-right"
@@ -88,7 +95,9 @@
             >
           </h6>
         </div>
+        <!-- 版權宣言結束 -->
         <div class="col-3"></div>
+        <!-- 額外連結開始 -->
         <div class="col-3">
           <ul class="mass-links-list d-flex flex-row justify-content-end">
             <li
@@ -112,6 +121,7 @@
             </li>
           </ul>
         </div>
+        <!-- 額外連結結束 -->
       </div>
     </div>
   </footer>
@@ -191,7 +201,8 @@ ul {
 
 .btn {
   color: $kapitan-white;
-  background-color: $kapitan-logo;
+  // background-color: $kapitan-logo;
+  background-color: $berry;
   &:hover {
     color: $scuba-blue;
   }
@@ -201,7 +212,7 @@ footer {
   width: 100%;
   height: 380px;
   padding: 60px 0px;
-  background-color: $kapitan-footer;
+  background-color: $deep-teal;
   .contact-info-list {
     li {
       list-style: none;
@@ -209,7 +220,8 @@ footer {
         width: 45px;
         height: 45px;
         border-radius: 45px;
-        background-color: $kapitan-logo;
+        // background-color: $kapitan-logo;
+        background-color: $berry;
         cursor: pointer;
         .contact-icon {
           width: 80%;

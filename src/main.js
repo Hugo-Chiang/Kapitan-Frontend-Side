@@ -52,6 +52,16 @@ configure({
   }
 });
 
+// 全域註冊過濾器：用以修飾全站的金額樣式，將具有錢字符前綴與千分號
+Vue.filter("currency", function (n) {
+  return n.toFixed(0).replace(/./g, function (c, i, a) {
+    return i && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+  });
+});
+Vue.filter("dollarSign", function (n) {
+  return `$ ${n}`;
+});
+
 // 我們熟悉的 Vue 實體
 new Vue({
   el: '#app',
