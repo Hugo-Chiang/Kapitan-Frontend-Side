@@ -81,7 +81,7 @@
       <hr />
       <div class="row px-4">
         <!-- 版權宣言開始 -->
-        <div class="col-6 d-flex align-items-center">
+        <div class="col-8 d-flex align-items-center">
           <h6
             class="fake-copy-right"
             @mouseenter="showFakeCopyRightDescription = true"
@@ -91,12 +91,12 @@
             <span
               class="fake-copy-right-des text-warning"
               v-show="showFakeCopyRightDescription"
-              >（實際上並沒有，前端作品而已）</span
+              >（練習作品而已，絕大多數圖文來自網路）</span
             >
           </h6>
         </div>
         <!-- 版權宣言結束 -->
-        <div class="col-3"></div>
+        <div class="col-1"></div>
         <!-- 額外連結開始 -->
         <div class="col-3">
           <ul class="mass-links-list d-flex flex-row justify-content-end">
