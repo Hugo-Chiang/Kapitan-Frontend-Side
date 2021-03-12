@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import $ from 'jquery';
@@ -52,7 +50,7 @@ configure({
   }
 });
 
-// 全域註冊過濾器：用以修飾全站的金額樣式，將具有錢字符前綴與千分號
+// 全域註冊：用以修飾全站金額樣式的過濾器，套上錢字符前綴與千分號
 Vue.filter("currency", function (n) {
   return n.toFixed(0).replace(/./g, function (c, i, a) {
     return i && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
