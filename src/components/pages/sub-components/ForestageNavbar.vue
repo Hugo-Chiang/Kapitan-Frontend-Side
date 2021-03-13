@@ -30,7 +30,12 @@
           >
             <!-- 路由連結開始 -->
             <router-link
-              :class="navbarLink.selfClass"
+              :class="[
+                navbarLink.selfClass,
+                {
+                  'current-link': navbarLink.path == currentPath ? true : false,
+                },
+              ]"
               :to="navbarLink.routerTo"
             >
               <!-- 假設項目為商標（首頁）連結，則會出現商標圖示 -->
@@ -70,6 +75,10 @@
         <router-link
           :to="burgerMenuLink.routerTo"
           class="hamburger-menu-link nav-link"
+          :class="{
+            'current-hamburger-menu-link':
+              burgerMenuLink.path == currentPath ? true : false,
+          }"
           @click.native="collapseHamburgerList"
           >{{ burgerMenuLink.selfText }}</router-link
         >
@@ -97,6 +106,7 @@ export default {
       navbarLinks: {
         // 導覽列連結：商標（首頁）圖示
         logo: {
+          path: "/",
           ItemID: "logo-link",
           selfClass: ["mr-2"],
           routerTo: "/",
@@ -104,6 +114,7 @@ export default {
         },
         // 導覽列連結：關於頁連結
         about: {
+          path: "/About",
           ItemID: "about-link",
           selfClass: ["nav-link", "text-link", "nav-link", "ml-3", "mr-4"],
           routerTo: "/About",
@@ -111,12 +122,14 @@ export default {
         },
         // 導覽列連結：商品（方案）頁
         store: {
+          path: "/Store",
           ItemID: "store-link",
           selfClass: ["nav-link", "text-link", "nav-link", "mr-4"],
           routerTo: "/Store",
           selfText: "挑選航程",
         },
         cart: {
+          path: "/Cart",
           ItemID: "cart-link",
           selfClass: ["nav-link", "icon-link", "ml-2", "mr-4"],
           routerTo: "/Cart",
@@ -124,6 +137,7 @@ export default {
         },
         // 導覽列連結：會員中心 icon
         memberCentre: {
+          path: "/Member-Centre",
           ItemID: "memberCentre-link",
           selfClass: ["nav-link", "icon-link", "ml-1"],
           routerTo: "/Member-Centre",
@@ -131,7 +145,11 @@ export default {
         },
       },
       hamburgerButtonToggle: false,
+      currentPath: "/",
     };
+  },
+  created() {
+    this.currentPath = this.$router.currentRoute.path;
   },
   methods: {
     // 方法：收起漢堡選單導覽列
@@ -151,6 +169,12 @@ export default {
           newObj[prop] = this.navbarLinks[prop];
       }
       return newObj;
+    },
+  },
+  watch: {
+    // 監看：路由改變時將於 data 紀錄當前路徑，以便渲染導覽列
+    $route(to, from) {
+      this.currentPath = this.$router.currentRoute.path;
     },
   },
 };
@@ -208,7 +232,7 @@ nav {
           width: 33px;
           height: 4px;
           margin-bottom: 5px;
-          background-color: $kapitan-white;
+          background-color: $sail;
           border-radius: 3px;
           transform-origin: 4px 0px;
           transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
@@ -234,7 +258,7 @@ nav {
         height: 75px;
         .nav-link {
           font-size: 18px;
-          color: oldlace !important;
+          color: $sail;
           @include media-breakpoint-down(md) {
             font-size: 16px;
           }
@@ -242,16 +266,22 @@ nav {
             font-size: 13px;
           }
         }
+        .current-link {
+          color: $kapitan-logo !important;
+        }
         .text-link {
           font-size: 20px;
+          font-weight: 600;
           &:hover {
             color: orange !important;
           }
         }
         .icon-link {
           cursor: pointer;
-          &:hover {
-            color: $kapitan-white;
+          svg {
+            &:hover {
+              color: orange;
+            }
           }
         }
         #logo-link {
@@ -299,12 +329,11 @@ nav {
   }
   // （行動版）漢堡選單導覽列開始
   #hamburger-menu-list {
-    // border: 1px solid black;
     width: 100vw;
     left: 0;
     top: $desktop-nav-bar-height;
     padding: 5px 100px;
-    background-color: #f7f7f9;
+    background-color: $sail;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     display: flex;
     list-style-type: none;
@@ -317,15 +346,15 @@ nav {
       display: none;
     }
     @include media-breakpoint-down(sm) {
-      padding: 5px 50px;
+      padding: 5px 60px;
     }
     li {
       padding: 10px 0;
       font-size: 18px;
-      margin-right: 15px;
+      margin: 0px 0px 0px 10px;
       @include media-breakpoint-down(sm) {
         font-size: 16px;
-        margin-right: 5px;
+        margin: 0px 0px 0px 5px;
       }
       .hamburger-menu-link {
         font-weight: 600;
@@ -333,6 +362,9 @@ nav {
         &:hover {
           color: $tiffany-blue;
         }
+      }
+      .current-hamburger-menu-link {
+        color: $tiffany-blue !important;
       }
     }
   }
