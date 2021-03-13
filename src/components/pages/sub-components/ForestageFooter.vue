@@ -3,7 +3,7 @@
   <footer class=".container-fluid">
     <div class="container">
       <div class="row px-5">
-        <div class="col-5">
+        <div class="col-xl-5 col-md-7">
           <!-- 聯絡資訊清單開始 -->
           <ul class="contact-info-list mt-3 ml-2">
             <!-- 聯絡資訊項目開始 -->
@@ -32,19 +32,19 @@
           </ul>
           <!-- 聯絡資訊清單結束 -->
         </div>
-        <div class="col-7">
+        <div class="col-xl-7 col-md-5">
           <!-- 企業格言開始 -->
           <div class="about-kapitan mb-5">
             <h5>甲必丹的使命</h5>
             <p>
-              「我希望來到這裡的每個人，能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
+              「來到這裡的每個人，都能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
               ── 甲必丹執行長 · 鄭賢之
             </p>
           </div>
           <!-- 企業格言結束 -->
           <div class="row">
             <!-- 社群連結開始 -->
-            <div class="col-6">
+            <div class="col-xl-6 col-md-12">
               <h6 class="mb-3">在社群網站上追蹤甲必丹</h6>
               <ul class="community-link-list d-flex flex-row">
                 <li
@@ -59,7 +59,7 @@
             </div>
             <!-- 社群連結結束 -->
             <!-- 訂閱電子報開始 -->
-            <div class="col-6">
+            <div class="col-xl-6 col-md-12">
               <h6 class="mb-3">或訂閱我們的電子報</h6>
               <div class="input-group mb-3">
                 <input
@@ -191,7 +191,7 @@ export default {
 @import "../../../assets/all.scss";
 
 * {
-  color: $kapitan-white;
+  color: $sail;
   list-style: none;
 }
 
@@ -200,12 +200,15 @@ ul {
 }
 
 .btn {
-  color: $kapitan-white;
-  // background-color: $kapitan-logo;
+  color: $sail;
   background-color: $berry;
   &:hover {
     color: $scuba-blue;
   }
+}
+
+div {
+  border: 1px solid red;
 }
 
 footer {
@@ -220,7 +223,6 @@ footer {
         width: 45px;
         height: 45px;
         border-radius: 45px;
-        // background-color: $kapitan-logo;
         background-color: $berry;
         cursor: pointer;
         .contact-icon {
