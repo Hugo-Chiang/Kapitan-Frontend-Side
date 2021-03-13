@@ -1,7 +1,10 @@
 <template>
   <main class="text-center">
     <form class="form-signin">
-      <img class="mb-4" src="../../../assets/img/logo.png" />
+      <img
+        class="mb-2"
+        src="../../../assets/img/Kapitan-Logo-Vertical-Version-01.png"
+      />
       <h3 class="h3 mb-3 font-weight-normal">請登入管理系統</h3>
       <div
         class="inpitArea"
