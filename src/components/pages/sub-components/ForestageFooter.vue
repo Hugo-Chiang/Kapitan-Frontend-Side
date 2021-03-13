@@ -3,7 +3,7 @@
   <footer class=".container-fluid">
     <div class="container">
       <div class="row px-5">
-        <div class="col-xl-5 col-md-7">
+        <div class="col-lg-5 col-md-6">
           <!-- 聯絡資訊清單開始 -->
           <ul class="contact-info-list mt-3 ml-2">
             <!-- 聯絡資訊項目開始 -->
@@ -13,7 +13,7 @@
                 @click="contactInfo[key].onClickEvent"
               >
                 <div
-                  class="contact-icon-block d-inline-flex justify-content-center align-items-center mb-4 mr-2"
+                  class="contact-icon-block d-inline-flex justify-content-center align-items-center mb-3 mr-2"
                 >
                   <i
                     class="contact-icon"
@@ -32,23 +32,25 @@
           </ul>
           <!-- 聯絡資訊清單結束 -->
         </div>
-        <div class="col-xl-7 col-md-5">
-          <!-- 企業格言開始 -->
-          <div class="about-kapitan mb-5">
-            <h5>甲必丹的使命</h5>
-            <p>
-              「來到這裡的每個人，都能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
-              ── 甲必丹執行長 · 鄭賢之
-            </p>
+        <div class="col-lg-7 col-md-6">
+          <div class="row">
+            <!-- 企業格言開始 -->
+            <div class="about-kapitan mb-4 col-lg-12 col-md-12">
+              <h5>甲必丹的使命</h5>
+              <p>
+                「來到這裡的每個人，都能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
+                ── 甲必丹執行長 · 鄭賢之
+              </p>
+            </div>
+            <!-- 企業格言結束 -->
           </div>
-          <!-- 企業格言結束 -->
           <div class="row">
             <!-- 社群連結開始 -->
-            <div class="col-xl-6 col-md-12">
+            <div class="col-sm-6 col-xs-12">
               <h6 class="mb-3">在社群網站上追蹤甲必丹</h6>
               <ul class="community-link-list d-flex flex-row">
                 <li
-                  class="mr-4 d-flex justify-content-center align-items-center"
+                  class="d-flex justify-content-center align-items-center"
                   v-for="(communityLink, key) in communityLinks"
                   :key="key"
                   @click="linkTo(communityLinks[key].link)"
@@ -59,7 +61,7 @@
             </div>
             <!-- 社群連結結束 -->
             <!-- 訂閱電子報開始 -->
-            <div class="col-xl-6 col-md-12">
+            <div class="col-sm-6 col-xs-12">
               <h6 class="mb-3">或訂閱我們的電子報</h6>
               <div class="input-group mb-3">
                 <input
@@ -78,10 +80,12 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="container">
       <hr />
       <div class="row px-4">
         <!-- 版權宣言開始 -->
-        <div class="col-8 d-flex align-items-center">
+        <div class="col-lg-8 col-md-7 col-12 d-flex align-items-center">
           <h6
             class="fake-copy-right"
             @mouseenter="showFakeCopyRightDescription = true"
@@ -96,10 +100,11 @@
           </h6>
         </div>
         <!-- 版權宣言結束 -->
-        <div class="col-1"></div>
         <!-- 額外連結開始 -->
-        <div class="col-3">
-          <ul class="mass-links-list d-flex flex-row justify-content-end">
+        <div class="col-lg-4 col-md-5 col-12">
+          <ul
+            class="mass-links-list d-flex flex-row align-items-center justify-content-end"
+          >
             <li
               class="position-relative"
               @mouseenter="showFakePrivacyPolicy = true"
@@ -208,13 +213,12 @@ ul {
 }
 
 div {
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 
 footer {
   width: 100%;
-  height: 380px;
-  padding: 60px 0px;
+  padding: 60px 0px 10px;
   background-color: $deep-teal;
   .contact-info-list {
     li {
@@ -228,12 +232,28 @@ footer {
         .contact-icon {
           width: 80%;
         }
+        @include media-breakpoint-down(md) {
+          width: 40px;
+          height: 40px;
+          border-radius: 40px;
+        }
+        @include media-breakpoint-down(sm) {
+          width: 35px;
+          height: 35px;
+          border-radius: 35px;
+        }
       }
       .contact-text-block {
         color: orange;
         font-size: 18px;
         font-weight: 400;
         cursor: pointer;
+        @include media-breakpoint-down(md) {
+          font-size: 16px;
+        }
+        @include media-breakpoint-down(sm) {
+          font-size: 14px;
+        }
       }
     }
   }
@@ -245,6 +265,13 @@ footer {
       border-radius: 10px;
       background-color: $midnight;
       font-size: 20px;
+      margin-right: 20px;
+      @include media-breakpoint-down(lg) {
+        margin-right: 10px;
+      }
+      // @include media-breakpoint-down(md) {
+      //   margin-right: 20px;
+      // }
       cursor: pointer;
       .fa-instagram {
         font-size: 25px;
@@ -255,6 +282,7 @@ footer {
     font-size: 12px;
   }
   .mass-links-list {
+    margin: 0;
     li {
       cursor: pointer;
       .reminder-bubble {
