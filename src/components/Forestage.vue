@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="forestage-container">
     <ForestageNavbar></ForestageNavbar>
     <router-view></router-view>
     <ForestageFooter></ForestageFooter>
@@ -18,3 +18,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../assets/all.scss";
+
+ForestageNavbar {
+  margin-bottom: 105px;
+}
+</style>

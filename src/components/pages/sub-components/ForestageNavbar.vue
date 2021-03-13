@@ -1,8 +1,8 @@
 <template>
   <!-- 導覽列開始 -->
-  <nav>
+  <nav id="nav-bar-container">
     <!-- （桌面版）導覽列開始 -->
-    <div class="backgroud d-flex">
+    <div class="backgroud d-flex w-100 position-fixed">
       <div
         id="nav-bar"
         class="nav-bar container d-flex justify-content-center position-relative"
@@ -60,8 +60,8 @@
     <!-- （行動版）漢堡選單項目開始 -->
     <ul
       id="hamburger-menu-list"
-      class="position-absolute"
-      :class="{ fly: hamburgerButtonToggle }"
+      class="position-fixed"
+      :class="{ 'show-hamburger-menu-list': hamburgerButtonToggle }"
     >
       <li
         v-for="(burgerMenuLink, burgerMenuLinkKey) in burgerMenuLinks"
@@ -70,6 +70,7 @@
         <router-link
           :to="burgerMenuLink.routerTo"
           class="hamburger-menu-link nav-link"
+          @click.native="collapseHamburgerList"
           >{{ burgerMenuLink.selfText }}</router-link
         >
       </li>
@@ -132,6 +133,15 @@ export default {
       hamburgerButtonToggle: false,
     };
   },
+  methods: {
+    // 方法：收起漢堡選單導覽列
+    collapseHamburgerList() {
+      const vm = this;
+      setTimeout(() => {
+        vm.hamburgerButtonToggle = false;
+      }, 400);
+    },
+  },
   // 計算（方法）：回傳僅屬於文字連結的導覽列連結
   computed: {
     burgerMenuLinks() {
@@ -149,150 +159,186 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/all.scss";
 
+$desktop-nav-bar-height: 105px;
+
 * {
   text-decoration: none;
 }
 
-.fly {
-  transform: none !important;
-}
-
-.backgroud {
-  background-color: $tiffany-blue;
-  height: 105px;
-  position: relative;
-  z-index: 9;
-  #nav-bar {
-    // （行動版）漢堡選單開始
-    #hamburger-menu {
-      display: block;
-      left: 20px;
-      user-select: none;
-      z-index: 3;
-      a {
-        text-decoration: none;
-        color: #232323;
-        transition: color 0.3s ease;
-        &:hover {
-          color: tomato;
-        }
-      }
-      input {
-        width: 43px;
-        height: 32px;
-        top: -5px;
-        left: -5px;
-        cursor: pointer;
-        opacity: 0;
-        z-index: 2;
-        &:checked ~ span {
-          opacity: 1;
-          transform: rotate(-45deg) translate(1px, 6px);
-        }
-        &:checked ~ span:nth-last-child(2) {
-          transform: rotate(45deg) translate(-2px, -10px);
-        }
-        &:checked ~ span:nth-last-child(3) {
+nav {
+  height: $desktop-nav-bar-height;
+  .backgroud {
+    background-color: $tiffany-blue;
+    height: $desktop-nav-bar-height;
+    z-index: 3;
+    #nav-bar {
+      // （行動版）漢堡選單開始
+      #hamburger-menu {
+        display: block;
+        left: 20px;
+        user-select: none;
+        z-index: 4;
+        input {
+          width: 43px;
+          height: 32px;
+          top: -5px;
+          left: -5px;
+          cursor: pointer;
           opacity: 0;
-          transform: rotate(0deg) scale(0.2, 0.2);
+          z-index: 5;
+          &:checked ~ span {
+            opacity: 1;
+            transform: rotate(-45deg) translate(1px, 6px);
+          }
+          &:checked ~ span:nth-last-child(2) {
+            transform: rotate(45deg) translate(-2px, -10px);
+          }
+          &:checked ~ span:nth-last-child(3) {
+            opacity: 0;
+            transform: rotate(0deg) scale(0.2, 0.2);
+          }
+          @include media-breakpoint-down(md) {
+            &:checked ~ span {
+              opacity: 1;
+              transform: rotate(-45deg) translate(1px, 5px);
+            }
+          }
         }
-      }
-      span {
-        width: 33px;
-        height: 4px;
-        margin-bottom: 5px;
-        background-color: $kapitan-white;
-        border-radius: 3px;
-        transform-origin: 4px 0px;
-        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-          background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
-        &:first-child {
-          transform-origin: 0% 0%;
+        span {
+          width: 33px;
+          height: 4px;
+          margin-bottom: 5px;
+          background-color: $kapitan-white;
+          border-radius: 3px;
+          transform-origin: 4px 0px;
+          transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+            background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+          &:first-child {
+            transform-origin: 0% 0%;
+          }
+          &:nth-last-child(2) {
+            transform-origin: 0% 100%;
+          }
+          @include media-breakpoint-down(md) {
+            width: 28px;
+            height: 3px;
+          }
         }
-        &:nth-last-child(2) {
-          transform-origin: 0% 100%;
-        }
-      }
-      @include media-breakpoint-up(lg) {
-        display: none;
-      }
-    }
-    // （行動版）漢堡選單結束
-    // （桌面版）導覽列項目開始
-    #navbar-list {
-      height: 75px;
-      .nav-link {
-        font-size: 18px;
-        color: oldlace !important;
-      }
-      .text-link {
-        font-size: 20px;
-        &:hover {
-          color: orange !important;
-        }
-      }
-      .icon-link {
-        cursor: pointer;
-        &:hover {
-          color: $kapitan-white;
-        }
-      }
-      #logo-link {
-        #logo-img {
-          width: 270px;
-        }
-        @include media-breakpoint-down(md) {
-          position: absolute;
-          transform: translate3d(-50%, -50%, 0);
-          left: 50%;
-          top: 50%;
-        }
-      }
-      #about-link {
-        margin-left: calc(100% - 620px);
-      }
-
-      #about-link,
-      #store-link {
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-up(lg) {
           display: none;
         }
       }
-      #cart-link {
-        @include media-breakpoint-down(md) {
-          margin-left: calc(100% - 90px);
+      // （行動版）漢堡選單結束
+      // （桌面版）導覽列項目開始
+      #navbar-list {
+        height: 75px;
+        .nav-link {
+          font-size: 18px;
+          color: oldlace !important;
+          @include media-breakpoint-down(md) {
+            font-size: 16px;
+          }
+          @include media-breakpoint-down(sm) {
+            font-size: 13px;
+          }
+        }
+        .text-link {
+          font-size: 20px;
+          &:hover {
+            color: orange !important;
+          }
+        }
+        .icon-link {
+          cursor: pointer;
+          &:hover {
+            color: $kapitan-white;
+          }
+        }
+        #logo-link {
+          #logo-img {
+            width: 270px;
+            @include media-breakpoint-down(md) {
+              width: 200px;
+            }
+            @include media-breakpoint-down(sm) {
+              width: 160px;
+            }
+          }
+          @include media-breakpoint-down(md) {
+            position: absolute;
+            transform: translate3d(-50%, -50%, 0);
+            left: 50%;
+            top: 50%;
+            width: 200px;
+          }
+          @include media-breakpoint-down(sm) {
+            width: 160px;
+          }
+        }
+        #about-link {
+          margin-left: calc(100% - 620px);
+        }
+        #about-link,
+        #store-link {
+          @include media-breakpoint-down(md) {
+            display: none;
+          }
+        }
+        #cart-link {
+          @include media-breakpoint-down(md) {
+            margin-left: calc(100% - 90px);
+          }
+          @include media-breakpoint-down(sm) {
+            margin-left: calc(100% - 70px);
+            margin-right: -10px;
+          }
+        }
+      }
+      // （桌面版）導覽列項目結束
+    }
+  }
+  // （行動版）漢堡選單導覽列開始
+  #hamburger-menu-list {
+    // border: 1px solid black;
+    width: 100vw;
+    left: 0;
+    top: $desktop-nav-bar-height;
+    padding: 5px 100px;
+    background-color: #f7f7f9;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    display: flex;
+    list-style-type: none;
+    transform-origin: 0% 0%;
+    transform: translate3d(0, -100%, 0);
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+    z-index: 1;
+    margin: 0;
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 5px 50px;
+    }
+    li {
+      padding: 10px 0;
+      font-size: 18px;
+      margin-right: 15px;
+      @include media-breakpoint-down(sm) {
+        font-size: 16px;
+        margin-right: 5px;
+      }
+      .hamburger-menu-link {
+        font-weight: 600;
+        color: black;
+        &:hover {
+          color: $tiffany-blue;
         }
       }
     }
-    // （桌面版）導覽列項目結束
   }
-}
-#hamburger-menu-list {
-  // border: 1px solid black;
-  width: 100vw;
-  left: 0;
-  top: 105px;
-  padding: 10px 130px;
-  background-color: #f7f7f9;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-  display: flex;
-  list-style-type: none;
-  transform-origin: 0% 0%;
-  transform: translate3d(0, -100%, 0);
-  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-  z-index: 1;
-  margin: 0;
-  li {
-    padding: 10px 0;
-    font-size: 20px;
-    margin-right: 15px;
-    .hamburger-menu-link {
-      font-weight: 600;
-      color: black;
-      &:hover {
-        color: $tiffany-blue;
-      }
-    }
+  .show-hamburger-menu-list {
+    transform: none !important;
   }
+  // （行動版）漢堡選單導覽列結束
 }
 </style>
