@@ -42,7 +42,7 @@ const router = new Router({
         },
         {
           path: '/Store',
-          name: '商城',
+          name: '挑選航程',
           component: Store
         },
         {

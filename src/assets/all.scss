@@ -3,7 +3,8 @@
 @import "~bootstrap/scss/bootstrap";
 
 *{
-    box-sizing: border-box;
+    box-sizing: border-box !important;
+    text-decoration: none  !important;
 }
 
 // 去除input樣式預設的增減按鈕開始
