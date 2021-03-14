@@ -112,7 +112,7 @@
         </div>
         <!-- 版權宣言結束 -->
         <!-- 額外連結開始 -->
-        <div class="ml-sm-auto ml-3">
+        <div class="ml-sm-auto ml-3 my-sm-0 my-1">
           <ul
             class="mass-links-list d-flex flex-row align-items-center justify-content-end"
           >
@@ -254,11 +254,19 @@ footer {
             width: 35px;
             height: 35px;
             border-radius: 35px;
+            svg {
+              width: 13px;
+              height: 13px;
+            }
           }
           @include media-breakpoint-down(sm) {
             width: 30px;
             height: 30px;
             border-radius: 30px;
+            svg {
+              width: 11px;
+              height: 11px;
+            }
           }
         }
         .contact-text-block {
