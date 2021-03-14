@@ -279,16 +279,14 @@ nav {
         .text-link {
           font-size: 20px;
           font-weight: 600;
-          &:hover {
-            color: $deep-teal !important;
-          }
         }
         .icon-link {
           cursor: pointer;
-          svg {
-            &:hover {
-              color: $deep-teal;
-            }
+        }
+        .text-link,
+        .icon-link {
+          &:hover {
+            transform: translate3d(0, -5px, 0);
           }
         }
         #logo-link {

@@ -128,12 +128,12 @@ export default {
 <style lang="scss" scope>
 @import "../../assets/all.scss";
 
-div,
-p,
-ul,
-li {
-  border: 1px solid red;
-}
+// div,
+// p,
+// ul,
+// li {
+//   border: 1px solid red;
+// }
 
 // 方案篩選器開始
 aside {
