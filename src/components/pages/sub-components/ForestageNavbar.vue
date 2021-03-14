@@ -116,7 +116,14 @@ export default {
         about: {
           path: "/About",
           ItemID: "about-link",
-          selfClass: ["nav-link", "text-link", "nav-link", "ml-3", "mr-4"],
+          selfClass: [
+            "nav-link",
+            "text-link",
+            "nav-link",
+            "ml-md-auto",
+            "ml-3",
+            "mr-4",
+          ],
           routerTo: "/About",
           selfText: "關於甲必丹",
         },
@@ -131,7 +138,7 @@ export default {
         cart: {
           path: "/Cart",
           ItemID: "cart-link",
-          selfClass: ["nav-link", "icon-link", "ml-2", "mr-4"],
+          selfClass: ["nav-link", "icon-link", "ml-2", "mr-sm-4", "mr-3"],
           routerTo: "/Cart",
           iconClass: ["fas", "fa-shopping-cart", "fa-lg"],
         },
@@ -139,7 +146,7 @@ export default {
         memberCentre: {
           path: "/Member-Centre",
           ItemID: "memberCentre-link",
-          selfClass: ["nav-link", "icon-link", "ml-1"],
+          selfClass: ["nav-link", "icon-link"],
           routerTo: "/Member-Centre",
           iconClass: ["fas", "fa-user", "fa-lg"],
         },
@@ -306,7 +313,7 @@ nav {
           }
         }
         #about-link {
-          margin-left: calc(100% - 620px);
+          margin-left: auto;
         }
         #about-link,
         #store-link {
@@ -316,11 +323,7 @@ nav {
         }
         #cart-link {
           @include media-breakpoint-down(md) {
-            margin-left: calc(100% - 90px);
-          }
-          @include media-breakpoint-down(sm) {
-            margin-left: calc(100% - 70px);
-            margin-right: -10px;
+            margin-left: auto;
           }
         }
       }
