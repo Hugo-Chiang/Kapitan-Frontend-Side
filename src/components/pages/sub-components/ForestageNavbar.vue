@@ -273,14 +273,14 @@ nav {
           font-size: 20px;
           font-weight: 600;
           &:hover {
-            color: orange !important;
+            color: $deep-teal !important;
           }
         }
         .icon-link {
           cursor: pointer;
           svg {
             &:hover {
-              color: orange;
+              color: $deep-teal;
             }
           }
         }

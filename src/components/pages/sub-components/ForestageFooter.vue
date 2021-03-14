@@ -1,19 +1,22 @@
 <template>
   <!-- 頁腳開始 -->
-  <footer class=".container-fluid">
+  <footer class="container-fluid">
     <div class="container">
-      <div class="row px-5">
-        <div class="col-lg-5 col-md-6">
-          <!-- 聯絡資訊清單開始 -->
-          <ul class="contact-info-list mt-3 ml-2">
+      <div id="footer-row-01" class="row d-lg-block px-5">
+        <!-- 聯絡資訊清單開始 -->
+        <div
+          id="footer-contact-info"
+          class="float-lg-left col-lg-5 h-lg-100 col-md-6"
+        >
+          <ul class="contact-info-list mt-2 ml-2">
             <!-- 聯絡資訊項目開始 -->
-            <li v-for="(info, key) in contactInfo" :key="key">
+            <li v-for="(info, key) in contactInfo" :key="key" class="mb-4">
               <div
-                class="d-inline-block"
+                class="d-inline-flex align-items-center"
                 @click="contactInfo[key].onClickEvent"
               >
                 <div
-                  class="contact-icon-block d-inline-flex justify-content-center align-items-center mb-3 mr-2"
+                  class="contact-icon-block d-inline-flex justify-content-center align-items-center mr-3"
                 >
                   <i
                     class="contact-icon"
@@ -21,32 +24,39 @@
                   ></i>
                 </div>
                 <div
+                  v-html="contactInfo[key].innerHTML"
                   class="contact-text-block d-inline-flex"
                   @click="contactInfo[key].onClickEvent"
-                >
-                  {{ contactInfo[key].text }}
-                </div>
+                ></div>
               </div>
             </li>
             <!-- 聯絡資訊項目結束 -->
           </ul>
-          <!-- 聯絡資訊清單結束 -->
         </div>
-        <div class="col-lg-7 col-md-6">
-          <div class="row">
-            <!-- 企業格言開始 -->
-            <div class="about-kapitan mb-4 col-lg-12 col-md-12">
-              <h5>甲必丹的使命</h5>
-              <p>
-                「來到這裡的每個人，都能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
-                ── 甲必丹執行長 · 鄭賢之
-              </p>
-            </div>
-            <!-- 企業格言結束 -->
-          </div>
+        <!-- 聯絡資訊清單結束 -->
+        <!-- 企業格言開始 -->
+        <div
+          id="footer-Kapitans-mission"
+          class="float-lg-left h-lg-50 pt-lg-1 col-lg-7 col-md-6 my-md-0 my-3"
+        >
+          <h5>甲必丹的使命</h5>
+          <p>
+            「來到這裡的每個人，都能以最優雅的姿態、最愉快的體驗，繼承先祖們的冒險精神。感受深藏在我們基因中的『甲必丹』情懷。」
+            ── 甲必丹執行長 · 鄭賢之
+          </p>
+        </div>
+        <!-- 企業格言結束 -->
+        <!-- 社群連結與訂閱電子報開始 -->
+        <div
+          id="footer-row-for-community-and-edm"
+          class="float-lg-left h-lg-50 col-lg-7 col-md-12 mt-sm-4"
+        >
           <div class="row">
             <!-- 社群連結開始 -->
-            <div class="col-sm-6 col-xs-12">
+            <div
+              id="footer-community-links"
+              class="col-sm-6 col-xs-12 mb-md-0 mb-3"
+            >
               <h6 class="mb-3">在社群網站上追蹤甲必丹</h6>
               <ul class="community-link-list d-flex flex-row">
                 <li
@@ -61,7 +71,7 @@
             </div>
             <!-- 社群連結結束 -->
             <!-- 訂閱電子報開始 -->
-            <div class="col-sm-6 col-xs-12">
+            <div id="footer-subscribe-edm" class="col-sm-6 col-xs-12">
               <h6 class="mb-3">或訂閱我們的電子報</h6>
               <div class="input-group mb-3">
                 <input
@@ -79,13 +89,14 @@
             <!-- 訂閱電子報結束 -->
           </div>
         </div>
+        <!-- 社群連結與訂閱電子報結束 -->
       </div>
     </div>
     <div class="container">
       <hr />
-      <div class="row px-4">
+      <div class="row px-sm-4">
         <!-- 版權宣言開始 -->
-        <div class="col-lg-8 col-md-7 col-12 d-flex align-items-center">
+        <div class="col-sm-6 col-12 d-flex align-items-center">
           <h6
             class="fake-copy-right"
             @mouseenter="showFakeCopyRightDescription = true"
@@ -101,7 +112,7 @@
         </div>
         <!-- 版權宣言結束 -->
         <!-- 額外連結開始 -->
-        <div class="col-lg-4 col-md-5 col-12">
+        <div class="ml-sm-auto ml-3">
           <ul
             class="mass-links-list d-flex flex-row align-items-center justify-content-end"
           >
@@ -140,21 +151,21 @@ export default {
       contactInfo: {
         address: {
           iconClass: ["fas", "fa-map-marker-alt"],
-          text: "251 新北市淡水區觀海路201號",
+          innerHTML: "251 新北市淡水區觀海路201號",
           onClickEvent: function () {
             window.location.href = "https://goo.gl/maps/HDg6TVKTjm6FDMmh8";
           },
         },
         email: {
           iconClass: ["fas", "fa-envelope"],
-          text: "service@Kapitan.com",
+          innerHTML: "service@Kapitan.com",
           onClickEvent: function () {
             window.open("mailto:service@Kapitan.com");
           },
         },
         phone: {
           iconClass: ["fas", "fa-phone-alt"],
-          text: "（886）2-3345-6789",
+          innerHTML: "（886）2-3345-6789",
           onClickEvent: function () {
             window.open("tel:+886233456789");
           },
@@ -199,60 +210,71 @@ export default {
   color: $sail;
   list-style: none;
 }
-
-ul {
-  padding: 0;
-}
-
-.btn {
-  color: $sail;
-  background-color: $berry;
-  &:hover {
-    color: $scuba-blue;
-  }
-}
-
-div {
-  // border: 1px solid red;
-}
-
 footer {
   width: 100%;
   padding: 60px 0px 10px;
   background-color: $deep-teal;
-  .contact-info-list {
-    li {
-      list-style: none;
-      .contact-icon-block {
-        width: 45px;
-        height: 45px;
-        border-radius: 45px;
-        background-color: $berry;
-        cursor: pointer;
-        .contact-icon {
-          width: 80%;
+  ul {
+    padding: 0;
+  }
+  h5 {
+    @include media-breakpoint-down(sm) {
+      font-size: 18px;
+    }
+  }
+  h6 {
+    @include media-breakpoint-down(sm) {
+      font-size: 16px;
+    }
+  }
+  .btn {
+    color: $sail;
+    background-color: $berry;
+    &:hover {
+      color: $scuba-blue;
+    }
+  }
+  #footer-row-01 {
+    @include media-breakpoint-up(lg) {
+      height: 225px;
+    }
+    .contact-info-list {
+      li {
+        list-style: none;
+        .contact-icon-block {
+          width: 45px;
+          height: 45px;
+          border-radius: 45px;
+          background-color: $berry;
+          cursor: pointer;
+          .contact-icon {
+            width: 80%;
+          }
+          @include media-breakpoint-down(md) {
+            width: 35px;
+            height: 35px;
+            border-radius: 35px;
+          }
+          @include media-breakpoint-down(sm) {
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+          }
         }
-        @include media-breakpoint-down(md) {
-          width: 40px;
-          height: 40px;
-          border-radius: 40px;
+        .contact-text-block {
+          color: $sail;
+          font-size: 18px;
+          font-weight: 400;
+          cursor: pointer;
         }
-        @include media-breakpoint-down(sm) {
-          width: 35px;
-          height: 35px;
-          border-radius: 35px;
-        }
-      }
-      .contact-text-block {
-        color: orange;
-        font-size: 18px;
-        font-weight: 400;
-        cursor: pointer;
-        @include media-breakpoint-down(md) {
-          font-size: 16px;
-        }
-        @include media-breakpoint-down(sm) {
-          font-size: 14px;
+        .contact-text-block,
+        p {
+          @include media-breakpoint-down(md) {
+            font-size: 16px;
+          }
+          @include media-breakpoint-down(sm) {
+            font-size: 14px;
+          }
         }
       }
     }
@@ -269,9 +291,6 @@ footer {
       @include media-breakpoint-down(lg) {
         margin-right: 10px;
       }
-      // @include media-breakpoint-down(md) {
-      //   margin-right: 20px;
-      // }
       cursor: pointer;
       .fa-instagram {
         font-size: 25px;
