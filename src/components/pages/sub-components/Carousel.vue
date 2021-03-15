@@ -18,21 +18,21 @@
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img
-              src="http://code.z01.com/img/2016instbg_01.jpg"
+              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801180/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-001_aqvvao.png"
               class="d-block w-100"
               alt="..."
             />
           </div>
           <div class="carousel-item">
             <img
-              src="http://code.z01.com/img/2016instbg_02.jpg"
+              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801181/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-002_ludmq0.png"
               class="d-block w-100"
               alt="..."
             />
           </div>
           <div class="carousel-item">
             <img
-              src="http://code.z01.com/img/2016instbg_03.jpg"
+              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801180/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-003_vbn9ew.png"
               class="d-block w-100"
               alt="..."
             />

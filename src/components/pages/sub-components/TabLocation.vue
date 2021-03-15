@@ -4,24 +4,27 @@
       <div class="col-8">
         <!-- Leaflet 初始佈局 -->
         <l-map
-          :zoom="mapZoomlevel"
-          :center="mapMarkerLocation"
-          :options="mapOptions"
+          :zoom="mapData.mapZoomlevel"
+          :center="mapData.mapMarkerLocation"
+          :options="mapData.mapOptions"
           style="height: 25rem"
         >
           <!-- 導入圖資 OpenStreetMap  -->
-          <l-tile-layer :url="mapGISurl" :attribution="mapSourceAttribution" />
+          <l-tile-layer
+            :url="mapData.mapGISurl"
+            :attribution="mapData.mapSourceAttribution"
+          />
           <!-- 設置會合地點圖釘 -->
-          <l-marker :lat-lng="mapMarkerLocation">
+          <l-marker :lat-lng="mapData.mapMarkerLocation">
             <!-- 設置圖釘樣式 -->
             <l-icon
-              :icon-url="mapIcon.iconUrl"
-              :shadow-url="mapIcon.shadowUrl"
-              :icon="mapIcon.iconUrl"
-              :popup-anchor="mapIcon.popupAnchor"
+              :icon-url="mapData.mapIcon.iconUrl"
+              :shadow-url="mapData.mapIcon.shadowUrl"
+              :icon="mapData.mapIcon.iconUrl"
+              :popup-anchor="mapData.mapIcon.popupAnchor"
             />
             <!-- 設置圖釘彈窗內容 -->
-            <l-popup> 333 </l-popup>
+            <l-popup> {{ departureLocationInfo.locationName }} </l-popup>
           </l-marker>
         </l-map>
       </div>
@@ -36,24 +39,27 @@ import { LMap, LTileLayer, LMarker, LPopup, LIcon } from "vue2-leaflet";
 export default {
   data() {
     return {
-      mapGISurl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      mapMarkerLocation: [25.0238087, 121.5531104],
-      mapZoomlevel: 16,
-      mapSourceAttribution: `© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors`,
-      mapOptions: {
-        zoomControl: true,
-      },
-      mapIcon: {
-        iconUrl:
-          "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
-        // iconUrl: "/static/img/marker-icon-blue.png",
-        shadowUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-        iconAnchor: [12.5, 40],
-        popupAnchor: [0, -30],
+      mapData: {
+        mapGISurl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        mapMarkerLocation: [25.0238087, 121.5531104],
+        mapZoomlevel: 16,
+        mapSourceAttribution: `© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors`,
+        mapOptions: {
+          zoomControl: true,
+        },
+        mapIcon: {
+          iconUrl:
+            "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+          // iconUrl: "/static/img/marker-icon-blue.png",
+          shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+          iconAnchor: [12.5, 40],
+          popupAnchor: [0, -30],
+        },
       },
     };
   },
+  props: ["departureLocationInfo"],
   components: { LMap, LTileLayer, LMarker, LPopup, LIcon },
 };
 </script>

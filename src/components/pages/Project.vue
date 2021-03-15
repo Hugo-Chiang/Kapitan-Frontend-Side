@@ -7,25 +7,32 @@
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 網站麵包屑結束 -->
     <!-- 方案摘要章節開始 -->
-    <section id="summaryArea" class="row mt-4 mb-5">
-      <div class="col-8">
+    <section id="summary-area" class="row mt-4 mb-5">
+      <div id="project-summary" class="col-lg-8 col-12">
         <h1>
-          {{ selectedProjectContent.projectName }}
+          {{ selectedProject.selectedProjectContent.projectName }}
         </h1>
         <hr />
-        <section v-html="selectedProjectContent.projectSummary"></section>
+        <section
+          v-html="selectedProject.selectedProjectContent.projectSummary"
+        ></section>
       </div>
-      <div class="col-4">
+      <div id="project-price" class="col-lg-4 col-12">
         <div class="card text-center">
           <div class="card-body">
             <h6>每位成員特惠價</h6>
             <h5
               class="price my-4"
-              v-if="selectedProjectContent.projectPricePerPerson != ''"
-              :key="selectedProjectContent.projectPricePerPerson"
+              v-if="
+                selectedProject.selectedProjectContent.projectPricePerPerson !=
+                ''
+              "
+              :key="
+                selectedProject.selectedProjectContent.projectPricePerPerson
+              "
             >
               {{
-                selectedProjectContent.projectPricePerPerson
+                selectedProject.selectedProjectContent.projectPricePerPerson
                   | currency
                   | dollarSign
               }}
@@ -39,45 +46,55 @@
     </section>
     <!-- 方案摘要章節結束 -->
     <!-- 方案購買章節開始 -->
-    <section id="projectPurchaseArea" class="row mb-5">
+    <section id="project-purchase-area" class="row mb-5">
       <div class="col-12">
         <h3>方案確認</h3>
         <hr />
         <div class="card text-center">
           <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item" v-for="(tab, index) in tabs" :key="index">
+              <li
+                class="nav-item"
+                v-for="(tab, index) in tabs.tabsArr"
+                :key="index"
+              >
                 <a
                   class="nav-link"
-                  :class="currentTab == tab ? 'active' : ''"
-                  href="#"
-                  @click.prevent="currentTab = tab"
+                  :class="tabs.currentTab == tab ? 'active' : ''"
+                  @click.prevent="tabs.currentTab = tab"
                   >{{ tab }}</a
                 >
               </li>
             </ul>
           </div>
           <TabDefault
-            :projectID="selectedProjectID"
-            v-if="currentTab == '選擇方案'"
+            :projectID="selectedProject.selectedProjectID"
+            v-if="tabs.currentTab == '選擇方案'"
           ></TabDefault>
-          <TabLocation v-else-if="currentTab == '會合地點'"></TabLocation>
+          <TabLocation
+            v-else-if="tabs.currentTab == '會合地點'"
+            :departureLocationInfo="
+              selectedProject.selectedProjectDepartureLocation
+            "
+          ></TabLocation>
           <TabTerms v-else></TabTerms>
         </div>
       </div>
     </section>
     <!-- 方案購買章節結束 -->
     <!-- 方案細節章節開始 -->
-    <section id="projectDetailsArea" class="row mb-5">
+    <section id="project-details-area" class="row mb-5">
       <div class="col-12">
         <h3>服務內容</h3>
         <hr />
-        <article v-html="selectedProjectContent.projectDescription"></article>
+        <article
+          v-html="selectedProject.selectedProjectContent.projectDescription"
+        ></article>
       </div>
     </section>
     <!-- 方案細節章節結束 -->
     <!-- 方案評價章節開始 -->
-    <section id="commentsArea" class="row mb-5">
+    <section id="comments-area" class="row mb-5">
       <div class="col-12">
         <h3>旅客評價</h3>
         <hr />
@@ -105,14 +122,24 @@ export default {
         pagesArr: ["首頁", "商城", "方案"],
         currentPage: 3,
       },
-      selectedProjectID: this.$route.params.selectedProjectID,
-      selectedProjectContent: {
-        projectName: "",
-        projectPricePerPerson: "",
-        projectSummary: "",
+      selectedProject: {
+        selectedProjectID: this.$route.params.selectedProjectID,
+        selectedProjectContent: {
+          projectName: "",
+          projectPricePerPerson: "",
+          projectSummary: "",
+        },
+        selectedProjectDepartureLocation: {
+          locationName: "",
+          locationDescription: "",
+          locationLng: "",
+          locationLat: "",
+        },
       },
-      tabs: ["選擇方案", "會合地點", "使用條款"],
-      currentTab: "會合地點",
+      tabs: {
+        currentTab: "會合地點",
+        tabsArr: ["選擇方案", "會合地點", "使用條款"],
+      },
       googleDriveSharingUrl: "http://drive.google.com/uc?export=view&id=",
     };
   },
@@ -127,24 +154,41 @@ export default {
     const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;
 
-    this.$http.post(api, vm.selectedProjectID).then((response) => {
-      console.log(response.data);
-      vm.selectedProjectContent.projectName =
-        response.data.projectContent["PROJECT_NAME"];
-      vm.selectedProjectContent.projectPricePerPerson = Number(
-        response.data.projectContent["PROJECT_ORIGINAL_PRICE_PER_PERSON"]
-      );
-      vm.selectedProjectContent.projectSummary =
-        response.data.projectContent["PROJECT_SUMMARY"];
-      vm.selectedProjectContent.projectDescription =
-        response.data.projectContent["PROJECT_DESCRIPITION"];
-    });
+    this.$http
+      .post(api, vm.selectedProject.selectedProjectID)
+      .then((response) => {
+        console.log(response.data);
+        vm.selectedProject.selectedProjectContent.projectName =
+          response.data.projectContent["PROJECT_NAME"];
+        vm.selectedProject.selectedProjectContent.projectPricePerPerson = Number(
+          response.data.projectContent["PROJECT_ORIGINAL_PRICE_PER_PERSON"]
+        );
+        vm.selectedProject.selectedProjectContent.projectSummary =
+          response.data.projectContent["PROJECT_SUMMARY"];
+        vm.selectedProject.selectedProjectContent.projectDescription =
+          response.data.projectContent["PROJECT_DESCRIPITION"];
+        vm.selectedProjectDepartureLocation.locationName =
+          response.data.projectDepartureLocation["LOCATION_NAME"];
+        vm.selectedProjectDepartureLocation.locationDescription =
+          response.data.projectDepartureLocation["LOCATION_DESCRIPTION"];
+        vm.selectedProjectDepartureLocation.locationLng =
+          response.data.projectDepartureLocation["LOCATION_LNG"];
+        vm.selectedProjectDepartureLocation.locationLat =
+          response.data.projectDepartureLocation["LOCATION_LAT"];
+      });
   },
+  // 監看（方法）：
+  // watch: {
+  //   selectedProject: {
+  //     handler() {},
+  //     deep: true,
+  //   },
+  // },
 };
 </script>
 
 <style lang="scss" scope>
-.carousel-item {
-  height: 400px;
+.nav-item {
+  cursor: pointer;
 }
 </style>
