@@ -1,7 +1,8 @@
 <template>
   <div class="card-body">
     <div class="row">
-      <div class="col-8">
+      <!-- Leaflet 地圖套件開始 -->
+      <div class="col-lg-8 col-md-12 mb-md-0 mb-5">
         <!-- Leaflet 初始佈局 -->
         <l-map
           :zoom="mapData.mapZoomlevel"
@@ -28,6 +29,11 @@
           </l-marker>
         </l-map>
       </div>
+      <!-- Leaflet 地圖套件結束 -->
+      <div class="col-lg-4 col-md-12">
+        <h5>{{ departureLocationInfo.locationName }}</h5>
+        <div v-html="departureLocationInfo.locationDescription"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +47,7 @@ export default {
     return {
       mapData: {
         mapGISurl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        mapMarkerLocation: [25.0238087, 121.5531104],
+        mapMarkerLocation: [0, 0],
         mapZoomlevel: 16,
         mapSourceAttribution: `© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors`,
         mapOptions: {
@@ -61,5 +67,30 @@ export default {
   },
   props: ["departureLocationInfo"],
   components: { LMap, LTileLayer, LMarker, LPopup, LIcon },
+  created() {
+    this.mapData.mapMarkerLocation = [
+      this.departureLocationInfo.locationLat,
+      this.departureLocationInfo.locationLng,
+    ];
+  },
+  watch: {
+    // 監看（方法）：若傳入的地點資訊物件內容有變，則更新地圖套件的經緯度
+    departureLocationInfo: {
+      handler(newObj) {
+        if (newObj.locationLat != 0 && newObj.locationLng != 0)
+          this.mapData.mapMarkerLocation = [
+            newObj.locationLat,
+            newObj.locationLng,
+          ];
+      },
+      deep: true,
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+/deep/ ol {
+  padding: 0px 30px;
+}
+</style>

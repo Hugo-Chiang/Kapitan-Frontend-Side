@@ -17,29 +17,45 @@
           v-html="selectedProject.selectedProjectContent.projectSummary"
         ></section>
       </div>
-      <div id="project-price" class="col-lg-4 col-12">
+      <div id="project-price" class="col-lg-4 col-12 position-sticky">
         <div class="card text-center">
-          <div class="card-body">
-            <h6>每位成員特惠價</h6>
-            <h5
-              class="price my-4"
-              v-if="
-                selectedProject.selectedProjectContent.projectPricePerPerson !=
-                ''
-              "
-              :key="
-                selectedProject.selectedProjectContent.projectPricePerPerson
-              "
-            >
-              {{
-                selectedProject.selectedProjectContent.projectPricePerPerson
-                  | currency
-                  | dollarSign
-              }}
-            </h5>
-            <router-link class="btn btn-primary" to="/cart"
-              >選擇方案</router-link
-            >
+          <div class="card-header">
+            <h5 class="my-1">團資概要</h5>
+          </div>
+          <div class="card-body container">
+            <div class="row mt-2">
+              <div id="project-min-num-of-people" class="col-6">
+                <h6>最低成團人數</h6>
+                <div class="my-3">
+                  <span>
+                    {{
+                      selectedProject.selectedProjectContent
+                        .projectMinNumOfPeople
+                    }}</span
+                  >人
+                </div>
+              </div>
+              <div class="col-6">
+                <h6>每位成員特惠價</h6>
+                <div
+                  id="project-price-per-person"
+                  class="my-3"
+                  v-if="
+                    selectedProject.selectedProjectContent
+                      .projectPricePerPerson != ''
+                  "
+                  :key="
+                    selectedProject.selectedProjectContent.projectPricePerPerson
+                  "
+                >
+                  {{
+                    selectedProject.selectedProjectContent.projectPricePerPerson
+                      | currency
+                      | dollarSign
+                  }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -50,8 +66,10 @@
       <div class="col-12">
         <h3>方案確認</h3>
         <hr />
-        <div class="card text-center">
+        <!-- 方案購買卡片開始 -->
+        <div id="project-purchase-card" class="card">
           <div class="card-header">
+            <!-- 方案購買卡片頁籤開始 -->
             <ul class="nav nav-tabs card-header-tabs">
               <li
                 class="nav-item"
@@ -66,9 +84,14 @@
                 >
               </li>
             </ul>
+            <!-- 方案購買卡片頁籤結束 -->
           </div>
+          <!-- 方案購買卡片主要內容（元件）開始 -->
           <TabDefault
             :projectID="selectedProject.selectedProjectID"
+            :projectPricePerPerson="
+              selectedProject.selectedProjectContent.projectPricePerPerson
+            "
             v-if="tabs.currentTab == '選擇方案'"
           ></TabDefault>
           <TabLocation
@@ -78,7 +101,9 @@
             "
           ></TabLocation>
           <TabTerms v-else></TabTerms>
+          <!-- 方案購買卡片主要內容（元件）結束 -->
         </div>
+        <!-- 方案購買卡片結束 -->
       </div>
     </section>
     <!-- 方案購買章節結束 -->
@@ -126,6 +151,7 @@ export default {
         selectedProjectID: this.$route.params.selectedProjectID,
         selectedProjectContent: {
           projectName: "",
+          projectMinNumOfPeople: "",
           projectPricePerPerson: "",
           projectSummary: "",
         },
@@ -137,7 +163,7 @@ export default {
         },
       },
       tabs: {
-        currentTab: "會合地點",
+        currentTab: "選擇方案",
         tabsArr: ["選擇方案", "會合地點", "使用條款"],
       },
       googleDriveSharingUrl: "http://drive.google.com/uc?export=view&id=",
@@ -160,6 +186,8 @@ export default {
         console.log(response.data);
         vm.selectedProject.selectedProjectContent.projectName =
           response.data.projectContent["PROJECT_NAME"];
+        vm.selectedProject.selectedProjectContent.projectMinNumOfPeople =
+          response.data.projectContent["PROJECT_MIN_NUM_OF_PEOPLE"];
         vm.selectedProject.selectedProjectContent.projectPricePerPerson = Number(
           response.data.projectContent["PROJECT_ORIGINAL_PRICE_PER_PERSON"]
         );
@@ -167,23 +195,16 @@ export default {
           response.data.projectContent["PROJECT_SUMMARY"];
         vm.selectedProject.selectedProjectContent.projectDescription =
           response.data.projectContent["PROJECT_DESCRIPITION"];
-        vm.selectedProjectDepartureLocation.locationName =
+        vm.selectedProject.selectedProjectDepartureLocation.locationName =
           response.data.projectDepartureLocation["LOCATION_NAME"];
-        vm.selectedProjectDepartureLocation.locationDescription =
+        vm.selectedProject.selectedProjectDepartureLocation.locationDescription =
           response.data.projectDepartureLocation["LOCATION_DESCRIPTION"];
-        vm.selectedProjectDepartureLocation.locationLng =
+        vm.selectedProject.selectedProjectDepartureLocation.locationLng =
           response.data.projectDepartureLocation["LOCATION_LNG"];
-        vm.selectedProjectDepartureLocation.locationLat =
+        vm.selectedProject.selectedProjectDepartureLocation.locationLat =
           response.data.projectDepartureLocation["LOCATION_LAT"];
       });
   },
-  // 監看（方法）：
-  // watch: {
-  //   selectedProject: {
-  //     handler() {},
-  //     deep: true,
-  //   },
-  // },
 };
 </script>
 

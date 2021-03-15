@@ -1,31 +1,42 @@
 <template>
-  <div class="input-group my-3" :data-id="uniqueKey" :key="uniqueKey">
+  <div class="input-group" :data-id="uniqueKey" :key="uniqueKey">
+    <!-- 減號按鈕開始 -->
     <div class="input-group-prepend">
       <button
         class="btn btn-outline-secondary"
         type="button"
-        @click.prevent="number == 1 ? number : number--"
+        @click.prevent="
+          number == 1
+            ? $emit('update:incomingValue', number)
+            : $emit('update:incomingValue', --number)
+        "
       >
         －
       </button>
+      <!-- 減號按鈕結束 -->
     </div>
+    <!-- 數目欄位開始 -->
     <input
       type="number"
-      :value="number"
-      class="form-control col-1"
+      v-model="number"
+      class="form-control text-center"
       placeholder=""
       aria-label=""
       aria-describedby="basic-addon1"
+      @change="$emit('update:incomingValue', number)"
     />
+    <!-- 數目欄位結束 -->
+    <!-- 加號按鈕開始 -->
     <div class="input-group-append">
       <button
         class="btn btn-outline-secondary"
         type="button"
-        @click.prevent="number++"
+        @click.prevent="$emit('update:incomingValue', ++number)"
       >
         ＋
       </button>
     </div>
+    <!-- 加號按鈕結束 -->
   </div>
 </template>
 
@@ -33,20 +44,20 @@
 export default {
   data() {
     return {
-      number: this.setDefaultValue || 1,
+      number: Number(this.incomingValue) || 1,
     };
   },
-  props: ["uniqueKey", "setDefaultValue"],
-  methods: {
-    confirmPurchaseData() {
-      this.$emit("emitNumber", Number(this.number));
+  props: ["uniqueKey", "incomingValue"],
+  watch: {
+    number() {
+      if (this.number == "") this.number = 1;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-input {
-  text-align: center;
+.input-group {
+  width: 160px;
 }
 </style>
