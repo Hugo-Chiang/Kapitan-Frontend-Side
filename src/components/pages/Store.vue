@@ -12,7 +12,17 @@
     <div class="row">
       <div class="col-lg-2 d-lg-block d-none">
         <aside id="aside-bar">
-          <div>123</div>
+          <ul id="category-list" class="py-3 pl-3">
+            <li v-for="category in categoryList" :key="category['CATEGORY_ID']">
+              <input
+                type="checkbox"
+                :name="category['CATEGORY_NAME']"
+                :value="category['CATEGORY_ID']"
+                v-model="selectedCategories"
+              />
+              {{ category["CATEGORY_NAME"] }}
+            </li>
+          </ul>
         </aside>
       </div>
       <!-- 方案列表開始 -->
@@ -21,7 +31,7 @@
           <!-- 方案卡片開始 -->
           <router-link
             v-for="(project, index) in currentPageContentArr"
-            :key="index"
+            :key="project['PROJECT_ID']"
             :data-id="project['PROJECT_ID']"
             :to="{
               name: '方案',
@@ -31,7 +41,7 @@
             }"
             class="router-link d-block col-lg-4 col-md-5 col-9 mx-lg-0 mx-md-1 mb-4"
           >
-            <li class="card">
+            <li class="card" :key="project['PROJECT_ID']">
               <img
                 class="card-img-top"
                 src="https://picsum.photos/286/180"
@@ -96,6 +106,8 @@ export default {
         pagesArr: ["首頁", "挑選航程"],
         currentPage: 2,
       },
+      categoryList: [],
+      selectedCategories: [],
       allProjectsArr: [],
       currentPageContentArr: [],
       itemsNumPerPage: 9,
@@ -108,11 +120,16 @@ export default {
   },
   created() {
     // const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
-    const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
+    const categoryListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+    const projectsListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
     const vm = this;
 
-    this.$http.get(api).then((response) => {
+    this.$http.get(categoryListAPI).then((response) => {
       console.log(response.data);
+      vm.categoryList = response.data;
+    });
+
+    this.$http.post(projectsListAPI, JSON.stringify([])).then((response) => {
       vm.allProjectsArr = response.data;
     });
   },
@@ -120,6 +137,18 @@ export default {
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
       this.currentPageContentArr = arr;
+    },
+  },
+  watch: {
+    selectedCategories() {
+      const projectsListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
+      const vm = this;
+
+      this.$http
+        .post(projectsListAPI, JSON.stringify(vm.selectedCategories))
+        .then((response) => {
+          vm.allProjectsArr = response.data;
+        });
     },
   },
 };
@@ -139,6 +168,11 @@ export default {
 aside {
   border: 1px solid grey;
   height: 30rem;
+  #category-list {
+    li {
+      list-style: none;
+    }
+  }
 }
 // 方案篩選器結束
 // 方案列表開始
