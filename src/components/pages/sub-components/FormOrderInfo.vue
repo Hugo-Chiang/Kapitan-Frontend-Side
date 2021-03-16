@@ -263,7 +263,8 @@ export default {
   methods: {
     // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
     queryMemberContactInfo() {
-      const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
+      // const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
       const vm = this;
 
       this.$http

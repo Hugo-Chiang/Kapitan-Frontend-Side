@@ -98,7 +98,8 @@ export default {
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   methods: {
     queryOrderDetails() {
-      const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
+      // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
       const vm = this;
 
       this.$http

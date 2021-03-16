@@ -94,7 +94,8 @@ export default {
   },
   created() {
     // 執行：根據 session 向後端詢問管理員的個資，以便做個性化渲染
-    const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminInfo.php`;
+    const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminInfo.php`;
+    // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminInfo.php`;
     const vm = this;
     const session = vm.getKapitanSession();
 

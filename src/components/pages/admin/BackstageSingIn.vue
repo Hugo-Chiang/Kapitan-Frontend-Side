@@ -81,7 +81,8 @@ export default {
   methods: {
     // 方法：（搭配導航守衛）將帳密傳予後端 API 進行登入，並透過後端回傳的 token 保持登入驗證狀態
     signIn() {
-      const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignIn.php`;
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignIn.php`;
+      // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignIn.php`;
       const vm = this;
 
       this.$http
