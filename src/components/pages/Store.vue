@@ -127,9 +127,10 @@ export default {
     Pagination,
   },
   created() {
-    // const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
-    const categoryListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
-    const projectsListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
+    const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+    const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
+    // const categoryListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+    // const projectsListAPI = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
     const vm = this;
 
     this.$http.get(categoryListAPI).then((response) => {
