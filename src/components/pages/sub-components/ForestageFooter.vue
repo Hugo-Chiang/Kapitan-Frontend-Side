@@ -1,6 +1,6 @@
 <template>
   <!-- 頁腳開始 -->
-  <footer class="container-fluid">
+  <footer class="container-fluid position-relative">
     <div class="container">
       <div id="footer-row-01" class="row d-lg-block px-5">
         <!-- 聯絡資訊清單開始 -->
@@ -214,6 +214,7 @@ footer {
   width: 100%;
   padding: 60px 0px 10px;
   background-color: $deep-teal;
+  z-index: 15;
   ul {
     padding: 0;
   }
