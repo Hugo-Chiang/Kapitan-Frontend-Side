@@ -1,7 +1,7 @@
 <template>
   <!-- 結帳區域開始 -->
   <div class="row">
-    <div class="col-12">
+    <div class=" col-12">
       <!-- 提示視窗元件開始 -->
       <Modal
         :situation="situation"

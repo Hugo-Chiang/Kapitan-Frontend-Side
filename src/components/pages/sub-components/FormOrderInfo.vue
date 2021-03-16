@@ -1,5 +1,5 @@
 <template>
-  <section id="checkoutStep02" class="card mb-5">
+  <section id="checkoutStep02" class="card my-5">
     <div class="card-header">
       <h5>
         <!-- 標題處藏有供演示用的自動填入信用卡資料方法 -->
