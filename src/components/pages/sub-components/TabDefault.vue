@@ -126,12 +126,17 @@ export default {
       },
       confirmProject: {},
       confirmID: this.projectID,
+      noImgUrl:
+        "https://res.cloudinary.com/hugo-chiang/image/upload/v1615878592/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess/No-Img-Now_wlqtdk.jpg",
     };
   },
-  props: ["projectID", "projectPricePerPerson"],
+  props: ["projectID", "projectPricePerPerson", "selectedProject"],
   components: {
     DatePicker,
     NumberInput,
+  },
+  created() {
+    console.log(this.selectedProject);
   },
   methods: {
     // 方法：回傳後端反饋的已預約日期，使月曆套件的相對應日期不可選
@@ -163,8 +168,15 @@ export default {
         let confirmNumOfPeople = this.bookingData.bookingNumOfPeople;
 
         this.confirmProject = {
-          localstorageID: `${this.confirmID}-${confirmDate}`,
-          bookingProjectID: this.confirmID,
+          localstorageID: `${this.selectedProject.selectedProjectID}-${confirmDate}`,
+          bookingProjectID: this.selectedProject.selectedProjectID,
+          bookingProjectName: this.selectedProject.selectedProjectContent
+            .projectName,
+          bookingProjectAvatarUrl:
+            this.selectedProject.selectedProjectContent.projectAvatarUrl ||
+            this.noImgUrl,
+          bookingProjectPricePerPerson: this.selectedProject
+            .selectedProjectContent.projectPricePerPerson,
           bookingProjectDate: confirmDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
         };

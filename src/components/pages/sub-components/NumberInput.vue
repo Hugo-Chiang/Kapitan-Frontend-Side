@@ -58,6 +58,6 @@ export default {
 
 <style lang="scss" scoped>
 .input-group {
-  width: 160px;
+  width: 140px !important;
 }
 </style>

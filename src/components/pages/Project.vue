@@ -92,6 +92,7 @@
             :projectPricePerPerson="
               selectedProject.selectedProjectContent.projectPricePerPerson
             "
+            :selectedProject="selectedProject"
             v-if="tabs.currentTab == '選擇方案'"
           ></TabDefault>
           <TabLocation
@@ -151,6 +152,7 @@ export default {
         selectedProjectID: this.$route.params.selectedProjectID,
         selectedProjectContent: {
           projectName: "",
+          projectAvatarUrl: "",
           projectMinNumOfPeople: "",
           projectPricePerPerson: "",
           projectSummary: "",
@@ -186,6 +188,8 @@ export default {
         console.log(response.data);
         vm.selectedProject.selectedProjectContent.projectName =
           response.data.projectContent["PROJECT_NAME"];
+        vm.selectedProject.selectedProjectContent.projectAvatarUrl =
+          response.data.projectContent["PROJECT_AVATAR_URL"];
         vm.selectedProject.selectedProjectContent.projectMinNumOfPeople =
           response.data.projectContent["PROJECT_MIN_NUM_OF_PEOPLE"];
         vm.selectedProject.selectedProjectContent.projectPricePerPerson = Number(

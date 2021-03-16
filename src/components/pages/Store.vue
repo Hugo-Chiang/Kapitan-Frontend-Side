@@ -44,7 +44,7 @@
             <li class="card" :key="project['PROJECT_ID']">
               <img
                 class="card-img-top"
-                src="https://picsum.photos/286/180"
+                :src="project['PROJECT_AVATAR_URL'] || noImgUrl"
                 alt="這裡是卡片頂圖"
               />
               <div class="card-body">
@@ -58,13 +58,19 @@
                   placeat repudiandae earum consectetur dolore expedita
                   accusamus tempore.
                 </p>
-                <h6 class="card-price">
-                  {{
-                    Number(project["PROJECT_ORIGINAL_PRICE_PER_PERSON"])
-                      | currency
-                      | dollarSign
-                  }}
-                </h6>
+                <div class="row">
+                  <div class="col-6">
+                    最少 {{ project["PROJECT_MIN_NUM_OF_PEOPLE"] }} 人成團
+                  </div>
+                  <h6 class="card-price col-6">
+                    每人
+                    {{
+                      Number(project["PROJECT_ORIGINAL_PRICE_PER_PERSON"])
+                        | currency
+                        | dollarSign
+                    }}
+                  </h6>
+                </div>
               </div>
             </li>
           </router-link>
@@ -112,6 +118,8 @@ export default {
       currentPageContentArr: [],
       itemsNumPerPage: 9,
       currentPageNum: 1,
+      noImgUrl:
+        "https://res.cloudinary.com/hugo-chiang/image/upload/v1615878592/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess/No-Img-Now_wlqtdk.jpg",
     };
   },
   components: {
@@ -125,12 +133,13 @@ export default {
     const vm = this;
 
     this.$http.get(categoryListAPI).then((response) => {
-      console.log(response.data);
       vm.categoryList = response.data;
+      console.log(vm.categoryList);
     });
 
     this.$http.post(projectsListAPI, JSON.stringify([])).then((response) => {
       vm.allProjectsArr = response.data;
+      console.log(vm.allProjectsArr);
     });
   },
   methods: {
@@ -192,6 +201,10 @@ aside {
       height: 22rem;
       color: black;
       box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
+      .card-img-top {
+        height: 160px;
+        object-fit: cover;
+      }
       .card-body {
         height: 75%;
         .card-title {
