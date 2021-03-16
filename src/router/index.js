@@ -112,7 +112,8 @@ const router = new Router({
 
 // 使用全局前置守衛，建立登入驗證機制
 router.beforeEach((to, from, next) => {
-  const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
+  const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
+  // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
   const session = getKapitanSession();
 
   if (to.meta.requiresAuth) {
