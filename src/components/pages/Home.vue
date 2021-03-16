@@ -9,6 +9,15 @@ export default {
   data() {
     return {};
   },
+  created() {
+    // 因應Heroku休眠機制，所做的後端喚醒行為，並不具備太多意義
+    const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
+    const vm = this;
+
+    this.$http.get(api).then((response) => {
+      console.log(response.data);
+    });
+  },
 };
 </script>
 

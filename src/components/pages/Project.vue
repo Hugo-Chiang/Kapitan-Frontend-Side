@@ -88,10 +88,6 @@
           </div>
           <!-- 方案購買卡片主要內容（元件）開始 -->
           <TabDefault
-            :projectID="selectedProject.selectedProjectID"
-            :projectPricePerPerson="
-              selectedProject.selectedProjectContent.projectPricePerPerson
-            "
             :selectedProject="selectedProject"
             v-if="tabs.currentTab == '選擇方案'"
           ></TabDefault>
@@ -163,6 +159,7 @@ export default {
           locationLng: "",
           locationLat: "",
         },
+        selectedProjectBookedDate: [],
       },
       tabs: {
         currentTab: "選擇方案",
@@ -208,6 +205,12 @@ export default {
           response.data.projectDepartureLocation["LOCATION_LNG"];
         vm.selectedProject.selectedProjectDepartureLocation.locationLat =
           response.data.projectDepartureLocation["LOCATION_LAT"];
+
+        response.data.projectBooking.forEach((bookingRow) => {
+          vm.selectedProject.selectedProjectBookedDate.push(
+            bookingRow["BOOKING_DATE"]
+          );
+        });
       });
   },
 };

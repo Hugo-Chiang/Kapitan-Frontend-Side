@@ -38,9 +38,6 @@
         </form>
       </ValidationObserver>
       <!-- 驗證套件 vee-validate 監看區域結束 -->
-      <div class="my-5">
-        {{ aa }}
-      </div>
     </div>
   </div>
   <!-- 結帳區域結束 -->
@@ -69,7 +66,6 @@ export default {
         message: "",
         data: {},
       },
-      aa: "",
     };
   },
   props: ["confirmProjectsArr"],
@@ -102,7 +98,6 @@ export default {
         .post(api, json)
         .then((response) => {
           console.log(response);
-          this.aa = response.data;
           if (response.data.status == "訂購成功") {
             this.situation.event = "訂購成功";
             this.situation.message = response.data.message;
