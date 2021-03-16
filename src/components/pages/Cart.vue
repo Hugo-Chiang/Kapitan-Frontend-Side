@@ -172,42 +172,9 @@ export default {
   },
   components: { NumberInput },
   created() {
-    console.log(this.confirmProjectsArr);
     this.confirmProjectsArr = this.confirmProjectsArr || [];
   },
   methods: {
-    // 方法：更新購物車，覆寫 localStorage，並帶往結帳頁
-    // updateCart() {
-    //   let newConfirmProjectsArr = [];
-    //   let projectBlocks = document.querySelectorAll(".projectBlock");
-
-    //   for (let i = 0; i < projectBlocks.length; i++) {
-    //     let confirmProjectID = projectBlocks[i]
-    //       .querySelector(".id")
-    //       .textContent.trim();
-    //     let confirmProjectDate = projectBlocks[i]
-    //       .querySelector(".date")
-    //       .textContent.trim();
-    //     let confirmNumOfPeople = projectBlocks[i]
-    //       .querySelector(".people")
-    //       .querySelector("input")
-    //       .value.trim();
-    //     let confirmProject = {
-    //       localstorageID: `${confirmProjectID}-${confirmProjectDate}`,
-    //       bookingProjectID: confirmProjectID,
-    //       bookingProjectDate: confirmProjectDate,
-    //       bookingProjectNumOfPeople: confirmNumOfPeople,
-    //     };
-    //     newConfirmProjectsArr.push(confirmProject);
-    //   }
-
-    //   localStorage.setItem(
-    //     "savingProjects",
-    //     JSON.stringify(newConfirmProjectsArr)
-    //   );
-
-    //   this.$router.push("/Cart/Checkout");
-    // },
     // 方法：刪除單一方案，覆寫 localStorage
     deleteSingleProject(e) {
       let storageArr = JSON.parse(localStorage.getItem("savingProjects"));
@@ -253,7 +220,6 @@ export default {
 .card-title {
   font-weight: 600;
 }
-
 #clear-cart-btn {
   background-color: darkcyan;
 }
@@ -289,7 +255,6 @@ export default {
 #order-amount-card-container {
   top: 0;
   #order-amount-list {
-    // border: 1px solid red;
     width: 150px;
     padding: 0;
     li {
