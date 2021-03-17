@@ -156,7 +156,7 @@
       <hr />
       <!-- 填寫信用卡資料開始 -->
       <div class="form-row">
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
@@ -174,7 +174,7 @@
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-5">
           <ValidationProvider
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
@@ -196,7 +196,7 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{
               required: true,
@@ -217,7 +217,7 @@
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true, length: 3, regex: /\d{3}$/ }"
             v-slot="{ errors, classes }"

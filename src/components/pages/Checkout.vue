@@ -20,6 +20,7 @@
           ref="formContactInfo"
           :confirmProjectsArr="confirmProjectsArr"
           :requiredInputTitle="requiredInputTitle"
+          :currentPage="currentPage"
           @getCheckOutData="checkOut"
         ></FormContactInfo>
         <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
@@ -55,7 +56,7 @@ export default {
       aa: true,
     };
   },
-  props: ["confirmProjectsArr"],
+  props: ["confirmProjectsArr", "currentPage"],
   components: {
     FormOrderInfo,
     FormContactInfo,
@@ -129,14 +130,6 @@ export default {
       } else {
         localStorage.removeItem("savingProjects");
       }
-    },
-  },
-  watch: {
-    ValidationObserver: {
-      handler(newObj) {
-        console.log(newObj.data);
-      },
-      deep: true,
     },
   },
 };

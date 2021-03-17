@@ -31,113 +31,39 @@
               </button>
             </div>
             <div class="card-body py-0 position-relative">
-              <div
-                class="project-row row py-md-0 py-3 d-flex align-items-center"
-                :class="{ 'has-project-divier': index > 0 ? true : false }"
+              <!-- 方案項目開始 -->
+              <CartListItem
                 v-for="(project, index) in confirmProjectsArr"
                 :data-id="
                   project.bookingProjectID + '-' + project.bookingProjectDate
                 "
+                :list="confirmProjectsArr"
+                :index="index"
+                :listItem="project"
+                :currentPage="currentPage"
                 :key="index"
-              >
-                <!-- 方案頭貼、標題與日期開始 -->
-                <div class="col-md-6 mb-md-0 col-12 mb-2">
-                  <router-link
-                    class="router-link d-flex flex-row align-items-center order-1"
-                    :to="{
-                      name: '方案',
-                      params: {
-                        selectedProjectID: project.bookingProjectID,
-                      },
-                    }"
-                  >
-                    <div
-                      class="project-avatar-block d-flex justify-content-center"
-                    >
-                      <img
-                        :src="confirmProjectsArr[index].bookingProjectAvatarUrl"
-                        alt=""
-                        class="project-avatar"
-                      />
-                    </div>
-                    <div class="pl-3">
-                      <h6 class="project-name">
-                        {{ confirmProjectsArr[index].bookingProjectName }}
-                      </h6>
-                      <h6 class="project-name-booking-date">
-                        預約日期：<span>{{
-                          confirmProjectsArr[index].bookingProjectDate
-                        }}</span>
-                      </h6>
-                    </div>
-                  </router-link>
-                </div>
-                <!-- 方案頭貼、標題與日期結束 -->
-                <!-- 選擇人數欄位開始 -->
-                <div
-                  class="col-md-3 order-md-2 col-sm-7 my-sm-0 col-8 my-3 order-3 d-flex flex-md-column flex-row align-items-center"
-                >
-                  <h6
-                    class="adjust-num-title my-md-2 mr-md-0 mr-2 mb-0"
-                    v-if="currentPage == '購物車'"
-                  >
-                    人數
-                  </h6>
-                  <h6 v-else>{{ project.bookingProjectNumOfPeople }} 人</h6>
-                  <NumberInput
-                    ref="numberInput"
-                    class="w-100"
-                    :uniqueKey="project.bookingProjectID"
-                    :incomingValue.sync="project.bookingProjectNumOfPeople"
-                    v-if="currentPage == '購物車'"
-                  ></NumberInput>
-                </div>
-                <!-- 選擇人數欄位結束 -->
-                <!-- 金額統計開始 -->
-                <div
-                  class="col-md-2 order-md-3 col-sm-3 col-4 order-2 d-flex flex-column align-items-center"
-                >
-                  <h5 class="project-final-price mb-0">
-                    {{
-                      (confirmProjectsArr[index].bookingProjectNumOfPeople *
-                        confirmProjectsArr[index].bookingProjectPricePerPerson)
-                        | currency
-                        | dollarSign
-                    }}
-                  </h5>
-                </div>
-                <!-- 金額統計結束 -->
-                <!-- 刪除單項方案開始 -->
-                <div
-                  class="col-md-1 col-sm-1 my-sm-0 order-4 col-12 my-3 d-flex"
-                >
-                  <a
-                    class="delete-single-project-icon d-inline-block mx-auto"
-                    href=""
-                    @click.prevent="deleteSingleProject"
-                    v-if="currentPage == '購物車'"
-                    ><i class="fas fa-trash-alt"></i
-                  ></a>
-                </div>
-                <!-- 刪除單項方案結束 -->
-              </div>
-              <!-- 購物車全空提醒語開始 -->
-              <div
-                id="empty-cart-message"
-                class="d-flex justify-content-center align-items-center"
-                v-if="confirmProjectsArr.length == 0"
-              >
-                <h6>
-                  您的購物車目前是空的呢。
-                  請到「挑選航程」頁看看有沒有喜歡的方案吧！
-                </h6>
-              </div>
-              <!-- 購物車全空提醒語結束 -->
+              ></CartListItem>
+              <!-- 方案項目結束 -->
             </div>
+            <!-- 購物車全空提醒語開始 -->
+            <div
+              id="empty-cart-message"
+              class="d-flex justify-content-center align-items-center"
+              v-if="confirmProjectsArr.length == 0"
+            >
+              <h6>
+                您的購物車目前是空的呢。
+                請到「挑選航程」頁看看有沒有喜歡的方案吧！
+              </h6>
+            </div>
+            <!-- 購物車全空提醒語結束 -->
           </div>
-          <!-- <ValidationObserver v-slot="{ invalid }"> -->
           <!-- 結帳區域開始 -->
-          <router-view :confirmProjectsArr="confirmProjectsArr"></router-view>
+          <router-view
+            ref="cart"
+            :confirmProjectsArr="confirmProjectsArr"
+            :currentPage="currentPage"
+          ></router-view>
           <!-- 結帳區域結束 -->
           <!-- </ValidationObserver> -->
         </div>
@@ -170,6 +96,7 @@
                   >元
                 </li>
               </ul>
+              <!-- 判斷該出現屬於購物車還是結帳頁的行動按鈕 -->
               <button
                 class="btn btn-action-now"
                 @click.prevent="$router.push('/Cart/Checkout')"
@@ -178,19 +105,22 @@
                 進行結帳
               </button>
               <input
-                v-else
+                v-else-if="
+                  currentPage != '購物車' && confirmProjectsArr.length > 0
+                "
                 type="submit"
-                value="立即結帳"
+                :value="invalid ? '請填資料' : '立即結帳'"
                 class="btn btn-action-now"
+                :class="{ 'invalid-btn': invalid }"
                 :disabled="invalid"
-                @click.prevent="aa"
+                @click.prevent="
+                  $refs.cart.$refs.formContactInfo.emitCheckOutData
+                "
                 data-toggle="modal"
                 data-target="#checkOutModel"
                 data-backdrop="static"
               />
             </div>
-            <!-- :disabled="invalid" -->
-            <!-- @click.prevent="$refs.formContactInfo.emitCheckOutData" -->
           </div>
         </div>
         <!-- 訂單總額部分結束 -->
@@ -219,9 +149,18 @@
             >元
           </li>
         </ul>
-        <button class="btn btn-action-now d-flex align-items-center">
-          <h5 class="mb-0 d-inline-block">進行結帳</h5>
-        </button>
+        <input
+          v-if="confirmProjectsArr.length > 0"
+          type="submit"
+          :value="invalid ? '請填資料' : '立即結帳'"
+          class="btn btn-action-now"
+          :class="{ 'invalid-btn': invalid }"
+          :disabled="invalid"
+          @click.prevent="$refs.cart.$refs.formContactInfo.emitCheckOutData"
+          data-toggle="modal"
+          data-target="#checkOutModel"
+          data-backdrop="static"
+        />
       </div>
       <!-- （行動版）結帳按鈕開始結束 -->
     </ValidationObserver>
@@ -230,8 +169,8 @@
 </template>
 
 <script>
-// 導入數字調控元件
-import NumberInput from "@/components/pages/sub-components/NumberInput";
+// 導入結帳項目元件
+import CartListItem from "@/components/pages/sub-components/CartListItem";
 
 export default {
   data() {
@@ -239,10 +178,7 @@ export default {
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
   },
-  provide: {
-    invalid: false,
-  },
-  components: { NumberInput },
+  components: { CartListItem },
   created() {
     this.confirmProjectsArr = this.confirmProjectsArr || [];
   },
@@ -310,6 +246,14 @@ $desktop-nav-bar-height: 105px;
 .btn-action-now {
   background-color: $action-now !important;
   color: $sail;
+  cursor: pointer;
+  &:hover {
+    color: $sail;
+  }
+}
+.invalid-btn {
+  background-color: grey !important;
+  cursor: not-allowed;
 }
 .card-title {
   font-weight: 600;

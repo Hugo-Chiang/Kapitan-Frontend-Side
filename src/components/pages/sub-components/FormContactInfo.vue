@@ -16,17 +16,23 @@
       </div>
     </div>
     <div class="card-body">
+      <!-- 方案項目開始 -->
       <div
         class="project-block-in-checkout-step-03"
         v-for="(project, index) in confirmProjectsArr"
         :data-id="project.bookingProjectID + '-' + project.bookingProjectDate"
         :key="index"
       >
-        <span class="id">{{ project.bookingProjectID }}</span
-        >, <span class="date">{{ project.bookingProjectDate }}</span
-        >,<span class="people2">{{ project.bookingProjectNumOfPeople }}</span>
-
-        <div class="col">
+        <CartListItem
+          :list="confirmProjectsArr"
+          :index="index"
+          :listItem="project"
+          :currentPage="currentPage"
+          :key="index"
+        ></CartListItem>
+        <!-- 方案項目結束 -->
+        <!-- 聯絡資訊開始 -->
+        <div class="mb-3 px-4">
           <input
             class="form-check-input checkbox-for-project"
             type="checkbox"
@@ -42,7 +48,6 @@
             >同訂購資訊（個案）</label
           >
         </div>
-
         <div
           class="form-row contact-info-input-block"
           :id="'contact-info-input-block' + index"
@@ -187,13 +192,18 @@
             </ValidationProvider>
           </div>
         </div>
+        <!-- 聯絡資訊結束 -->
         <hr v-if="index < confirmProjectsArr.length - 1" />
+        <!-- 方案項目結束 -->
       </div>
     </div>
   </section>
 </template>
 
 <script>
+// 導入結帳項目元件
+import CartListItem from "@/components/pages/sub-components/CartListItem";
+
 export default {
   data() {
     return {
@@ -210,8 +220,10 @@ export default {
       inputContantInfoArr: [],
     };
   },
-  props: ["confirmProjectsArr", "requiredInputTitle"],
+  props: ["confirmProjectsArr", "requiredInputTitle", "currentPage"],
+  components: { CartListItem },
   created() {
+    console.log(this.confirmProjectsArr);
     this.establishSyncOrdererContactInfoArr();
     this.$eventBus.$on("emitInputOrdererInfo", (infoObj) => {
       this.inputOrdererInfo = infoObj;
@@ -314,3 +326,32 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../../../assets/all.scss";
+
+.router-link {
+  color: black;
+  .project-avatar-block {
+    width: 120px;
+    height: 80px;
+    overflow: hidden;
+    .project-avatar {
+      height: 100%;
+    }
+  }
+  .project-name {
+    font-weight: 600;
+    color: $deep-teal;
+    @include media-breakpoint-down(md) {
+      font-size: 15px;
+    }
+  }
+  .project-name-booking-date {
+    font-size: 14px;
+    @include media-breakpoint-down(md) {
+      font-size: 13px;
+    }
+  }
+}
+</style>

@@ -57,13 +57,15 @@ const router = new Router({
           children: [{
             path: '/Cart/Checkout',
             name: '結帳',
-            component: Checkout
+            component: Checkout,
+            meta: { requiresAuth: true }
           }]
         },
         {
           path: '/Member-Centre',
           name: '會員中心',
-          component: MemberCentre
+          component: MemberCentre,
+          meta: { requiresAuth: true }
         },
       ]
     }, {
@@ -113,17 +115,38 @@ const router = new Router({
 // 使用全局前置守衛，建立登入驗證機制
 router.beforeEach((to, from, next) => {
   const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
-  // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
   const session = getKapitanSession();
 
   if (to.meta.requiresAuth) {
 
-    axios.post(api, session).then((response) => {
-      if (response.data.sessionCheck) next();
-      else next({ name: '管理系統：登入頁', });
-    }).catch((response) => {
-      console.log(response);
-    })
+    // 判斷所前往頁面是前台還後台，會有不同的應對
+    if (to.path.indexOf('Admin') != -1) {
+      axios.post(api, session).then((response) => {
+        if (response.data.sessionCheck) next();
+        else next({ name: '管理系統：登入頁', });
+      }).catch((response) => {
+        console.log(response);
+      })
+    } else {
+      let aa = true;
+
+      if (aa) {
+        // 判斷所前往是不是結帳頁，會有不同的應對
+        if (to.path.indexOf('Checkout') != -1) {
+          if (localStorage.getItem("savingProjects") != null) next();
+          else setTimeout(() => {
+            router.push({ name: '首頁', });
+          }, 500);
+        } else {
+          next();
+        }
+      } else {
+        setTimeout(() => {
+          router.push({ name: '首頁', });
+        }, 500);
+      }
+
+    }
   } else {
 
     // 在有登入狀況下進入登入頁，將自動被導回首頁
@@ -139,7 +162,6 @@ router.beforeEach((to, from, next) => {
         console.log(response);
       });
     }
-
     next();
   }
 });
