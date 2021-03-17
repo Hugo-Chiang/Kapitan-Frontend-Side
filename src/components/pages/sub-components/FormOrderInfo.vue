@@ -1,5 +1,5 @@
 <template>
-  <section id="checkoutStep02" class="card my-5">
+  <section id="checkout-step-02" class="card my-5">
     <div class="card-header">
       <h5>
         <!-- 標題處藏有供演示用的自動填入信用卡資料方法 -->
@@ -10,11 +10,11 @@
         <input
           class="form-check-input"
           type="checkbox"
-          id="inlineCheckbox1"
+          id="inline-check-box-1"
           value="option1"
           v-model="syncMemberContactInfo"
         />
-        <label class="form-check-label" for="inlineCheckbox1"
+        <label class="form-check-label" for="inline-check-box-1"
           >同登入會員資訊</label
         >
         <!-- 訂購人資訊同步會員資訊 checkbox 結束 -->
@@ -22,16 +22,16 @@
     </div>
     <div class="card-body">
       <!-- 填寫訂購人資訊開始 -->
-      <div class="form-row ordererContactInfoInputBlock">
-        <div class="form-group col-md-2">
+      <div class="form-row orderer-contact-info-input-block">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputMainName">訂購人姓名</label>
+            <label for="input-main-name">訂購人姓名</label>
             <input
               type="text"
-              id="inputMainName"
+              id="input-main-name"
               name="訂購人姓名"
               class="form-control"
               :class="classes"
@@ -43,16 +43,16 @@
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true, length: 10, regex: /^09\d{8}$/ }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputMainPhoneNumber">訂購人手機號碼</label>
+            <label for="inputM-main-phone-number">訂購人手機號碼</label>
             <input
               type="text"
               maxlength="10"
-              id="inputMainPhoneNumber"
+              id="inputM-main-phone-number"
               name="訂購人手機號碼"
               class="form-control"
               :class="classes"
@@ -69,12 +69,12 @@
             :rules="{ required: true, email: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputMainEmail">訂購人電子信箱</label>
+            <label for="input-main-email">訂購人電子信箱</label>
             <input
               type="email"
               class="form-control"
               :class="classes"
-              id="inputMainEmail"
+              id="input-main-email"
               name="訂購人電子信箱"
               placeholder="例：Hello-World@email.com"
               v-model="inputOrdererInfo.MCemail"
@@ -85,16 +85,16 @@
           </ValidationProvider>
         </div>
       </div>
-      <div class="form-row ordererContactInfoInputBlock">
-        <div class="form-group col-md-2">
+      <div class="form-row orderer-contact-info-input-block">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputSubName">{{ requiredInputTitle.ECname }}</label>
+            <label for="input-sub-name">{{ requiredInputTitle.ECname }}</label>
             <input
               type="text"
-              id="inputSubName"
+              id="input-sub-name"
               :name="requiredInputTitle.ECname"
               class="form-control"
               :class="classes"
@@ -106,18 +106,18 @@
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <ValidationProvider
             :rules="{ required: true, length: 10, regex: /^09\d{8}$/ }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputSubPhoneNumber">{{
+            <label for="input-sub-phone-number">{{
               requiredInputTitle.ECphone
             }}</label>
             <input
               type="text"
               maxlength="10"
-              id="inputSubPhoneNumber"
+              id="input-sub-phone-number"
               :name="requiredInputTitle.ECphone"
               class="form-control"
               :class="classes"
@@ -134,12 +134,14 @@
             :rules="{ required: true, email: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputSubEmail">{{ requiredInputTitle.ECemail }}</label>
+            <label for="input-sub-email">{{
+              requiredInputTitle.ECemail
+            }}</label>
             <input
               type="email"
               class="form-control"
               :class="classes"
-              id="inputSubEmail"
+              id="input-sub-email"
               :name="requiredInputTitle.ECemail"
               placeholder="例：Hello-World@email.com"
               v-model="inputOrdererInfo.ECemail"
@@ -159,10 +161,10 @@
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputCardName">持卡人姓名</label>
+            <label for="input-card-name">持卡人姓名</label>
             <input
               type="text"
-              id="inputCardName"
+              id="input-card-name"
               name="持卡人姓名"
               class="form-control"
               :class="classes"
@@ -177,11 +179,11 @@
             :rules="{ required: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputCardNumber">信用卡卡號</label>
+            <label for="input-card-number">信用卡卡號</label>
             <input
               type="text"
               maxlength="19"
-              id="inputCardNumber"
+              id="input-card-number"
               name="信用卡卡號"
               class="form-control"
               :class="classes"
@@ -201,10 +203,10 @@
             }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputCardNumber">有效期</label>
+            <label for="input-card-exp">有效期</label>
             <input
               type="text"
-              id="inputCardNumber"
+              id="input-card-exp"
               name="有效期"
               class="form-control"
               :class="classes"
@@ -220,10 +222,10 @@
             :rules="{ required: true, length: 3, regex: /\d{3}$/ }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputCardCVV">安全碼（CVV）</label>
+            <label for="input-card-cvv">安全碼（CVV）</label>
             <input
               type="text"
-              id="inputCardCVV"
+              id="input-card-cvv"
               name="安全碼（CVV）"
               class="form-control"
               :class="classes"
@@ -264,7 +266,6 @@ export default {
     // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
     queryMemberContactInfo() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
       const vm = this;
 
       this.$http
@@ -367,7 +368,7 @@ export default {
 
       // 模擬 blur 事件以觸發表單驗證
       let ordererContactInfoInputBlocks = document.querySelectorAll(
-        ".ordererContactInfoInputBlock"
+        ".orderer-contact-info-input-block"
       );
       let inputsArr = [];
 

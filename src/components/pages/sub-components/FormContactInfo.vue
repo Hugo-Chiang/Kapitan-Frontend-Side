@@ -1,23 +1,23 @@
 <template>
-  <section id="checkoutStep03" class="card">
+  <section id="checkout-step-03" class="card">
     <div class="card-header">
       <h5>第三步：填寫聯絡資訊</h5>
       <div class="form-check form-check-inline">
         <input
           class="form-check-input"
           type="checkbox"
-          id="inlineCheckbox2"
+          id="inline-checkbox-2"
           value="option1"
           v-model="syncOrdererContactInfoAll"
         />
-        <label class="form-check-label" for="inlineCheckbox2"
+        <label class="form-check-label" for="inline-checkbox-2"
           >同訂購人資訊（全部）</label
         >
       </div>
     </div>
     <div class="card-body">
       <div
-        class="projectBlockInCheckOutStep03"
+        class="project-block-in-checkout-step-03"
         v-for="(project, index) in confirmProjectsArr"
         :data-id="project.bookingProjectID + '-' + project.bookingProjectDate"
         :key="index"
@@ -28,36 +28,38 @@
 
         <div class="col">
           <input
-            class="form-check-input checkboxForProject"
+            class="form-check-input checkbox-for-project"
             type="checkbox"
-            :id="'inlineCheckbox' + (index + 3)"
-            :key="'inlineCheckbox' + (index + 3)"
+            :id="'inline-checkbox-' + (index + 3)"
+            :key="'inline-checkbox-' + (index + 3)"
             v-model="syncOrdererContactInfoArr[index]"
             value="option1"
             @change="simulateBlurEvt(index)"
           />
-          <label class="form-check-label" :for="'inlineCheckbox' + (index + 3)"
+          <label
+            class="form-check-label"
+            :for="'inline-checkbox-' + (index + 3)"
             >同訂購資訊（個案）</label
           >
         </div>
 
         <div
-          class="form-row contactInfoInputBlock"
-          :id="'contactInfoInputBlock' + index"
+          class="form-row contact-info-input-block"
+          :id="'contact-info-input-block' + index"
         >
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-3">
             <ValidationProvider
               :rules="{ required: true }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputMainName' + (index + 1)">{{
+              <label :for="'input-main-name' + (index + 1)">{{
                 requiredInputTitle.MCname
               }}</label>
               <input
                 type="text"
-                :id="'inputMainName' + (index + 1)"
+                :id="'input-main-name' + (index + 1)"
                 :name="requiredInputTitle.MCname"
-                :key="'inputMainName' + (index + 1)"
+                :key="'input-main-name' + (index + 1)"
                 class="form-control"
                 :class="classes"
                 :placeholder="requiredInputTitle.MCname"
@@ -67,20 +69,20 @@
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-3">
             <ValidationProvider
               :rules="{ required: true, regex: /^09\d{8}$/ }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputMainPhoneNumber' + (index + 1)">{{
+              <label :for="'input-main-phone-number' + (index + 1)">{{
                 requiredInputTitle.MCphone
               }}</label>
               <input
                 type="text"
                 maxlength="10"
-                :id="'inputMainPhoneNumber' + (index + 1)"
+                :id="'input-main-phone-number' + (index + 1)"
                 :name="requiredInputTitle.MCphone"
-                :key="'inputMainPhoneNumber' + (index + 1)"
+                :key="'input-main-phone-number' + (index + 1)"
                 class="form-control"
                 :class="classes"
                 placeholder="例：0933128872"
@@ -95,16 +97,16 @@
               :rules="{ required: true, email: true }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputMainEmail' + (index + 1)">{{
+              <label :for="'input-main-email' + (index + 1)">{{
                 requiredInputTitle.MCemail
               }}</label>
               <input
                 type="email"
                 class="form-control"
                 :class="classes"
-                :id="'inputMainEmail' + (index + 1)"
+                :id="'input-main-email' + (index + 1)"
                 :name="requiredInputTitle.ECemeal"
-                :key="'inputMainEmail' + (index + 1)"
+                :key="'input-main-email' + (index + 1)"
                 placeholder="例：Hello-World@email.com"
                 v-model="inputContantInfoArr[index].MCemail"
                 @keyup="unsyncOrdererContactInfo(index)"
@@ -114,22 +116,22 @@
           </div>
         </div>
         <div
-          class="form-row contactInfoInputBlock"
-          :id="'contactInfoInputBlock' + (index + 1)"
+          class="form-row contact-info-input-block"
+          :id="'contact-info-input-block' + (index + 1)"
         >
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-3">
             <ValidationProvider
               :rules="{ required: true }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputSubName' + (index + 2)">{{
+              <label :for="'input-sub-name' + (index + 2)">{{
                 requiredInputTitle.ECname
               }}</label>
               <input
                 type="text"
-                :id="'inputSubName' + (index + 2)"
+                :id="'input-sub-name' + (index + 2)"
                 :name="requiredInputTitle.ECname"
-                :key="'inputSubName' + (index + 2)"
+                :key="'input-sub-name' + (index + 2)"
                 class="form-control"
                 :class="classes"
                 :placeholder="requiredInputTitle.ECname"
@@ -139,20 +141,20 @@
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-3">
             <ValidationProvider
               :rules="{ required: true, regex: /^09\d{8}$/ }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputSubPhoneNumber' + (index + 2)">{{
+              <label :for="'input-sub-phone-number' + (index + 2)">{{
                 requiredInputTitle.ECphone
               }}</label>
               <input
                 type="text"
                 maxlength="10"
-                :id="'inputSubPhoneNumber' + (index + 2)"
+                :id="'input-sub-phone-number' + (index + 2)"
                 :name="requiredInputTitle.ECphone"
-                :key="'inputSubPhoneNumber' + (index + 2)"
+                :key="'input-sub-phone-number' + (index + 2)"
                 class="form-control"
                 :class="classes"
                 placeholder="例：0933128872"
@@ -167,16 +169,16 @@
               :rules="{ required: true, email: true }"
               v-slot="{ errors, classes }"
             >
-              <label :for="'inputSubEmail' + (index + 2)">{{
+              <label :for="'input-sub-email' + (index + 2)">{{
                 requiredInputTitle.ECemail
               }}</label>
               <input
                 type="email"
                 class="form-control"
                 :class="classes"
-                :id="'inputSubEmail' + (index + 2)"
+                :id="'input-sub-email' + (index + 2)"
                 :name="requiredInputTitle.ECemail"
-                :key="'inputSubEmail' + (index + 2)"
+                :key="'input-sub-email' + (index + 2)"
                 placeholder="例：Hello-World@email.com"
                 v-model="inputContantInfoArr[index].ECemail"
                 @keyup="unsyncOrdererContactInfo(index)"
@@ -241,7 +243,7 @@ export default {
     // 方法：個別方案模擬 blur 事件以觸發表單驗證
     simulateBlurEvt(index) {
       let targetProject = document.querySelectorAll(
-        ".projectBlockInCheckOutStep03"
+        ".project-block-in-checkout-step-03"
       )[index];
       console.log(targetProject);
       let targetInputs = targetProject.querySelectorAll("input");
@@ -276,7 +278,9 @@ export default {
       }
 
       // 模擬 blur 事件以觸發表單驗證
-      let Projects = document.querySelectorAll(".projectBlockInCheckOutStep03");
+      let Projects = document.querySelectorAll(
+        ".project-block-in-checkout-step-03"
+      );
       Projects.forEach((project, index) => vm.simulateBlurEvt(index));
     },
     // 監看（方法）：確認同步訂購資訊時，複製訂購資訊予「第三步：填寫聯絡資訊」的個別輸入欄

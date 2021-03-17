@@ -1,7 +1,7 @@
 <template>
   <!-- 結帳區域開始 -->
   <div class="row">
-    <div class=" col-12">
+    <div class="col-12">
       <!-- 提示視窗元件開始 -->
       <Modal
         :situation="situation"
@@ -9,7 +9,7 @@
       ></Modal>
       <!-- 提示視窗元件結束 -->
       <!-- 驗證套件 vee-validate 監看區域開始 -->
-      <ValidationObserver v-slot="{ invalid }">
+      <!-- <ValidationObserver v-slot="{ invalid }"> -->
         <form>
           <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
           <FormOrderInfo
@@ -25,7 +25,7 @@
             @getCheckOutData="checkOut"
           ></FormContactInfo>
           <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
-          <input
+          <!-- <input
             type="submit"
             value="立即結帳"
             class="btn btn-primary mt-5"
@@ -34,9 +34,9 @@
             data-toggle="modal"
             data-target="#checkOutModel"
             data-backdrop="static"
-          />
+          /> -->
         </form>
-      </ValidationObserver>
+      <!-- </ValidationObserver> -->
       <!-- 驗證套件 vee-validate 監看區域結束 -->
     </div>
   </div>

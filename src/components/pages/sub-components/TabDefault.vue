@@ -226,7 +226,7 @@ export default {
     color: $sail;
   }
   #booking-now-btn {
-    background-color: #f16c5d;
+    background-color: $action-now;
     color: $sail;
   }
 }
