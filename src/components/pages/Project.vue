@@ -141,7 +141,7 @@ export default {
   data() {
     return {
       breadCrumbData: {
-        pagesArr: ["首頁", "商城", "方案"],
+        pagesArr: ["首頁", "挑選航程", "方案詳情"],
         currentPage: 3,
       },
       selectedProject: {
