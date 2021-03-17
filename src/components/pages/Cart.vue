@@ -149,8 +149,14 @@
             >元
           </li>
         </ul>
+        <button
+          v-if="currentPage == '購物車' && confirmProjectsArr.length > 0"
+          class="btn btn-action-now d-flex align-items-center"
+        >
+          <h5 class="mb-0 d-inline-block">進行結帳</h5>
+        </button>
         <input
-          v-if="confirmProjectsArr.length > 0"
+          v-else-if="currentPage != '購物車' && confirmProjectsArr.length > 0"
           type="submit"
           :value="invalid ? '請填資料' : '立即結帳'"
           class="btn btn-action-now"

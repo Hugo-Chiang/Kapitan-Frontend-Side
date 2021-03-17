@@ -33,7 +33,8 @@
               :class="[
                 navbarLink.selfClass,
                 {
-                  'current-link': navbarLink.path == currentPath ? true : false,
+                  'current-link':
+                    currentPath.indexOf(navbarLink.path) != -1 ? true : false,
                 },
               ]"
               :to="navbarLink.routerTo"
