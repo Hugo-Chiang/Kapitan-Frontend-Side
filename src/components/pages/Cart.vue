@@ -7,6 +7,7 @@
         <hr />
       </div>
     </div>
+    <!-- 驗證套件 vee-validate 監看區域開始 -->
     <ValidationObserver v-slot="{ invalid }">
       <!-- 購物車區域開始 -->
       <section id="cart-area" class="row d-flex">
@@ -134,9 +135,11 @@
               <!-- 購物車全空提醒語結束 -->
             </div>
           </div>
+          <!-- <ValidationObserver v-slot="{ invalid }"> -->
           <!-- 結帳區域開始 -->
           <router-view :confirmProjectsArr="confirmProjectsArr"></router-view>
           <!-- 結帳區域結束 -->
+          <!-- </ValidationObserver> -->
         </div>
         <!-- 訂單列表部分結束 -->
         <!-- 訂單總額部分開始 -->
@@ -180,12 +183,14 @@
                 value="立即結帳"
                 class="btn btn-action-now"
                 :disabled="invalid"
-                @click.prevent="$refs.formContactInfo.emitCheckOutData"
+                @click.prevent="aa"
                 data-toggle="modal"
                 data-target="#checkOutModel"
                 data-backdrop="static"
               />
             </div>
+            <!-- :disabled="invalid" -->
+            <!-- @click.prevent="$refs.formContactInfo.emitCheckOutData" -->
           </div>
         </div>
         <!-- 訂單總額部分結束 -->
@@ -220,6 +225,7 @@
       </div>
       <!-- （行動版）結帳按鈕開始結束 -->
     </ValidationObserver>
+    <!-- 驗證套件 vee-validate 監看區域結束 -->
   </main>
 </template>
 
@@ -232,6 +238,9 @@ export default {
     return {
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
+  },
+  provide: {
+    invalid: false,
   },
   components: { NumberInput },
   created() {
@@ -257,6 +266,15 @@ export default {
       localStorage.removeItem("savingProjects");
       this.confirmProjectsArr = [];
     },
+    aa() {
+      this.$validator.validate().then((valid) => {
+        if (!valid) {
+          alert("ya");
+        } else {
+          alert("no");
+        }
+      });
+    },
   },
   computed: {
     // 方法：藉由動態路由自動回傳所在頁面名稱
@@ -274,6 +292,11 @@ export default {
         amount = amount + price;
       });
       return amount;
+    },
+  },
+  watch: {
+    invalid() {
+      console.log(this.provide.invalid);
     },
   },
 };

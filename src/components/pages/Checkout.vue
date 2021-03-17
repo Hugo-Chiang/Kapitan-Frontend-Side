@@ -8,36 +8,22 @@
         :deleteInvalidProjects="deleteInvalidProjects"
       ></Modal>
       <!-- 提示視窗元件結束 -->
-      <!-- 驗證套件 vee-validate 監看區域開始 -->
-      <!-- <ValidationObserver v-slot="{ invalid }"> -->
-        <form>
-          <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
-          <FormOrderInfo
-            :confirmProjectsArr="confirmProjectsArr"
-            :requiredInputTitle="requiredInputTitle"
-          ></FormOrderInfo>
-          <!-- 進行結帳「第二步：填寫訂購資訊」章節結束 -->
-          <!-- 進行結帳「第三步：填寫聯絡資訊」章節開始 -->
-          <FormContactInfo
-            ref="formContactInfo"
-            :confirmProjectsArr="confirmProjectsArr"
-            :requiredInputTitle="requiredInputTitle"
-            @getCheckOutData="checkOut"
-          ></FormContactInfo>
-          <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
-          <!-- <input
-            type="submit"
-            value="立即結帳"
-            class="btn btn-primary mt-5"
-            :disabled="invalid"
-            @click.prevent="$refs.formContactInfo.emitCheckOutData"
-            data-toggle="modal"
-            data-target="#checkOutModel"
-            data-backdrop="static"
-          /> -->
-        </form>
-      <!-- </ValidationObserver> -->
-      <!-- 驗證套件 vee-validate 監看區域結束 -->
+      <form>
+        <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
+        <FormOrderInfo
+          :confirmProjectsArr="confirmProjectsArr"
+          :requiredInputTitle="requiredInputTitle"
+        ></FormOrderInfo>
+        <!-- 進行結帳「第二步：填寫訂購資訊」章節結束 -->
+        <!-- 進行結帳「第三步：填寫聯絡資訊」章節開始 -->
+        <FormContactInfo
+          ref="formContactInfo"
+          :confirmProjectsArr="confirmProjectsArr"
+          :requiredInputTitle="requiredInputTitle"
+          @getCheckOutData="checkOut"
+        ></FormContactInfo>
+        <!-- 進行結帳「第三步：填寫聯絡資訊」章節結束 -->
+      </form>
     </div>
   </div>
   <!-- 結帳區域結束 -->
@@ -66,6 +52,7 @@ export default {
         message: "",
         data: {},
       },
+      aa: true,
     };
   },
   props: ["confirmProjectsArr"],
@@ -73,6 +60,10 @@ export default {
     FormOrderInfo,
     FormContactInfo,
     Modal,
+  },
+  created() {
+    // console.log(invalid);
+    console.log(this.$validator);
   },
   methods: {
     // 方法：進行結帳，透過 Ajax 與後端溝通，獲悉訂購成敗
@@ -138,6 +129,14 @@ export default {
       } else {
         localStorage.removeItem("savingProjects");
       }
+    },
+  },
+  watch: {
+    ValidationObserver: {
+      handler(newObj) {
+        console.log(newObj.data);
+      },
+      deep: true,
     },
   },
 };

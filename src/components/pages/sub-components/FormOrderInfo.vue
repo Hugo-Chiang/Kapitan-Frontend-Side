@@ -166,7 +166,7 @@
               type="text"
               id="input-card-name"
               name="持卡人姓名"
-              class="form-control"
+              class="form-control credit-card-data-input-block"
               :class="classes"
               placeholder="持卡人姓名"
               v-model="creditCardData.name"
@@ -185,7 +185,7 @@
               maxlength="19"
               id="input-card-number"
               name="信用卡卡號"
-              class="form-control"
+              class="form-control credit-card-data-input-block"
               :class="classes"
               placeholder="0000 0000 0000 0000"
               v-model="creditCardData.number"
@@ -208,7 +208,7 @@
               type="text"
               id="input-card-exp"
               name="有效期"
-              class="form-control"
+              class="form-control credit-card-data-input-block"
               :class="classes"
               placeholder="例：08/2025"
               v-model="creditCardData.date"
@@ -227,9 +227,9 @@
               type="text"
               id="input-card-cvv"
               name="安全碼（CVV）"
-              class="form-control"
+              class="form-control credit-card-data-input-block"
               :class="classes"
-              placeholder="卡片背面三碼"
+              placeholder="背面三碼"
               v-model="creditCardData.cvv"
               maxlength="3"
               @input="formatCreditCardCVV"
@@ -260,6 +260,7 @@ export default {
   },
   props: ["confirmProjectsArr", "requiredInputTitle"],
   created() {
+    // created 階段即詢問會員資訊，以利使用者進行同步填寫
     this.queryMemberContactInfo();
   },
   methods: {
@@ -295,6 +296,15 @@ export default {
         date: "04/2028",
         cvv: "168",
       };
+
+      // 模擬 blur 事件以觸發表單驗證
+      let creditCardDataInputBlocks = document.querySelectorAll(
+        ".credit-card-data-input-block"
+      );
+      let inputsArr = [];
+
+      creditCardDataInputBlocks.forEach((block) => inputsArr.push(block));
+      inputsArr.forEach((input) => input.dispatchEvent(new Event("blur")));
     },
     // 方法：使信用卡卡號格式標準化，每 4 碼以空格區間彼此
     formatCreditCardNum() {

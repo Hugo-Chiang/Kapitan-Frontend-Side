@@ -245,7 +245,6 @@ export default {
       let targetProject = document.querySelectorAll(
         ".project-block-in-checkout-step-03"
       )[index];
-      console.log(targetProject);
       let targetInputs = targetProject.querySelectorAll("input");
 
       targetInputs.forEach((input) => input.dispatchEvent(new Event("blur")));
