@@ -15,6 +15,7 @@ import Dashboard from '@/components/pages/admin/Dashboard';
 import OrdersManager from '@/components/pages/admin/OrdersManager';
 import OrderDetails from '@/components/pages/admin/OrderDetails';
 import ProjectsManager from '@/components/pages/admin/ProjectsManager';
+import ProjectDetails from '@/components/pages/admin/ProjectDetails';
 import MembersManager from '@/components/pages/admin/MembersManager';
 
 Vue.use(Router);
@@ -94,12 +95,20 @@ const router = new Router({
               name: '管理系統：訂單細節清單',
               component: OrderDetails,
               meta: { requiresAuth: true }
-            }, {
+            },
+            {
               path: '/Admin/Projects-Manager',
               name: '管理系統：方案管理',
               component: ProjectsManager,
               meta: { requiresAuth: true }
-            }, {
+            },
+            {
+              path: '/Admin/Projects-Manager/Project-Details',
+              name: '管理系統：方案細節',
+              component: ProjectDetails,
+              meta: { requiresAuth: true }
+            },
+            {
               path: '/Admin/Members-Manager',
               name: '管理系統：會員管理',
               component: MembersManager,

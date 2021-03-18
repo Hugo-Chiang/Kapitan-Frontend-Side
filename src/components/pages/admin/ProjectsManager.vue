@@ -125,7 +125,7 @@
           <tr
             class="order-item"
             @click.prevent="
-              checkOrderDetails(currentPageContentArr[index].ORDER_ID)
+              checkProjectDetails(currentPageContentArr[index].PROJECT_ID)
             "
           >
             <th class="text-center" scope="row">{{ index + 1 }}</th>
@@ -226,10 +226,10 @@ export default {
       this.currentPageContentArr = arr;
     },
     // 方法：點擊訂單進行入詳情頁
-    checkOrderDetails(selectedOrderID) {
-      localStorage.removeItem("selectedOrderID");
-      localStorage.setItem("selectedOrderID", selectedOrderID);
-      this.$router.push({ name: "管理系統：訂單細節清單" });
+    checkProjectDetails(manageProjectID) {
+      localStorage.removeItem("managingProject");
+      localStorage.setItem("managingProject", manageProjectID);
+      this.$router.push({ name: "管理系統：方案細節" });
     },
   },
 };

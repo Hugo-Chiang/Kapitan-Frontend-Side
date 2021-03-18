@@ -6,30 +6,30 @@
         <form>
           <div class="form-row">
             <div class="form-group col-md-3">
-              <label for="orderID">訂單編號</label>
+              <label for="order-id">訂單編號</label>
               <input
                 type="text"
                 class="form-control"
-                id="orderID"
+                id="order-id"
                 placeholder="OD0000000001"
                 v-model="queryData.orderID"
               />
             </div>
             <div class="form-group col-md-3">
-              <label for="orderDate">訂單日期</label>
+              <label for="order-date">訂單日期</label>
               <input
                 type="date"
                 class="form-control"
-                id="orderDate"
+                id="order-date"
                 v-model="queryData.orderDate"
               />
             </div>
             <div class="form-group col-md-4">
-              <label for="memberAccount">會員帳號</label>
+              <label for="member-account">會員帳號</label>
               <input
                 type="eamil"
                 class="form-control"
-                id="memberAccount"
+                id="member-account"
                 placeholder="Hello-World@email.com"
                 v-model="queryData.memberAccount"
               />
@@ -43,31 +43,31 @@
         <form>
           <div class="form-row">
             <div class="form-group col-md-3">
-              <label for="ordererName">訂購人姓名</label>
+              <label for="orderer-name">訂購人姓名</label>
               <input
                 type="text"
                 class="form-control"
-                id="ordererName"
+                id="orderer-name"
                 placeholder="訂購人姓名"
                 v-model="queryData.ordererName"
               />
             </div>
             <div class="form-group col-md-3">
-              <label for="ordererPhone">訂購人手機</label>
+              <label for="orderer-phone">訂購人手機</label>
               <input
                 type="text"
                 class="form-control"
-                id="ordererPhone"
+                id="orderer-phone"
                 placeholder="0933128872"
                 v-model="queryData.ordererPhone"
               />
             </div>
             <div class="form-group col-md-4">
-              <label for="ordererEmail">訂購人電子信箱</label>
+              <label for="orderer-email">訂購人電子信箱</label>
               <input
                 type="email"
                 class="form-control"
-                id="ordererEmail"
+                id="orderer-email"
                 placeholder="Hello-World@email.com"
                 v-model="queryData.ordererEmail"
               />
@@ -89,7 +89,7 @@
     <!-- 查詢結果表格區開始 -->
     <div>
       <h6 class="my-4">查詢結果：</h6>
-      <table class="table table-striped queryResultsTable">
+      <table class="table table-striped query-resultsTable">
         <thead>
           <tr>
             <th class="text-center" scope="col">序號</th>
@@ -106,7 +106,10 @@
           <tr
             class="order-item"
             @click.prevent="
-              checkOrderDetails(currentPageContentArr[index].ORDER_ID)
+              checkOrderDetails(
+                currentPageContentArr[index].ORDER_ID,
+                currentPageContentArr[index].ORDER_DATE
+              )
             "
           >
             <th class="text-center" scope="row">{{ index + 1 }}</th>
@@ -141,7 +144,7 @@
       >
         查無資料
       </div>
-      <div id="paginationContainer" class="d-flex justify-content-center mt-4">
+      <div id="pagination-container" class="d-flex justify-content-center mt-4">
         <Pagination
           v-show="currentPageContentArr.length > 0"
           :allContentArr="allOrdersArr"
@@ -195,9 +198,14 @@ export default {
       this.currentPageContentArr = arr;
     },
     // 方法：點擊訂單進行入詳情頁
-    checkOrderDetails(selectedOrderID) {
-      localStorage.removeItem("selectedOrderID");
-      localStorage.setItem("selectedOrderID", selectedOrderID);
+    checkOrderDetails(managingOrderID, managingOrderDate) {
+      let manageObj = {
+        managingOrderID: managingOrderID,
+        managingOrderDate: managingOrderDate,
+      };
+
+      localStorage.removeItem("managingOrder");
+      localStorage.setItem("managingOrder", JSON.stringify(manageObj));
       this.$router.push({ name: "管理系統：訂單細節清單" });
     },
   },
@@ -212,7 +220,7 @@ h5 {
   }
 }
 
-.queryResultsTable {
+.query-resultsTable {
   tr {
     th {
       font-size: 14px;

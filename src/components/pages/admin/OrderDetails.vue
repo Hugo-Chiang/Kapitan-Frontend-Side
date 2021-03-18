@@ -1,11 +1,13 @@
 <template>
   <section id="order-details-page" class="position-relative">
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
-    <h6 class="my-4 mr-5 d-inline-block">
-      所選訂單編號：{{ selectedOrderID }}
+    <h6 class="my-4 mr-4 d-inline-block">
+      所選訂單編號：{{ managingOrder.managingOrderID }}
     </h6>
-    <h6 class="ml-5 d-inline-block">所選定單日期：{{ selectedOrderID }}</h6>
-    <table class="table table-striped queryResultsTable">
+    <h6 class="d-inline-block">
+      所選訂單日期：{{ managingOrder.managingOrderDate }}
+    </h6>
+    <table class="table table-striped query-resultsTable">
       <thead>
         <tr>
           <th class="text-center" scope="col">序號</th>
@@ -57,7 +59,7 @@
         </tr>
       </tbody>
     </table>
-    <div id="paginationContainer" class="position-absolute">
+    <div id="pagination-container" class="position-absolute">
       <Pagination
         v-show="currentPageContentArr.length > 0"
         :allContentArr="allOrderDetailsArr"
@@ -76,7 +78,7 @@ import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetai
 export default {
   data() {
     return {
-      selectedOrderID: "",
+      managingOrder: {},
       breadCrumbData: {
         pagesArr: ["管理系統：訂單管理", "管理系統：編輯項目"],
         currentPage: 2,
@@ -89,11 +91,11 @@ export default {
     };
   },
   created() {
-    this.selectedOrderID = localStorage.getItem("selectedOrderID");
+    this.managingOrder = JSON.parse(localStorage.getItem("managingOrder"));
     this.queryOrderDetails();
   },
   beforeDestroy() {
-    localStorage.removeItem("selectedOrderID");
+    localStorage.removeItem("managingOrder");
   },
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   methods: {
@@ -102,7 +104,7 @@ export default {
       const vm = this;
 
       this.$http
-        .post(api, vm.selectedOrderID)
+        .post(api, vm.managingOrder.managingOrderID)
         .then((response) => {
           vm.allOrderDetailsArr = response.data;
         })
@@ -125,7 +127,7 @@ export default {
   .breadcrumb {
     padding: 0;
   }
-  .queryResultsTable {
+  .query-resultsTable {
     tr {
       th {
         font-size: 14px;
@@ -138,7 +140,7 @@ export default {
       cursor: pointer;
     }
   }
-  #paginationContainer {
+  #pagination-container {
     transform: translate3d(-50%, -50%, 0);
     left: 50%;
     bottom: -15px;

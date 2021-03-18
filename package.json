@@ -23,8 +23,10 @@
     "vee-validate": "^3.4.5",
     "vue": "^2.5.2",
     "vue-axios": "^3.2.4",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^3.9.0",
+    "vue2-editor": "^2.10.2",
     "vue2-leaflet": "^2.6.0"
   },
   "devDependencies": {

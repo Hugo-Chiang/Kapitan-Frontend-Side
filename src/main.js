@@ -23,11 +23,14 @@ import * as rules from 'vee-validate/dist/rules';
 import App from './App';
 import router from './router';
 import eventBus from "./eventBus"
+// 導入 vue2-editor 相關內容開始
+import { VueEditor } from "vue2-editor";
+// 導入 vue2-editor 相關內容結束
 
 window.$ = $;
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus);
+Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, VueEditor);
 
 // 導出驗證套件 vee-validate 的所有規則
 Object.keys(rules).forEach((rule) => {
