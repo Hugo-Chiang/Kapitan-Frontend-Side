@@ -78,7 +78,7 @@
                 type="button"
                 class="btn btn-primary"
                 value="進行查詢"
-                @click.prevent="submitOrdersQuuery"
+                @click.prevent="submitOrdersQuery"
               />
             </div>
           </div>
@@ -176,7 +176,7 @@ export default {
   components: { Pagination },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
-    submitOrdersQuuery() {
+    submitOrdersQuery() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrders.php`;
       // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/QueryOrders.php`;
       const vm = this;

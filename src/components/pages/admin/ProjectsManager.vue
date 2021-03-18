@@ -5,14 +5,14 @@
       <div class="col-10">
         <form>
           <div class="form-row">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <label for="project-id">方案編號</label>
               <input
                 type="text"
                 class="form-control"
                 id="project-id"
                 placeholder="PJ0000001"
-                v-model="queryData.orderID"
+                v-model="queryData.projectID"
               />
             </div>
             <div class="form-group col-md-4">
@@ -21,14 +21,20 @@
                 type="text"
                 class="form-control"
                 id="project-name"
-                placeholder="請輸入關鍵詞"
-                v-model="queryData.orderDate"
+                placeholder="可輸入全名或關鍵詞"
+                v-model="queryData.projectName"
               />
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <label for="project-status">方案狀態</label>
-              <select id="project-status" class="form-control form-select-lg">
-                <option value="1" selected>上線中</option>
+              <select
+                id="project-status"
+                class="form-control form-select-lg"
+                v-model="queryData.projectStatus"
+              >
+                <option disabled selected value>－請選擇－</option>
+                <option value="%%">全部</option>
+                <option value="1">上線中</option>
                 <option value="0">已下線</option>
               </select>
             </div>
@@ -38,7 +44,7 @@
                 type="button"
                 class="btn btn-primary"
                 value="進行查詢"
-                @click.prevent=""
+                @click.prevent="submitProjectsQuery"
               />
             </div>
           </div>
@@ -70,26 +76,29 @@
             "
           >
             <th class="text-center" scope="row">{{ index + 1 }}</th>
-            <td>{{ currentPageContentArr[index].ORDER_ID }}</td>
+            <td>{{ currentPageContentArr[index].PROJECT_ID }}</td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_NAME }}
+              {{ currentPageContentArr[index].PROJECT_NAME }}
             </td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_PHONE }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_EMAIL }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_DATE }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].FK_MEMBER_ID_for_OD }}
+              {{ currentPageContentArr[index].CATEGORY_NAME }}
             </td>
             <td class="text-center">
               {{
-                currentPageContentArr[index].ORDER_TOTAL_CONSUMPTION -
-                currentPageContentArr[index].ORDER_TOTAL_DISCOUNT
+                currentPageContentArr[index].PROJECT_ORIGINAL_PRICE_PER_PERSON
+              }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].PROJECT_MIN_NUM_OF_PEOPLE }}
+            </td>
+            <td class="text-center">
+              {{ currentPageContentArr[index].LOCATION_NAME }}
+            </td>
+            <td class="text-center">
+              {{
+                currentPageContentArr[index].PROJECT_STATUS == 0
+                  ? "已下線"
+                  : "上線中"
               }}
             </td>
           </tr>
@@ -104,7 +113,7 @@
       <div id="paginationContainer" class="d-flex justify-content-center mt-4">
         <Pagination
           v-show="currentPageContentArr.length > 0"
-          :allContentArr="allOrdersArr"
+          :allContentArr="allProjectsArr"
           :itemsNumPerPage="itemsNumPerPage"
           @emitCurrentPageContentArr="getCurrentPageContentArr"
         ></Pagination>
@@ -121,14 +130,11 @@ export default {
   data() {
     return {
       queryData: {
-        orderID: "",
-        orderDate: "",
-        memberAccount: "",
-        ordererName: "",
-        ordererPhone: "",
-        ordererEmail: "",
+        projectID: "",
+        projectName: "",
+        projectStatus: "",
       },
-      allOrdersArr: [],
+      allProjectsArr: [],
       itemsNumPerPage: 5,
       currentPageContentArr: [],
     };
@@ -136,19 +142,23 @@ export default {
   components: { Pagination },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
-    submitOrdersQuuery() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrders.php`;
+    submitProjectsQuery() {
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjects.php`;
       const vm = this;
 
-      this.$http
-        .post(api, JSON.stringify(vm.queryData))
-        .then((response) => {
-          console.log(response.data);
-          vm.allOrdersArr = response.data;
-        })
-        .catch((respponse) => {
-          console.log(respponse);
-        });
+      if (vm.queryData.projectStatus == "") {
+        alert("請選擇方案狀態！");
+      } else {
+        this.$http
+          .post(api, JSON.stringify(vm.queryData))
+          .then((response) => {
+            console.log(response.data);
+            vm.allProjectsArr = response.data;
+          })
+          .catch((respponse) => {
+            console.log(respponse);
+          });
+      }
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
