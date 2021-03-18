@@ -23,14 +23,23 @@ import * as rules from 'vee-validate/dist/rules';
 import App from './App';
 import router from './router';
 import eventBus from "./eventBus"
-// 導入 vue2-editor 相關內容開始
+// 導入雲端圖庫套件 cloudinary-vue 相關內容開始
+import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue";
+// 導入雲端圖庫套件 cloudinary-vue 相關內容結束
+// 導入 HTML 編輯器套件 vue2-editor 相關內容開始
 import { VueEditor } from "vue2-editor";
-// 導入 vue2-editor 相關內容結束
+// 導入 HTML 編輯器套件 vue2-editor 相關內容結束
 
 window.$ = $;
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, VueEditor);
+Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, Cloudinary, {
+  configuration: { cloudName: "demo" },
+  components: {
+    CldImage,
+    CldTransformation
+  }
+}, VueEditor);
 
 // 導出驗證套件 vee-validate 的所有規則
 Object.keys(rules).forEach((rule) => {
@@ -67,6 +76,8 @@ Vue.filter("dollarSign", function (n) {
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 });

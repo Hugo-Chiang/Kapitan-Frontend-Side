@@ -6,7 +6,7 @@
     </h6>
     <ValidationObserver v-slot="{ invalid }">
       <div class="row">
-        <div class="col-10">
+        <div class="col-12">
           <div class="form-row">
             <div class="form-group col-md-2">
               <label for="project-status">方案狀態</label>
@@ -19,7 +19,7 @@
                 <option value="0">已下線</option>
               </select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label for="project-name">方案名稱</label>
               <input
                 type="text"
@@ -51,9 +51,9 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-10">
+            <div class="col-12">
               <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                   <label for="project-category">所屬分類</label>
                   <select
                     id="project-category"
@@ -64,7 +64,7 @@
                     <option value="%%">全選</option>
                   </select>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                   <label for="project-departure-location">會合地點</label>
                   <input
                     type="text"
@@ -74,18 +74,17 @@
                     v-model="editDetails.projectDepartureLocation"
                   />
                 </div>
-                <div class="form-group col-md-5">
-                  <label for="project-avatar">方案大頭貼</label>
-                  <div class="custom-file">
-                    <label class="custom-file-label" for="project-avatar"
-                      >請選擇上傳檔案</label
-                    >
+                <div class="form-group col-md-4">
+                  <form @submit.prevent="upload">
+                    <label for="project-avatar">方案大頭貼</label>
                     <input
+                      id="file-input"
                       type="file"
-                      class="custom-file-input"
-                      id="project-avatar"
+                      accept="image/png, image/jpeg"
+                      @change="handleFileChange($event)"
                     />
-                  </div>
+                    <button type="submit">Upload</button>
+                  </form>
                 </div>
               </div>
             </div>
@@ -109,13 +108,8 @@
           ></VueEditor>
           <VueEditor
             :editorToolbar="vueEditorData.ToolbarConfig"
-            v-else-if="vueEditorData.inEditing == '方案內容'"
-            v-model="editDetails.projectDescription"
-          ></VueEditor>
-          <VueEditor
-            :editorToolbar="vueEditorData.ToolbarConfig"
             v-else
-            v-model="editDetails.projectDepartureLocationDescription"
+            v-model="editDetails.projectDescription"
           ></VueEditor>
           <!-- VueEditor 文本編輯器結束 -->
         </div>
@@ -148,8 +142,11 @@
 </template>
 
 <script>
+import axios from "axios";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入 cloudinary-vue 雲端圖庫元件
+import { CldContext, CldImage } from "cloudinary-vue";
 // 導入 vue2-editor 文本編輯器元件
 import { VueEditor } from "vue2-editor";
 
@@ -187,19 +184,35 @@ export default {
           ["link", "image"],
           ["clean"],
         ],
-        vModelTargets: ["方案摘要", "方案內容", "會合地點內容"],
+        vModelTargets: ["方案摘要", "方案內容"],
         inEditing: "方案摘要",
       },
+      vueCloudinaryData: {
+        cloudname: process.env.CLOUD_NAME,
+        cloudGeneralURL: process.env.CLOUD_GENERAL_FIELD_URL,
+      },
+      cloudName: "hugo-chiang",
+      preset: "yavti8fs",
+      file: "",
+      filesSelected: "",
+      url: "",
+      publicId: "",
     };
   },
   created() {
+    console.log(window);
     this.managingProjectID = localStorage.getItem("managingProject");
     this.queryProjectDetails();
   },
   beforeDestroy() {
     localStorage.removeItem("managingOrder");
   },
-  components: { Breadcrumb, VueEditor },
+  components: {
+    Breadcrumb,
+    VueEditor,
+    CldContext,
+    CldImage,
+  },
   methods: {
     // 方法：
     queryProjectDetails() {
@@ -231,6 +244,80 @@ export default {
         .catch((respponse) => {
           console.log(respponse);
         });
+    },
+    // 方法：
+    handleFileChange: function (event) {
+      console.log("handlefilechange", event.target.files);
+      //returns an array of files even though multiple not used
+      this.file = event.target.files[0];
+      this.filesSelected = event.target.files.length;
+    },
+    // function to handle form submit
+    upload: function (event) {
+      //no need to look at selected files if there is no cloudname or preset
+      if (this.preset.length < 1 || this.cloudName.length < 1) {
+        this.errors.push("You must enter a cloud name and preset to upload");
+        return;
+      }
+      // clear errors
+      else {
+        this.errors = [];
+      }
+      console.log("upload", this.file.name);
+      let reader = new FileReader();
+
+      // attach listener to be called when data from file
+      // is available
+      reader.addEventListener(
+        "load",
+        function () {
+          console.log("file reader listener");
+          let fd = new FormData();
+          fd.append("upload_preset", this.preset);
+          fd.append("tags", this.tags); // Optional - add tag for image admin in Cloudinary
+          fd.append("file", reader.result);
+
+          let cloudinaryUploadURL = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
+
+          let requestObj = {
+            url: cloudinaryUploadURL,
+            method: "POST",
+            data: fd,
+            onUploadProgress: function (progressEvent) {
+              console.log("progress", progressEvent);
+              this.progress = Math.round(
+                (progressEvent.loaded * 100.0) / progressEvent.total
+              );
+              console.log(this.progress);
+            }.bind(this),
+          };
+          //show progress bar at beginning of post
+          this.showProgress = true;
+          axios(requestObj)
+            .then((response) => {
+              this.results = response.data;
+              console.log(this.results);
+              console.log("public_id", this.results.public_id);
+            })
+            .catch((error) => {
+              this.errors.push(error);
+              console.log(this.error);
+            })
+            .finally(() => {
+              setTimeout(
+                function () {
+                  this.showProgress = false;
+                }.bind(this),
+                1000
+              );
+            });
+        }.bind(this),
+        false
+      );
+      // call for file read if there is a file
+      if (this.file && this.file.name) {
+        reader.readAsDataURL(this.file);
+      }
     },
   },
 };
