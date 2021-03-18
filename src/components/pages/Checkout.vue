@@ -70,7 +70,6 @@ export default {
     // 方法：進行結帳，透過 Ajax 與後端溝通，獲悉訂購成敗
     checkOut(inputOrdererInfo, inputContantInfoArr) {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/Checkout.php`;
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/Checkout.php`;
       let orderDetailsArr = [];
       let confirmProjectsArr = JSON.parse(
         localStorage.getItem("savingProjects")

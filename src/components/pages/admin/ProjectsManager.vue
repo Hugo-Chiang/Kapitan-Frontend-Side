@@ -3,52 +3,105 @@
     <!-- 查詢輸入表單區域開始 -->
     <div class="row">
       <div class="col-10">
-        <form>
-          <div class="form-row">
-            <div class="form-group col-md-3">
-              <label for="project-id">方案編號</label>
-              <input
-                type="text"
-                class="form-control"
-                id="project-id"
-                placeholder="PJ0000001"
-                v-model="queryData.projectID"
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="project-name">方案名稱</label>
-              <input
-                type="text"
-                class="form-control"
-                id="project-name"
-                placeholder="可輸入全名或關鍵詞"
-                v-model="queryData.projectName"
-              />
-            </div>
-            <div class="form-group col-md-3">
-              <label for="project-status">方案狀態</label>
-              <select
-                id="project-status"
-                class="form-control form-select-lg"
-                v-model="queryData.projectStatus"
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="project-id">方案編號</label>
+            <input
+              type="text"
+              class="form-control"
+              id="project-id"
+              placeholder="PJ0000001"
+              v-model="queryData.projectID"
+            />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="project-name">方案名稱</label>
+            <input
+              type="text"
+              class="form-control"
+              id="project-name"
+              placeholder="可輸入全名或關鍵詞"
+              v-model="queryData.projectName"
+            />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="project-status">方案狀態</label>
+            <select
+              id="project-status"
+              class="form-control form-select-lg"
+              v-model="queryData.projectStatus"
+            >
+              <option disabled selected value>－請選擇－</option>
+              <option value="%%">全部</option>
+              <option value="1">上線中</option>
+              <option value="0">已下線</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="project-category">所屬分類</label>
+            <select
+              id="project-category"
+              class="form-control form-select-lg"
+              v-model="queryData.projectCategory"
+            >
+              <option disabled selected value>－請選擇－</option>
+              <option value="%%">全選</option>
+              <option
+                v-for="category in categoryList"
+                :key="category['CATEGORY_NAME']"
+                :value="category['CATEGORY_NAME']"
               >
-                <option disabled selected value>－請選擇－</option>
-                <option value="%%">全部</option>
-                <option value="1">上線中</option>
-                <option value="0">已下線</option>
-              </select>
-            </div>
-            <div class="form-group col-md-1 ml-3">
-              <label for="">&nbsp;</label>
+                {{ category["CATEGORY_NAME"] }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="project-departure-location">會合地點</label>
+            <input
+              type="text"
+              class="form-control"
+              id="project-departure-location"
+              placeholder="可輸入全名或關鍵詞"
+              v-model="queryData.projectDepartureLocation"
+            />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="project-price-beyond" class="form-label"
+              >人均價格<span class="remarks">（含以下）</span></label
+            >
+            <div class="h-50 px-1 d-flex flex-column align-items-start">
+              <div class="project-price-str">
+                {{
+                  Number(queryData.projectPriceBeyond) | currency | dollarSign
+                }}
+              </div>
               <input
-                type="button"
-                class="btn btn-primary"
-                value="進行查詢"
-                @click.prevent="submitProjectsQuery"
+                type="range"
+                class="form-range"
+                min="0"
+                max="10000"
+                step="500"
+                id="project-price-beyond"
+                v-model="queryData.projectPriceBeyond"
               />
             </div>
           </div>
-        </form>
+          <div class="form-group col-md-1 ml-3">
+            <label for="">&nbsp;</label>
+            <input
+              type="button"
+              class="btn btn-primary"
+              value="進行查詢"
+              @click.prevent="submitProjectsQuery"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <!-- 查詢輸入表單區域結束 -->
@@ -133,32 +186,40 @@ export default {
         projectID: "",
         projectName: "",
         projectStatus: "",
+        projectCategory: "",
+        projectDepartureLocation: "",
+        projectPriceBeyond: 10000,
       },
+      categoryList: [],
       allProjectsArr: [],
       itemsNumPerPage: 5,
       currentPageContentArr: [],
     };
   },
   components: { Pagination },
+  created() {
+    const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+    const vm = this;
+
+    this.$http.get(categoryListAPI).then((response) => {
+      vm.categoryList = response.data;
+    });
+  },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
     submitProjectsQuery() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjects.php`;
+      const QueryProjectsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjects.php`;
       const vm = this;
 
-      if (vm.queryData.projectStatus == "") {
-        alert("請選擇方案狀態！");
-      } else {
-        this.$http
-          .post(api, JSON.stringify(vm.queryData))
-          .then((response) => {
-            console.log(response.data);
-            vm.allProjectsArr = response.data;
-          })
-          .catch((respponse) => {
-            console.log(respponse);
-          });
-      }
+      this.$http
+        .post(QueryProjectsAPI, JSON.stringify(vm.queryData))
+        .then((response) => {
+          console.log(response.data);
+          vm.allProjectsArr = response.data;
+        })
+        .catch((respponse) => {
+          console.log(respponse);
+        });
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
@@ -181,7 +242,14 @@ h5 {
     color: green;
   }
 }
-
+.remarks {
+  font-size: 12px;
+}
+.project-price-str {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: -2px;
+}
 .queryResultsTable {
   tr {
     th {

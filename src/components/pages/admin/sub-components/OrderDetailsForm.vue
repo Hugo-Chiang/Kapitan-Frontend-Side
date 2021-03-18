@@ -251,7 +251,6 @@ export default {
     // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
       const vm = this;
       const session = vm.getKapitanSession();
       let currentArr = this.currentPageContentArr;

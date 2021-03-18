@@ -177,7 +177,6 @@ export default {
   },
   created() {
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
-    // const api = `${process.env.LOCAL_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;
 
     this.$http

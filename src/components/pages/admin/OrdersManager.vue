@@ -178,7 +178,6 @@ export default {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
     submitOrdersQuery() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrders.php`;
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/QueryOrders.php`;
       const vm = this;
 
       this.$http
