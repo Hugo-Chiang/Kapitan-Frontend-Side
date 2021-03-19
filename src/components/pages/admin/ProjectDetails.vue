@@ -15,7 +15,6 @@
               <select
                 :id="requiredInputTitle.projectStatus"
                 class="form-control form-select-lg"
-                :class="classes"
                 v-model="editDetails.projectStatus"
               >
                 <option value="1">上線中</option>
@@ -94,7 +93,6 @@
               <select
                 :id="requiredInputTitle.projectCategory"
                 class="form-control form-select-lg"
-                :class="classes"
                 v-model="editDetails.projectCategory"
               >
                 <option
@@ -113,7 +111,6 @@
               <select
                 :id="requiredInputTitle.projectDepartureLocation"
                 class="form-control form-select-lg"
-                :class="classes"
                 v-model="editDetails.projectDepartureLocation"
               >
                 <option
@@ -126,26 +123,23 @@
               </select>
             </div>
             <div class="form-group col-md-4">
-              <form @submit.prevent="upload">
-                <label
-                  :for="requiredInputTitle.projectAvatarPublicID"
-                  class="form-label"
-                  >{{ requiredInputTitle.projectAvatarPublicID }}</label
-                >
-                <div class="custom-file">
-                  <input
-                    :id="requiredInputTitle.projectAvatarPublicID"
-                    class="custom-file-input"
-                    :class="classes"
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    @change="handleFileChange($event)"
-                  />
-                  <label class="custom-file-label" for="inputGroupFile01">{{
-                    vueCloudinaryData.file.name || "尚未選擇"
-                  }}</label>
-                </div>
-              </form>
+              <label
+                :for="requiredInputTitle.projectAvatarPublicID"
+                class="form-label"
+                >{{ requiredInputTitle.projectAvatarPublicID }}</label
+              >
+              <div class="custom-file">
+                <input
+                  :id="requiredInputTitle.projectAvatarPublicID"
+                  class="custom-file-input"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  @change="handleFileChange($event)"
+                />
+                <label class="custom-file-label" for="inputGroupFile01">{{
+                  vueCloudinaryData.file.name || "尚未選擇"
+                }}</label>
+              </div>
             </div>
           </div>
         </div>
@@ -199,10 +193,11 @@
             class="action-buttons-block w-100 mt-5 px-2 d-flex justify-content-between align-items-center"
           >
             <input
-              type="submit"
+              type="button"
               class="btn btn-primary"
               value="修改完成"
               :disabled="invalid"
+              @click.prevent="uploadAvatarAndUpdateData"
             />
             <a
               class="d-inline-block"
@@ -324,6 +319,8 @@ export default {
 
           vm.editDetails.projectStatus = response.data["PROJECT_STATUS"];
           vm.editDetails.projectName = response.data["PROJECT_NAME"];
+          vm.editDetails.projectAvatarPublicID =
+            response.data["PROJECT_AVATAR_URL"];
           vm.editDetails.projectSummary = response.data["PROJECT_SUMMARY"];
           vm.editDetails.projectDescription =
             response.data["PROJECT_DESCRIPITION"];
@@ -349,8 +346,8 @@ export default {
       this.vueCloudinaryData.file = e.target.files[0];
       this.vueCloudinaryData.filesSelected = e.target.files.length;
     },
-    // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置，並回傳其 PublicID 以便利用
-    upload: function () {
+    // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
+    uploadAvatarAndUpdateData: function () {
       let fileReader = new FileReader();
 
       fileReader.addEventListener(
@@ -388,13 +385,11 @@ export default {
               console.log("上傳失敗！");
               console.log(error);
             })
-            .finally(() => {
-              setTimeout(
-                function () {
-                  this.showProgress = false;
-                }.bind(this),
-                1000
-              );
+            .then(() => {
+              this.updateProjectDetails();
+            })
+            .catch((error) => {
+              console.log(error);
             });
         }.bind(this),
         false
@@ -403,6 +398,39 @@ export default {
       if (this.vueCloudinaryData.file && this.vueCloudinaryData.file.name) {
         fileReader.readAsDataURL(this.vueCloudinaryData.file);
       }
+    },
+    // 方法：將方案更新數據寫入資料庫
+    updateProjectDetails() {
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdatepProjectDetails.php`;
+      const vm = this;
+      const session = vm.getKapitanSession();
+
+      let sendingObj = {
+        session: session,
+        projectID: vm.managingProjectID,
+        editedDetails: vm.editDetails,
+      };
+
+      vm.$http
+        .post(api, JSON.stringify(sendingObj))
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((respponse) => {
+          console.log(respponse);
+        });
+    },
+    // 方法：抓取存在 cookie 中的 session
+    getKapitanSession() {
+      let cookie = document.cookie;
+      let strArr = cookie.split("");
+      let equalSymbolIndex = strArr.indexOf("=");
+      let cookieLen = cookie.length;
+      let namePulsSymbolLen = equalSymbolIndex + 2;
+      let sessionLen = cookieLen - namePulsSymbolLen - 1;
+      let session = cookie.substr(namePulsSymbolLen, sessionLen);
+
+      return session;
     },
   },
 };
