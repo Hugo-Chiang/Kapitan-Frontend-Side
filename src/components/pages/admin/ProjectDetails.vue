@@ -9,10 +9,13 @@
         <div class="col-12">
           <div class="form-row">
             <div class="form-group col-md-2">
-              <label for="project-status">方案狀態</label>
+              <label :for="requiredInputTitle.projectStatus">{{
+                requiredInputTitle.projectStatus
+              }}</label>
               <select
-                id="project-status"
+                :id="requiredInputTitle.projectStatus"
                 class="form-control form-select-lg"
+                :class="classes"
                 v-model="editDetails.projectStatus"
               >
                 <option value="1">上線中</option>
@@ -20,73 +23,129 @@
               </select>
             </div>
             <div class="form-group col-md-4">
-              <label for="project-name">方案名稱</label>
-              <input
-                type="text"
-                class="form-control"
-                id="project-name"
-                placeholder="請輸入全名，可包含符號"
-                v-model="editDetails.projectName"
-              />
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.projectName">{{
+                  requiredInputTitle.projectName
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.projectName"
+                  placeholder="請輸入全名，可包含符號"
+                  v-model="editDetails.projectName"
+                />
+                <span class="invalid-feedback">{{
+                  errors[0]
+                }}</span></ValidationProvider
+              >
             </div>
             <div class="form-group col-md-2">
-              <label for="project-price-per-person">人均價格</label>
-              <input
-                type="text"
-                class="form-control"
-                id="project-price-per-person"
-                placeholder="例：1000"
-                v-model="editDetails.projectPricePerPerson"
-              />
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.projectPricePerPerson">{{
+                  requiredInputTitle.projectPricePerPerson
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.projectPricePerPerson"
+                  placeholder="例：1000"
+                  v-model="editDetails.projectPricePerPerson"
+                />
+                <span class="invalid-feedback">{{
+                  errors[0]
+                }}</span></ValidationProvider
+              >
             </div>
             <div class="form-group col-md-2">
-              <label for="project-min-num-of-people">最低人數</label>
-              <input
-                type="text"
-                class="form-control"
-                id="project-min-num-of-people"
-                placeholder="例：3"
-                v-model="editDetails.projectMinNumOfPeople"
-              />
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.projectMinNumOfPeople">{{
+                  requiredInputTitle.projectMinNumOfPeople
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.projectMinNumOfPeople"
+                  placeholder="例：3"
+                  v-model="editDetails.projectMinNumOfPeople"
+                />
+                <span class="invalid-feedback">{{
+                  errors[0]
+                }}</span></ValidationProvider
+              >
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="form-row">
-                <div class="form-group col-md-2">
-                  <label for="project-category">所屬分類</label>
-                  <select
-                    id="project-category"
-                    class="form-control form-select-lg"
-                    v-model="editDetails.projectCategory"
-                  >
-                    <option disabled selected value>－請選擇－</option>
-                    <option value="%%">全選</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="project-departure-location">會合地點</label>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label :for="requiredInputTitle.projectCategory">{{
+                requiredInputTitle.projectCategory
+              }}</label>
+              <select
+                :id="requiredInputTitle.projectCategory"
+                class="form-control form-select-lg"
+                :class="classes"
+                v-model="editDetails.projectCategory"
+              >
+                <option
+                  v-for="category in renderData['categoryList']"
+                  :key="category['CATEGORY_NAME']"
+                  :value="category['CATEGORY_ID']"
+                >
+                  {{ category["CATEGORY_NAME"] }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label :for="requiredInputTitle.projectDepartureLocation">{{
+                requiredInputTitle.projectDepartureLocation
+              }}</label>
+              <select
+                :id="requiredInputTitle.projectDepartureLocation"
+                class="form-control form-select-lg"
+                :class="classes"
+                v-model="editDetails.projectDepartureLocation"
+              >
+                <option
+                  v-for="location in renderData['departureLocationList']"
+                  :key="location['LOCATION_NAME']"
+                  :value="location['LOCATION_ID']"
+                >
+                  {{ location["LOCATION_NAME"] }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <form @submit.prevent="upload">
+                <label
+                  :for="requiredInputTitle.projectAvatarPublicID"
+                  class="form-label"
+                  >{{ requiredInputTitle.projectAvatarPublicID }}</label
+                >
+                <div class="custom-file">
                   <input
-                    type="text"
-                    class="form-control"
-                    id="project-departure-location"
-                    placeholder="請輸入全名"
-                    v-model="editDetails.projectDepartureLocation"
+                    :id="requiredInputTitle.projectAvatarPublicID"
+                    class="custom-file-input"
+                    :class="classes"
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    @change="handleFileChange($event)"
                   />
+                  <label class="custom-file-label" for="inputGroupFile01">{{
+                    vueCloudinaryData.file.name || "尚未選擇"
+                  }}</label>
                 </div>
-                <div class="form-group col-md-4">
-                  <form @submit.prevent="upload">
-                    <label for="project-avatar">方案大頭貼</label>
-                    <input
-                      id="file-input"
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      @change="handleFileChange($event)"
-                    />
-                    <button type="submit">Upload</button>
-                  </form>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -113,7 +172,7 @@
           ></VueEditor>
           <!-- VueEditor 文本編輯器結束 -->
         </div>
-        <div class="col-3">
+        <div class="col-3 d-flex flex-column">
           <h6>正在編輯：</h6>
           <ul class="editingHTMLlist pl-2 mt-3">
             <li
@@ -135,6 +194,24 @@
               {{ target }}
             </li>
           </ul>
+          <!-- 操作按鈕開始 -->
+          <div
+            class="action-buttons-block w-100 mt-5 px-2 d-flex justify-content-between align-items-center"
+          >
+            <input
+              type="submit"
+              class="btn btn-primary"
+              value="修改完成"
+              :disabled="invalid"
+            />
+            <a
+              class="d-inline-block"
+              href=""
+              @click.prevent="$router.push('/Admin/Projects-Manager')"
+              >不儲存關閉</a
+            >
+          </div>
+          <!-- 操作按鈕結束 -->
         </div>
       </div>
     </ValidationObserver>
@@ -142,9 +219,10 @@
 </template>
 
 <script>
-import axios from "axios";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入 axios 元件
+import axios from "axios";
 // 導入 cloudinary-vue 雲端圖庫元件
 import { CldContext, CldImage } from "cloudinary-vue";
 // 導入 vue2-editor 文本編輯器元件
@@ -153,14 +231,28 @@ import { VueEditor } from "vue2-editor";
 export default {
   data() {
     return {
-      managingProjectID: {},
       breadCrumbData: {
         pagesArr: ["管理系統：方案管理", "管理系統：編輯項目"],
         currentPage: 2,
       },
+      requiredInputTitle: {
+        projectStatus: "方案狀態",
+        projectName: "方案名稱",
+        projectPricePerPerson: "人均價格",
+        projectMinNumOfPeople: "最低人數",
+        projectCategory: "所屬分類",
+        projectDepartureLocation: "會合地點",
+        projectAvatarPublicID: "方案大頭貼",
+      },
+      renderData: {
+        categoryList: [],
+        departureLocationList: [],
+      },
+      managingProjectID: {},
       editDetails: {
         projectStatus: "",
         projectName: "",
+        projectAvatarPublicID: "",
         projectSummary: "",
         projectDescription: "",
         projectPricePerPerson: 0,
@@ -169,6 +261,7 @@ export default {
         projectDepartureLocation: "",
         projectDepartureLocationDescription: "",
       },
+      // vue2-editor 文本編輯器的配置或應用資料
       vueEditorData: {
         ToolbarConfig: [
           [{ header: [false, 1, 2, 3, 4, 5, 6] }],
@@ -187,20 +280,25 @@ export default {
         vModelTargets: ["方案摘要", "方案內容"],
         inEditing: "方案摘要",
       },
+      // cloudinary-vue 雲端圖庫元件的配置或應用資料
       vueCloudinaryData: {
-        cloudname: process.env.CLOUD_NAME,
-        cloudGeneralURL: process.env.CLOUD_GENERAL_FIELD_URL,
+        file: "",
+        filesSelected: "",
+        preset: "FE-SP-0001-Kapitan-Projects-Avatar",
       },
-      cloudName: "hugo-chiang",
-      preset: "yavti8fs",
-      file: "",
-      filesSelected: "",
-      url: "",
-      publicId: "",
     };
   },
   created() {
-    console.log(window);
+    const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+    const departureLocationListAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryDepartureLocationList.php`;
+    const vm = this;
+    this.$http.get(categoryListAPI).then((response) => {
+      vm.renderData.categoryList = response.data;
+    });
+    this.$http.get(departureLocationListAPI).then((response) => {
+      vm.renderData.departureLocationList = response.data;
+    });
+
     this.managingProjectID = localStorage.getItem("managingProject");
     this.queryProjectDetails();
   },
@@ -214,7 +312,7 @@ export default {
     CldImage,
   },
   methods: {
-    // 方法：
+    // 方法：向後端查詢欲編輯項目的內容，以利進行雙向綁定編修
     queryProjectDetails() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjectDetails.php`;
       const vm = this;
@@ -235,7 +333,7 @@ export default {
             response.data["PROJECT_MIN_NUM_OF_PEOPLE"];
           vm.editDetails.projectCategory = response.data["CATEGORY_ID"];
           vm.editDetails.projectDepartureLocation =
-            response.data["LOCATION_NAME"];
+            response.data["LOCATION_ID"];
           vm.editDetails.projectDepartureLocationDescription =
             response.data["LOCATION_DESCRIPTION"];
 
@@ -245,63 +343,50 @@ export default {
           console.log(respponse);
         });
     },
-    // 方法：
-    handleFileChange: function (event) {
-      console.log("handlefilechange", event.target.files);
-      //returns an array of files even though multiple not used
-      this.file = event.target.files[0];
-      this.filesSelected = event.target.files.length;
+    // 方法：紀錄觀察上傳檔案的內容
+    handleFileChange: function (e) {
+      console.log("上傳檔案更換：", e.target.files);
+      this.vueCloudinaryData.file = e.target.files[0];
+      this.vueCloudinaryData.filesSelected = e.target.files.length;
     },
-    // function to handle form submit
-    upload: function (event) {
-      //no need to look at selected files if there is no cloudname or preset
-      if (this.preset.length < 1 || this.cloudName.length < 1) {
-        this.errors.push("You must enter a cloud name and preset to upload");
-        return;
-      }
-      // clear errors
-      else {
-        this.errors = [];
-      }
-      console.log("upload", this.file.name);
-      let reader = new FileReader();
+    // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置，並回傳其 PublicID 以便利用
+    upload: function () {
+      let fileReader = new FileReader();
 
-      // attach listener to be called when data from file
-      // is available
-      reader.addEventListener(
+      fileReader.addEventListener(
         "load",
         function () {
-          console.log("file reader listener");
-          let fd = new FormData();
-          fd.append("upload_preset", this.preset);
-          fd.append("tags", this.tags); // Optional - add tag for image admin in Cloudinary
-          fd.append("file", reader.result);
+          console.log("檔案讀取器已啟動");
+          let formData = new FormData();
+          formData.append("upload_preset", this.vueCloudinaryData.preset);
+          formData.append("file", fileReader.result);
 
-          let cloudinaryUploadURL = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
+          const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
 
           let requestObj = {
-            url: cloudinaryUploadURL,
+            url: cloudinaryUploadAPI,
             method: "POST",
-            data: fd,
+            data: formData,
             onUploadProgress: function (progressEvent) {
-              console.log("progress", progressEvent);
+              console.log("正在處理：", progressEvent);
               this.progress = Math.round(
                 (progressEvent.loaded * 100.0) / progressEvent.total
               );
-              console.log(this.progress);
+              console.log(`進度：${this.progress}％`);
             }.bind(this),
           };
-          //show progress bar at beginning of post
           this.showProgress = true;
+
           axios(requestObj)
             .then((response) => {
               this.results = response.data;
+              console.log("上傳成功！");
               console.log(this.results);
-              console.log("public_id", this.results.public_id);
+              this.editDetails.projectAvatarPublicID = this.results.public_id;
             })
             .catch((error) => {
-              this.errors.push(error);
-              console.log(this.error);
+              console.log("上傳失敗！");
+              console.log(error);
             })
             .finally(() => {
               setTimeout(
@@ -314,9 +399,9 @@ export default {
         }.bind(this),
         false
       );
-      // call for file read if there is a file
-      if (this.file && this.file.name) {
-        reader.readAsDataURL(this.file);
+
+      if (this.vueCloudinaryData.file && this.vueCloudinaryData.file.name) {
+        fileReader.readAsDataURL(this.vueCloudinaryData.file);
       }
     },
   },
@@ -372,6 +457,15 @@ h6 {
     .in-editing-arrow {
       width: 20px;
       height: 20px;
+    }
+  }
+}
+.action-buttons-block {
+  a {
+    font-size: 14px;
+    color: black;
+    &:hover {
+      color: red;
     }
   }
 }
