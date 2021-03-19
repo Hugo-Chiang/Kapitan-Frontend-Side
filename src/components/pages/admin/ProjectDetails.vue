@@ -155,15 +155,22 @@
         <div class="col-9">
           <!-- VueEditor 文本編輯器開始 -->
           <VueEditor
+            ref="vueEditor"
             :editorToolbar="vueEditorData.ToolbarConfig"
             v-if="vueEditorData.inEditing == '方案摘要'"
             v-model="editDetails.projectSummary"
+            :use-custom-image-handler="true"
+            @image-added="uploadContentImg"
           ></VueEditor>
           <VueEditor
+            ref="vueEditor"
             :editorToolbar="vueEditorData.ToolbarConfig"
             v-else
             v-model="editDetails.projectDescription"
+            :use-custom-image-handler="true"
+            @image-added="uploadContentImg"
           ></VueEditor>
+          <!-- @input="$refs.vueEditor.useCustomImageHandler = true" -->
           <!-- VueEditor 文本編輯器結束 -->
         </div>
         <div class="col-3 d-flex flex-column">
@@ -279,7 +286,8 @@ export default {
       vueCloudinaryData: {
         file: "",
         filesSelected: "",
-        preset: "FE-SP-0001-Kapitan-Projects-Avatar",
+        presetForProjectAvatar: "FE-SP-0001-Kapitan-Projects-Avatar",
+        presetForProjectContent: "FE-SP-0001-Kapitan-Projects-Content",
       },
     };
   },
@@ -347,18 +355,21 @@ export default {
       this.vueCloudinaryData.filesSelected = e.target.files.length;
     },
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
-    uploadAvatarAndUpdateData: function () {
+    uploadAvatarAndUpdateData() {
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const vm = this;
       let fileReader = new FileReader();
 
       fileReader.addEventListener(
         "load",
         function () {
-          console.log("檔案讀取器已啟動");
+          console.log("圖檔上傳器已啟動");
           let formData = new FormData();
-          formData.append("upload_preset", this.vueCloudinaryData.preset);
+          formData.append(
+            "upload_preset",
+            vm.vueCloudinaryData.presetForProjectAvatar
+          );
           formData.append("file", fileReader.result);
-
-          const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
 
           let requestObj = {
             url: cloudinaryUploadAPI,
@@ -366,37 +377,38 @@ export default {
             data: formData,
             onUploadProgress: function (progressEvent) {
               console.log("正在處理：", progressEvent);
-              this.progress = Math.round(
+              vm.progress = Math.round(
                 (progressEvent.loaded * 100.0) / progressEvent.total
               );
-              console.log(`進度：${this.progress}％`);
-            }.bind(this),
+              console.log(`進度：${vm.progress}％`);
+            },
           };
-          this.showProgress = true;
 
           axios(requestObj)
             .then((response) => {
-              this.results = response.data;
               console.log("上傳成功！");
-              console.log(this.results);
-              this.editDetails.projectAvatarPublicID = this.results.public_id;
+              console.log(response.data);
+              vm.editDetails.projectAvatarPublicID = vm.results.public_id;
             })
             .catch((error) => {
               console.log("上傳失敗！");
               console.log(error);
             })
             .then(() => {
-              this.updateProjectDetails();
+              vm.updateProjectDetails();
             })
             .catch((error) => {
               console.log(error);
             });
-        }.bind(this),
+        },
         false
       );
 
+      // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）
       if (this.vueCloudinaryData.file && this.vueCloudinaryData.file.name) {
         fileReader.readAsDataURL(this.vueCloudinaryData.file);
+      } else {
+        this.updateProjectDetails();
       }
     },
     // 方法：將方案更新數據寫入資料庫
@@ -418,6 +430,45 @@ export default {
         })
         .catch((respponse) => {
           console.log(respponse);
+        });
+    },
+    // 方法：自定義 vue2-editor 文本編輯器的圖片上傳方式，改為 Cloudinary 的上傳方式
+    uploadContentImg(file, editor, cursorLocation) {
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const vm = this;
+
+      console.log("圖檔上傳器已啟動");
+
+      let formData = new FormData();
+      formData.append(
+        "upload_preset",
+        vm.vueCloudinaryData.presetForProjectAvatar
+      );
+      formData.append("file", file);
+
+      let requestObj = {
+        url: cloudinaryUploadAPI,
+        method: "POST",
+        data: formData,
+        onUploadProgress: function (progressEvent) {
+          console.log("正在處理：", progressEvent);
+          vm.progress = Math.round(
+            (progressEvent.loaded * 100.0) / progressEvent.total
+          );
+          console.log(`進度：${vm.progress}％`);
+        },
+      };
+
+      axios(requestObj)
+        .then((response) => {
+          console.log("上傳成功！");
+          console.log(response);
+          let url = response.data.secure_url;
+          editor.insertEmbed(cursorLocation, "image", url);
+        })
+        .catch((error) => {
+          console.log("上傳失敗！");
+          console.log(error);
         });
     },
     // 方法：抓取存在 cookie 中的 session
