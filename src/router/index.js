@@ -12,10 +12,11 @@ import MemberCentre from '@/components/pages/MemberCentre';
 import Backstage from '@/components/Backstage';
 import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
 import Dashboard from '@/components/pages/admin/Dashboard';
-import OrdersManager from '@/components/pages/admin/OrdersManager';
-import OrderDetails from '@/components/pages/admin/OrderDetails';
-import ProjectsManager from '@/components/pages/admin/ProjectsManager';
-import ProjectDetails from '@/components/pages/admin/ProjectDetails';
+import ChooseModeEntry from '@/components/pages/admin/ChooseModeEntry';
+import OrderSearching from '@/components/pages/admin/OrderSearching';
+import OrderEditior from '@/components/pages/admin/OrderEditior';
+import ProjectSearching from '@/components/pages/admin/ProjectSearching';
+import ProjectEditior from '@/components/pages/admin/ProjectEditior';
 import MembersManager from '@/components/pages/admin/MembersManager';
 
 Vue.use(Router);
@@ -87,26 +88,48 @@ const router = new Router({
             {
               path: '/Admin/Orders-Manager',
               name: '管理系統：訂單管理',
-              component: OrdersManager,
-              meta: { requiresAuth: true }
-            },
-            {
-              path: '/Admin/Orders-Manager/Order-Details',
-              name: '管理系統：訂單細節清單',
-              component: OrderDetails,
-              meta: { requiresAuth: true }
+              component: ChooseModeEntry,
+              meta: { requiresAuth: true },
+              children: [
+                {
+                  path: '/Admin/Orders-Manager/Order-Searching',
+                  name: '管理系統：查詢訂單',
+                  component: OrderSearching,
+                  meta: { requiresAuth: true }
+                },
+                {
+                  path: '/Admin/Orders-Manager/Order-Searching/Order-Editior',
+                  name: '管理系統：編輯訂單',
+                  component: OrderEditior,
+                  meta: { requiresAuth: true }
+                }
+              ]
             },
             {
               path: '/Admin/Projects-Manager',
               name: '管理系統：方案管理',
-              component: ProjectsManager,
-              meta: { requiresAuth: true }
-            },
-            {
-              path: '/Admin/Projects-Manager/Project-Details',
-              name: '管理系統：方案細節',
-              component: ProjectDetails,
-              meta: { requiresAuth: true }
+              component: ChooseModeEntry,
+              meta: { requiresAuth: true },
+              children: [
+                {
+                  path: '/Admin/Projects-Manager/Project-Creation',
+                  name: '管理系統：新增方案',
+                  component: ProjectEditior,
+                  meta: { requiresAuth: true }
+                },
+                {
+                  path: '/Admin/Projects-Manager/Project-Searching/',
+                  name: '管理系統：查詢方案',
+                  component: ProjectSearching,
+                  meta: { requiresAuth: true },
+                },
+                {
+                  path: '/Admin/Projects-Manager/Project-Edition/Project-Editior',
+                  name: '管理系統：編輯方案',
+                  component: ProjectEditior,
+                  meta: { requiresAuth: true }
+                }
+              ]
             },
             {
               path: '/Admin/Members-Manager',

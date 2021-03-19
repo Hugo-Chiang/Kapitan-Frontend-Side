@@ -80,7 +80,7 @@ export default {
     return {
       managingOrder: {},
       breadCrumbData: {
-        pagesArr: ["管理系統：訂單管理", "管理系統：編輯項目"],
+        pagesArr: ["管理系統：查詢訂單", "管理系統：編輯訂單"],
         currentPage: 2,
       },
       allOrderDetailsArr: [],

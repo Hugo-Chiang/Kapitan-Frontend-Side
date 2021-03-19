@@ -7,7 +7,7 @@
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 網站麵包屑結束 -->
     <!-- 方案摘要章節開始 -->
-    <section id="summary-area" class="row mt-4 mb-5">
+    <section id="project-summary-area" class="row mt-4 mb-5">
       <div id="project-summary" class="col-lg-8 col-12">
         <h1>
           {{ selectedProject.selectedProjectContent.projectName }}
@@ -216,7 +216,21 @@ export default {
 </script>
 
 <style lang="scss" scope>
+@import "../../assets/all.scss";
+
 .nav-item {
   cursor: pointer;
+}
+
+#project-summary-area,
+#project-details-area {
+  p {
+    img {
+      width: 75%;
+      @include media-breakpoint-down(md) {
+        width: 90%;
+      }
+    }
+  }
 }
 </style>

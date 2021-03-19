@@ -1,5 +1,5 @@
 <template>
-  <ol class="breadcrumb">
+  <ol class="breadcrumb p-0">
     <li
       class="breadcrumb-item"
       :class="index == breadCrumbData.currentPage - 1 ? 'active' : ''"

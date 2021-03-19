@@ -3,86 +3,91 @@
     <!-- 查詢輸入表單區域開始 -->
     <div class="row">
       <div class="col-10">
-        <form>
-          <div class="form-row">
-            <div class="form-group col-md-3">
-              <label for="order-id">訂單編號</label>
-              <input
-                type="text"
-                class="form-control"
-                id="order-id"
-                placeholder="OD0000000001"
-                v-model="queryData.orderID"
-              />
-            </div>
-            <div class="form-group col-md-3">
-              <label for="order-date">訂單日期</label>
-              <input
-                type="date"
-                class="form-control"
-                id="order-date"
-                v-model="queryData.orderDate"
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="member-account">會員帳號</label>
-              <input
-                type="eamil"
-                class="form-control"
-                id="member-account"
-                placeholder="Hello-World@email.com"
-                v-model="queryData.memberAccount"
-              />
-            </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="order-id">訂單編號</label>
+            <input
+              type="text"
+              class="form-control"
+              id="order-id"
+              placeholder="OD0000000001"
+              v-model="queryData.orderID"
+            />
           </div>
-        </form>
+          <div class="form-group col-md-3">
+            <label for="order-date">訂單日期</label>
+            <input
+              type="date"
+              class="form-control"
+              id="order-date"
+              v-model="queryData.orderDate"
+            />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="member-account">會員帳號</label>
+            <input
+              type="eamil"
+              class="form-control"
+              id="member-account"
+              placeholder="Hello-World@email.com"
+              v-model="queryData.memberAccount"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        id="rechoose-mode-link"
+        class="col-2 ml-auto d-flex justify-content-end"
+      >
+        <a href="" @click.prevent="$router.push('/Admin/Orders-Manager')"
+          >重選模式
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
       </div>
     </div>
     <div class="row">
       <div class="col-10">
-        <form>
-          <div class="form-row">
-            <div class="form-group col-md-3">
-              <label for="orderer-name">訂購人姓名</label>
-              <input
-                type="text"
-                class="form-control"
-                id="orderer-name"
-                placeholder="訂購人姓名"
-                v-model="queryData.ordererName"
-              />
-            </div>
-            <div class="form-group col-md-3">
-              <label for="orderer-phone">訂購人手機</label>
-              <input
-                type="text"
-                class="form-control"
-                id="orderer-phone"
-                placeholder="0933128872"
-                v-model="queryData.ordererPhone"
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="orderer-email">訂購人電子信箱</label>
-              <input
-                type="email"
-                class="form-control"
-                id="orderer-email"
-                placeholder="Hello-World@email.com"
-                v-model="queryData.ordererEmail"
-              />
-            </div>
-            <div class="form-group col-md-1 ml-3">
-              <label for="">&nbsp;</label>
-              <input
-                type="button"
-                class="btn btn-primary"
-                value="進行查詢"
-                @click.prevent="submitOrdersQuery"
-              />
-            </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="orderer-name">訂購人姓名</label>
+            <input
+              type="text"
+              class="form-control"
+              id="orderer-name"
+              placeholder="訂購人姓名"
+              v-model="queryData.ordererName"
+            />
           </div>
-        </form>
+          <div class="form-group col-md-3">
+            <label for="orderer-phone">訂購人手機</label>
+            <input
+              type="text"
+              class="form-control"
+              id="orderer-phone"
+              placeholder="0933128872"
+              v-model="queryData.ordererPhone"
+            />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="orderer-email">訂購人電子信箱</label>
+            <input
+              type="email"
+              class="form-control"
+              id="orderer-email"
+              placeholder="Hello-World@email.com"
+              v-model="queryData.ordererEmail"
+            />
+          </div>
+          <div class="form-group col-md-1 ml-3">
+            <label for="">&nbsp;</label>
+            <input
+              type="button"
+              class="btn btn-primary"
+              value="進行查詢"
+              @click.prevent="submitOrdersQuery"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <!-- 查詢輸入表單區域結束 -->
@@ -206,7 +211,7 @@ export default {
 
       localStorage.removeItem("managingOrder");
       localStorage.setItem("managingOrder", JSON.stringify(manageObj));
-      this.$router.push({ name: "管理系統：訂單細節清單" });
+      this.$router.push({ name: "管理系統：編輯訂單" });
     },
   },
 };
@@ -219,7 +224,14 @@ h5 {
     color: green;
   }
 }
-
+#rechoose-mode-link {
+  a {
+    color: black;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
 .query-resultsTable {
   tr {
     th {

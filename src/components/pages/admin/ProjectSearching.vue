@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <!-- 查詢輸入表單區域開始 -->
     <div class="row">
       <div class="col-10">
@@ -38,6 +38,12 @@
             </select>
           </div>
         </div>
+      </div>
+      <div id="rechoose-mode-link" class="col-2 d-flex justify-content-end">
+        <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
+          >重選模式
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
       </div>
     </div>
     <div class="row">
@@ -173,15 +179,23 @@
       </div>
     </div>
     <!-- 查詢結果表格區結束 -->
-  </div>
+  </section>
 </template>
 
 <script>
+// 導入麵包屑元件
+import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入
 import Pagination from "@/components/pages/sub-components/Pagination";
 
 export default {
   data() {
     return {
+      currentMode: "",
+      breadCrumbData: {
+        pagesArr: ["管理系統：方案管理", "管理系統：方案查詢"],
+        currentPage: 2,
+      },
       queryData: {
         projectID: "",
         projectName: "",
@@ -196,7 +210,7 @@ export default {
       currentPageContentArr: [],
     };
   },
-  components: { Pagination },
+  components: { Breadcrumb, Pagination },
   created() {
     const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
     const vm = this;
@@ -229,7 +243,7 @@ export default {
     checkProjectDetails(manageProjectID) {
       localStorage.removeItem("managingProject");
       localStorage.setItem("managingProject", manageProjectID);
-      this.$router.push({ name: "管理系統：方案細節" });
+      this.$router.push({ name: "管理系統：編輯方案" });
     },
   },
 };
@@ -240,6 +254,14 @@ h5 {
   span {
     font-size: 12px;
     color: green;
+  }
+}
+#rechoose-mode-link {
+  a {
+    color: black;
+    &:hover {
+      opacity: 0.7;
+    }
   }
 }
 .remarks {

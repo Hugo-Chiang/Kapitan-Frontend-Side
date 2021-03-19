@@ -48,7 +48,9 @@
           <div
             class="card-header d-flex flex-row justify-content-between align-items-center"
           >
-            <h5>{{ currentPage }}</h5>
+            <h5>
+              {{ currentPage }}
+            </h5>
             <button class="btn btn-danger" @click.prevent="signOut">
               登出
             </button>
@@ -142,10 +144,10 @@ export default {
   background-image: url("../../../assets/img/backstage/dashboard-backgroud.jpg");
   opacity: 0.95;
   .container {
-    padding-top: 90px;
+    padding-top: 80px;
   }
   .dashboard {
-    height: 700px;
+    height: 720px;
     .side-bar {
       width: 20%;
       height: 100%;
@@ -215,7 +217,7 @@ export default {
         background: #7e909a;
         border-radius: 0 calc(0.25rem - 1px) 0 0 !important;
         h5 {
-          color: oldlace;
+          color: $sail;
         }
       }
       .card-body {

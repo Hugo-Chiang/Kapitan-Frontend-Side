@@ -170,7 +170,6 @@
             :use-custom-image-handler="true"
             @image-added="uploadContentImg"
           ></VueEditor>
-          <!-- @input="$refs.vueEditor.useCustomImageHandler = true" -->
           <!-- VueEditor 文本編輯器結束 -->
         </div>
         <div class="col-3 d-flex flex-column">
@@ -233,8 +232,9 @@ import { VueEditor } from "vue2-editor";
 export default {
   data() {
     return {
+      currentMode: "",
       breadCrumbData: {
-        pagesArr: ["管理系統：方案管理", "管理系統：編輯項目"],
+        pagesArr: ["管理系統：查詢方案", "管理系統：編輯方案"],
         currentPage: 2,
       },
       requiredInputTitle: {
