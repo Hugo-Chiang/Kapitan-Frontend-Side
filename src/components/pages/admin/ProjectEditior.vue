@@ -1,9 +1,27 @@
 <template>
-  <section id="project-details-page" class="position-relative">
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
-    <h6 class="mt-2 mb-4 mr-4 d-inline-block">
-      正在編輯：{{ managingProjectID }} 方案
-    </h6>
+  <section id="project-details-page">
+    <!-- 麵包屑元件開始 -->
+    <Breadcrumb
+      v-if="!inCreatingMode"
+      :breadCrumbData="breadCrumbData"
+    ></Breadcrumb>
+    <!-- 麵包屑元件結束 -->
+    <div class="d-flex justify-content-between">
+      <h6 class="mt-2 mb-4 d-inline-block">
+        正在<span v-if="inCreatingMode">新增</span><span v-else>編輯</span>：{{
+          managingProjectID
+        }}
+        方案
+      </h6>
+      <div class="d-inline-block">
+        <div id="rechoose-mode-link" class="d-flex justify-content-end">
+          <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
+            >重選模式
+            <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
     <ValidationObserver v-slot="{ invalid }">
       <div class="row">
         <div class="col-12">
@@ -201,9 +219,12 @@
             <input
               type="button"
               class="btn btn-primary"
-              value="修改完成"
+              :value="inCreatingMode ? '新增完成' : '修改完成'"
               :disabled="invalid"
               @click.prevent="uploadAvatarAndUpdateData"
+              data-toggle="modal"
+              data-target="#modal"
+              data-backdrop="static"
             />
             <a
               class="d-inline-block"
@@ -222,6 +243,8 @@
 <script>
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入提示視窗元件
+// import Modal from "@/components/pages/sub-components/Modal";
 // 導入 axios 元件
 import axios from "axios";
 // 導入 cloudinary-vue 雲端圖庫元件
@@ -232,10 +255,41 @@ import { VueEditor } from "vue2-editor";
 export default {
   data() {
     return {
-      currentMode: "",
+      inCreatingMode: null,
       breadCrumbData: {
         pagesArr: ["管理系統：查詢方案", "管理系統：編輯方案"],
         currentPage: 2,
+      },
+      modalData: {
+        callBy: { path: this.currentPath, vm: null },
+        methods: {
+          deleteInvalidProjects: null,
+        },
+        situation: {
+          event: "",
+          message: "",
+          data: {},
+        },
+        reaction: function () {
+          // console.log(this);
+          // switch (this.situation.event) {
+          //   case "伺服器異常":
+          //     setTimeout(
+          //       () => this.callBy.vm.$router.push({ name: "首頁" }),
+          //       1000
+          //     );
+          //     break;
+          //   case "訂購成功":
+          //     setTimeout(
+          //       () => this.callBy.vm.$router.push({ name: "首頁" }),
+          //       1000
+          //     );
+          //     break;
+          //   case "重複訂購":
+          //     this.methods.deleteInvalidProjects(this.situation.data);
+          //     break;
+          // }
+        },
       },
       requiredInputTitle: {
         projectStatus: "方案狀態",
@@ -286,15 +340,18 @@ export default {
       vueCloudinaryData: {
         file: "",
         filesSelected: "",
+        uploadStatus: "",
         presetForProjectAvatar: "FE-SP-0001-Kapitan-Projects-Avatar",
         presetForProjectContent: "FE-SP-0001-Kapitan-Projects-Content",
       },
     };
   },
+  props: ["currentManager", "currentPath"],
   created() {
+    const vm = this;
+
     const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
     const departureLocationListAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryDepartureLocationList.php`;
-    const vm = this;
     this.$http.get(categoryListAPI).then((response) => {
       vm.renderData.categoryList = response.data;
     });
@@ -302,11 +359,29 @@ export default {
       vm.renderData.departureLocationList = response.data;
     });
 
-    this.managingProjectID = localStorage.getItem("managingProject");
-    this.queryProjectDetails();
+    // 判斷是否處於新增模式，以設置不同的初始佈局
+    if (this.currentPath.indexOf("Project-Creation") == -1)
+      this.inCreatingMode = false;
+    else this.inCreatingMode = true;
+
+    if (this.inCreatingMode) {
+      const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
+      this.$http
+        .post(queryCreatingIDAPI, this.currentManager)
+        .then((response) => {
+          vm.managingProjectID = response.data;
+        });
+
+      vm.editDetails.projectStatus = "0";
+      vm.editDetails.projectCategory = "CG0001";
+      vm.editDetails.projectDepartureLocation = "LC0001";
+    } else {
+      this.managingProjectID = localStorage.getItem("managingProject");
+      this.queryProjectDetails();
+    }
   },
   beforeDestroy() {
-    localStorage.removeItem("managingOrder");
+    localStorage.removeItem("managingProject");
   },
   components: {
     Breadcrumb,
@@ -356,6 +431,8 @@ export default {
     },
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
     uploadAvatarAndUpdateData() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
       const vm = this;
       let fileReader = new FileReader();
@@ -363,7 +440,7 @@ export default {
       fileReader.addEventListener(
         "load",
         function () {
-          console.log("圖檔上傳器已啟動");
+          vm.modalData.situation.message = "圖檔上傳器已啟動中，請勿關閉視窗";
           let formData = new FormData();
           formData.append(
             "upload_preset",
@@ -376,29 +453,30 @@ export default {
             method: "POST",
             data: formData,
             onUploadProgress: function (progressEvent) {
-              console.log("正在處理：", progressEvent);
+              vm.modalData.situation.message = `正在處理：${progressEvent}`;
               vm.progress = Math.round(
                 (progressEvent.loaded * 100.0) / progressEvent.total
               );
-              console.log(`進度：${vm.progress}％`);
+              vm.modalData.situation.message = `圖檔上傳進度：${vm.progress}％`;
             },
           };
 
           axios(requestObj)
             .then((response) => {
-              console.log("上傳成功！");
               console.log(response.data);
-              vm.editDetails.projectAvatarPublicID = vm.results.public_id;
+              vm.modalData.situation.message = `圖檔上傳成功！`;
             })
             .catch((error) => {
-              console.log("上傳失敗！");
               console.log(error);
+              // vm.modalData.situation.message = `圖檔上傳失敗！`;
             })
             .then(() => {
               vm.updateProjectDetails();
+              vm.modalData.situation.message += `<br>方案內容已寫入資料庫！`;
             })
             .catch((error) => {
               console.log(error);
+              vm.modalData.situation.message += `<br>方案內容寫入失敗！`;
             });
         },
         false
@@ -494,6 +572,14 @@ export default {
   height: 600px;
   .breadcrumb {
     padding: 0;
+  }
+  #rechoose-mode-link {
+    a {
+      color: black;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
   }
   .query-resultsTable {
     tr {

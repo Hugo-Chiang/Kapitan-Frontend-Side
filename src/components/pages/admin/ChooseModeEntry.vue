@@ -26,7 +26,10 @@
         </div>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view
+      :currentManager="returnCurrentManager"
+      :currentPath="returnCurrentPath"
+    ></router-view>
   </section>
 </template>
 
@@ -78,6 +81,9 @@ export default {
     returnCurrentManager() {
       this.findOutCurrentManager();
       return this.currentManager;
+    },
+    returnCurrentPath() {
+      return this.$route.path;
     },
   },
 };

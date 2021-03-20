@@ -37,7 +37,7 @@ export default {
 
 <style lang="scss" scoped>
 .breadcrumb {
-  background-color: transparent;
+  background-color: transparent !important;
   li {
     cursor: pointer;
   }

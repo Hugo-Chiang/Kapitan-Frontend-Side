@@ -304,6 +304,8 @@ export default {
             ...vm.inputOrdererInfo,
           });
         } else {
+          vm.unsyncOrdererContactInfo(index);
+
           // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
           let inputContactInfoStr = JSON.stringify(
             vm.inputContantInfoArr[index]

@@ -117,7 +117,7 @@
                   $refs.cart.$refs.formContactInfo.emitCheckOutData
                 "
                 data-toggle="modal"
-                data-target="#checkOutModel"
+                data-target="#modal"
                 data-backdrop="static"
               />
             </div>
@@ -164,7 +164,7 @@
           :disabled="invalid"
           @click.prevent="$refs.cart.$refs.formContactInfo.emitCheckOutData"
           data-toggle="modal"
-          data-target="#checkOutModel"
+          data-target="#modal"
           data-backdrop="static"
         />
       </div>
@@ -207,15 +207,6 @@ export default {
     clearCart() {
       localStorage.removeItem("savingProjects");
       this.confirmProjectsArr = [];
-    },
-    aa() {
-      this.$validator.validate().then((valid) => {
-        if (!valid) {
-          alert("ya");
-        } else {
-          alert("no");
-        }
-      });
     },
   },
   computed: {
