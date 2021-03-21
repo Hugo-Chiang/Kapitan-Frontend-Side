@@ -18,7 +18,11 @@
             class="carousel-item"
             :class="index == 0 ? 'active' : ''"
           >
-            <img :src="carouselItem" class="d-block w-100" alt="..." />
+            <img
+              :src="srcPrefix + carouselItem"
+              class="d-block w-100"
+              alt="..."
+            />
           </div>
         </div>
         <a
@@ -47,11 +51,21 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      srcPrefix: process.env.CLOUD_URL_PREFIX,
+    };
   },
   props: ["carouselData"],
 };
 </script>
 
 <style lang="scss" scoped>
+.carousel-item {
+  height: 530px;
+  img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
 </style>

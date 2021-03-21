@@ -149,6 +149,7 @@ export default {
         selectedProjectContent: {
           projectName: "",
           projectAvatarUrl: "",
+          projectCarouselImgs: [],
           projectMinNumOfPeople: "",
           projectPricePerPerson: "",
           projectSummary: "",
@@ -163,11 +164,7 @@ export default {
       },
       carouselData: {
         usinAt: "挑選航程",
-        carouselItems: [
-          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/ou18njfgtbrjvegoqdzx.png",
-          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/am6rmc4rbc26wiftrd0u.png",
-          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/j8dblbp8r6b6y7mzq9qv.png",
-        ],
+        carouselItems: [],
       },
       tabs: {
         currentTab: "選擇方案",
@@ -189,11 +186,17 @@ export default {
     this.$http
       .post(api, vm.selectedProject.selectedProjectID)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         vm.selectedProject.selectedProjectContent.projectName =
           response.data.projectContent["PROJECT_NAME"];
         vm.selectedProject.selectedProjectContent.projectAvatarUrl =
           response.data.projectContent["PROJECT_AVATAR_URL"];
+        console.log(response.data.projectContent["PROJECT_CAROUSEL_URL"]);
+        vm.selectedProject.selectedProjectContent.projectCarouselImgs = JSON.parse(
+          response.data.projectContent["PROJECT_CAROUSEL_URL"]
+        );
+        vm.carouselData.carouselItems =
+          vm.selectedProject.selectedProjectContent.projectCarouselImgs;
         vm.selectedProject.selectedProjectContent.projectMinNumOfPeople =
           response.data.projectContent["PROJECT_MIN_NUM_OF_PEOPLE"];
         vm.selectedProject.selectedProjectContent.projectPricePerPerson = Number(

@@ -46,7 +46,7 @@ export default {
       // 提示視窗資料
       modalData: {
         callBy: { name: "結帳", vm: null },
-        methods: {
+        propsMethods: {
           deleteInvalidProjects: null,
         },
         situation: {
@@ -54,8 +54,8 @@ export default {
           message: "",
           data: {},
         },
+        buttoText: "我知道了",
         reaction: function () {
-          console.log(this);
           switch (this.situation.event) {
             case "伺服器異常":
               setTimeout(
@@ -70,7 +70,7 @@ export default {
               );
               break;
             case "重複訂購":
-              this.methods.deleteInvalidProjects(this.situation.data);
+              this.propsMethods.deleteInvalidProjects(this.situation.data);
               break;
           }
         },
@@ -110,14 +110,14 @@ export default {
           console.log(response);
           if (response.data.status == "訂購成功") {
             vm.modalData.callBy.vm = vm;
-            vm.modalData.methods.deleteInvalidProjects =
+            vm.modalData.propsMethods.deleteInvalidProjects =
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "訂購成功";
             vm.modalData.situation.message = response.data.message;
             localStorage.removeItem("savingProjects");
           } else if (response.data.status == "重複訂購") {
             vm.modalData.callBy.vm = vm;
-            vm.modalData.methods.deleteInvalidProjects =
+            vm.modalData.propsMethods.deleteInvalidProjects =
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "重複訂購";
             vm.modalData.situation.message = response.data.message;

@@ -42,17 +42,15 @@
             class="router-link d-block col-lg-4 col-md-5 col-9 mx-lg-0 mx-md-1 mb-4"
           >
             <li class="card" :key="project['PROJECT_ID']">
-              <cld-context cloudName="hugo-chiang">
-                <cld-image
-                  class="card-img-top"
-                  :publicId="project['PROJECT_AVATAR_URL'] || noImgUrl"
-                />
-              </cld-context>
-              <!-- <img
+              <img
                 class="card-img-top"
-                :src="project['PROJECT_AVATAR_URL'] || noImgUrl"
+                :src="
+                  project['PROJECT_AVATAR_URL'] != null
+                    ? srcPrefix + project['PROJECT_AVATAR_URL']
+                    : srcPrefix + noImgUrl
+                "
                 alt="這裡是卡片頂圖"
-              /> -->
+              />
               <div class="card-body">
                 <h6 class="card-title">
                   {{ project["PROJECT_NAME"] }}
@@ -110,8 +108,6 @@
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
-// 導入 cloudinary-vue 雲端圖庫元件
-import { CldContext, CldImage } from "cloudinary-vue";
 
 export default {
   data() {
@@ -126,14 +122,13 @@ export default {
       currentPageContentArr: [],
       itemsNumPerPage: 9,
       currentPageNum: 1,
+      srcPrefix: process.env.CLOUD_URL_PREFIX,
       noImgUrl: process.env.CLOUD_NO_IMG_URL,
     };
   },
   components: {
     Breadcrumb,
     Pagination,
-    CldContext,
-    CldImage,
   },
   created() {
     const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
@@ -202,14 +197,11 @@ aside {
       height: 22rem;
       color: black;
       box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
-      .cld-image {
+      img {
         width: 100%;
-        img {
-          width: 100%;
-          height: 160px;
-          object-fit: cover;
-          @include border-top-radius($card-inner-border-radius);
-        }
+        height: 160px;
+        object-fit: cover;
+        @include border-top-radius($card-inner-border-radius);
       }
       .card-body {
         height: 75%;

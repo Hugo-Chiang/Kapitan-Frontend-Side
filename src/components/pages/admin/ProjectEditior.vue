@@ -12,6 +12,16 @@
           managingProjectID
         }}
         方案
+        <span v-if="!inCreatingMode" class="delete-project-btn ml-1">
+          <a
+            href=""
+            @click.prevent="deleteProject"
+            data-toggle="modal"
+            data-target="#modal"
+            data-backdrop="static"
+            >刪除專案</a
+          >
+        </span>
       </h6>
       <div
         class="d-inline-block"
@@ -72,7 +82,7 @@
                   requiredInputTitle.projectPricePerPerson
                 }}</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.projectPricePerPerson"
@@ -93,7 +103,7 @@
                   requiredInputTitle.projectMinNumOfPeople
                 }}</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.projectMinNumOfPeople"
@@ -250,6 +260,7 @@
             <input
               type="button"
               class="btn btn-primary"
+              :class="{ 'invalid-btn': invalid }"
               :value="inCreatingMode ? '新增完成' : '修改完成'"
               :disabled="invalid"
               @click.prevent="uploadAvatarAndUpdateData"
@@ -274,12 +285,8 @@
 <script>
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-// 導入提示視窗元件
-// import Modal from "@/components/pages/sub-components/Modal";
 // 導入 axios 元件
 import axios from "axios";
-// 導入 cloudinary-vue 雲端圖庫元件
-import { CldContext, CldImage } from "cloudinary-vue";
 // 導入 vue2-editor 文本編輯器元件
 import { VueEditor } from "vue2-editor";
 
@@ -292,16 +299,21 @@ export default {
         currentPage: 2,
       },
       modalData: {
-        callBy: { path: this.currentPath, vm: null },
-        methods: {
-          deleteInvalidProjects: null,
-        },
+        callBy: { vm: null },
         situation: {
           event: "",
           message: "",
+          buttonType: "gotIt",
           data: {},
         },
-        reaction: function () {},
+        emitValue: null,
+        reaction: function () {
+          if (this.situation.event.indexOf("失敗") != -1)
+            setTimeout(
+              () => this.callBy.vm.$router.push({ name: "管理系統：方案管理" }),
+              1000
+            );
+        },
       },
       requiredInputTitle: {
         projectStatus: "方案狀態",
@@ -367,37 +379,11 @@ export default {
   },
   props: ["currentManager", "currentPath"],
   created() {
-    const vm = this;
-
-    const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
-    const departureLocationListAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryDepartureLocationList.php`;
-    this.$http.get(categoryListAPI).then((response) => {
-      vm.renderData.categoryList = response.data;
+    this.modalData.callBy.vm = this;
+    this.$eventBus.$on("emitModalValue", (value) => {
+      this.modalData.emitValue = value;
     });
-    this.$http.get(departureLocationListAPI).then((response) => {
-      vm.renderData.departureLocationList = response.data;
-    });
-
-    // 判斷是否處於新增模式，以設置不同的初始佈局
-    if (this.currentPath.indexOf("Project-Creation") == -1)
-      this.inCreatingMode = false;
-    else this.inCreatingMode = true;
-
-    if (this.inCreatingMode) {
-      const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
-      this.$http
-        .post(queryCreatingIDAPI, this.currentManager)
-        .then((response) => {
-          vm.managingProjectID = response.data;
-        });
-
-      vm.editDetails.projectStatus = "0";
-      vm.editDetails.projectCategory = "CG0001";
-      vm.editDetails.projectDepartureLocation = "LC0001";
-    } else {
-      this.managingProjectID = localStorage.getItem("managingProject");
-      this.queryProjectDetails();
-    }
+    this.initializeEditor();
   },
   beforeDestroy() {
     // localStorage.removeItem("managingProject");
@@ -405,10 +391,46 @@ export default {
   components: {
     Breadcrumb,
     VueEditor,
-    CldContext,
-    CldImage,
   },
   methods: {
+    // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
+    initializeEditor() {
+      const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
+      const departureLocationListAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryDepartureLocationList.php`;
+      const vm = this;
+
+      vm.editDetails.projectName = "";
+      vm.editDetails.projectPricePerPerson = 0;
+      vm.editDetails.projectMinNumOfPeople = 0;
+      vm.vueCloudinaryData.filesData.avatar = "";
+      vm.vueCloudinaryData.filesData.carouselImgs = [];
+      vm.editDetails.projectStatus = "0";
+      vm.editDetails.projectCategory = "CG0001";
+      vm.editDetails.projectDepartureLocation = "LC0001";
+
+      this.$http.get(categoryListAPI).then((response) => {
+        vm.renderData.categoryList = response.data;
+      });
+      this.$http.get(departureLocationListAPI).then((response) => {
+        vm.renderData.departureLocationList = response.data;
+      });
+
+      if (this.currentPath.indexOf("Project-Creation") == -1)
+        this.inCreatingMode = false;
+      else this.inCreatingMode = true;
+
+      if (this.inCreatingMode) {
+        const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
+        this.$http
+          .post(queryCreatingIDAPI, this.currentManager)
+          .then((response) => {
+            vm.managingProjectID = response.data;
+          });
+      } else {
+        this.managingProjectID = localStorage.getItem("managingProject");
+        this.queryProjectDetails();
+      }
+    },
     // 方法：向後端查詢欲編輯項目的內容，以利進行雙向綁定編修
     queryProjectDetails() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjectDetails.php`;
@@ -461,6 +483,7 @@ export default {
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
     uploadAvatarAndUpdateData() {
       this.$eventBus.$emit("emitModalData", this.modalData);
+      vm.modalData.situation.buttonType = "gotIt";
 
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
       const vm = this;
@@ -519,17 +542,29 @@ export default {
               axios(requestObj)
                 .then((response) => {
                   console.log(response.data);
+                  if (avatarFile != "" && objIndex == 1) {
+                    vm.editDetails.projectAvatarPublicID =
+                      response.data.public_id;
+                  } else {
+                    vm.editDetails.projectCarouselImgs.push(
+                      response.data.public_id
+                    );
+                  }
+
                   if (objIndex == objSize) {
+                    vm.modalData.situation.event = "圖片上傳成功。";
                     vm.modalData.situation.message = `<p>${objIndex} 張圖片全部上傳成功！</p>`;
                     vm.updateProjectDetails();
                   } else {
                     vm.modalData.situation.message = `第 ${objIndex} 張圖片上傳成功`;
                   }
+
                   objIndex++;
                 })
                 .catch((error) => {
                   console.log(error);
-                  // vm.modalData.situation.message = `圖片上傳失敗！`;
+                  vm.modalData.situation.event = "圖片上傳失敗。";
+                  vm.modalData.situation.message = `圖片上傳失敗！請稍後再試。`;
                 });
             },
             false
@@ -541,7 +576,8 @@ export default {
     },
     // 方法：將方案更新數據寫入資料庫
     updateProjectDetails() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdatepProjectDetails.php`;
+      const updateProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdatepProjectDetails.php`;
+      const createProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewProject.php`;
       const vm = this;
       const session = vm.getKapitanSession();
 
@@ -550,20 +586,53 @@ export default {
         projectID: vm.managingProjectID,
         editedDetails: vm.editDetails,
       };
+      let api = "";
+
+      if (this.inCreatingMode) api = createProjectDetailsAPI;
+      else api = updateProjectDetailsAPI;
 
       vm.$http
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
-          console.log(response);
+          vm.modalData.situation.event += "資料庫寫入成功。";
           vm.modalData.situation.message += response.data;
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          vm.modalData.situation.event += "資料庫寫入失敗。";
+          vm.modalData.situation.message += error.data;
         })
         .then(() => {
-          vm.vueCloudinaryData.filesData.avatar = "";
-          vm.vueCloudinaryData.filesData.carouselImgs = [];
+          vm.initializeEditor();
         });
+    },
+    // 方法：刪除方案
+    deleteProject() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+      const deleteProjectAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteProject.php`;
+      const vm = this;
+      const session = vm.getKapitanSession();
+
+      this.modalData.situation.event = "準備刪除方案";
+      this.modalData.situation.message = `確定要刪除 ${this.managingProjectID} 專案嗎？`;
+      this.modalData.situation.buttonType = "yesNo";
+
+      vm.$forceUpdate();
+
+      let sendingObj = {
+        session: session,
+        projectID: vm.managingProjectID,
+      };
+
+      if (this.returnModalEmitValue == 1) {
+        vm.$http
+          .post(deleteProjectAPI, JSON.stringify(sendingObj))
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     // 方法：自定義 vue2-editor 文本編輯器的圖片上傳方式，改為 Cloudinary 的上傳方式
     uploadContentImg(file, editor, cursorLocation) {
@@ -617,12 +686,28 @@ export default {
       return session;
     },
   },
+  computed: {
+    returnModalEmitValue() {
+      return this.modalData.emitValue;
+    },
+  },
+  // watch: {
+  //   modalData: {
+  //     handler(newObj) {
+  //       console.log(newObj);
+  //     },
+  //     deep: true,
+  //   },
+  // },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../../assets/all.scss";
 
+.invalid-btn {
+  cursor: not-allowed;
+}
 #project-details-page {
   height: 600px;
   .breadcrumb {
@@ -668,6 +753,12 @@ export default {
 }
 h6 {
   font-weight: 600;
+  .delete-project-btn {
+    font-size: 13px;
+    a {
+      color: darkred;
+    }
+  }
 }
 .editingHTMLlist {
   li {
