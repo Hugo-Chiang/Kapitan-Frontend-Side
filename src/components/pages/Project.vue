@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <!-- 方案輪播章節開始 -->
-    <Carousel></Carousel>
+    <Carousel :carouselData="carouselData"></Carousel>
     <!-- 方案輪播章節結束 -->
     <!-- 網站麵包屑開始 -->
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
@@ -161,11 +161,18 @@ export default {
         },
         selectedProjectBookedDate: [],
       },
+      carouselData: {
+        usinAt: "挑選航程",
+        carouselItems: [
+          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/ou18njfgtbrjvegoqdzx.png",
+          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/am6rmc4rbc26wiftrd0u.png",
+          "https://res.cloudinary.com/hugo-chiang/image/upload/v1/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Carousel/j8dblbp8r6b6y7mzq9qv.png",
+        ],
+      },
       tabs: {
         currentTab: "選擇方案",
         tabsArr: ["選擇方案", "會合地點", "使用條款"],
       },
-      googleDriveSharingUrl: "http://drive.google.com/uc?export=view&id=",
     };
   },
   components: {

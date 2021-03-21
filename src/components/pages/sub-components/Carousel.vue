@@ -1,46 +1,29 @@
 <template>
-  <section id="carouselArea" class="row">
-    <div id="carouselContainer" class="col-12">
-      <div
-        id="carouselExampleIndicators"
-        class="carousel slide"
-        data-ride="carousel"
-      >
+  <section id="carousel-area" class="row mb-2">
+    <div class="col-12">
+      <div id="carousel-block" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
           <li
-            data-target="#carouselExampleIndicators"
-            data-slide-to="0"
-            class="active"
+            v-for="(carouselItem, index) in carouselData.carouselItems"
+            :key="index"
+            data-target="#carousel-block"
+            :data-slide-to="index"
+            :class="index == 0 ? 'active' : ''"
           ></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img
-              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801180/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-001_aqvvao.png"
-              class="d-block w-100"
-              alt="..."
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801181/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-002_ludmq0.png"
-              class="d-block w-100"
-              alt="..."
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="https://res.cloudinary.com/hugo-chiang/image/upload/v1615801180/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Projects-Images/PJ0000001/PJ0000001-01-003_vbn9ew.png"
-              class="d-block w-100"
-              alt="..."
-            />
+          <div
+            v-for="(carouselItem, index) in carouselData.carouselItems"
+            :key="'carouselItem' + index"
+            class="carousel-item"
+            :class="index == 0 ? 'active' : ''"
+          >
+            <img :src="carouselItem" class="d-block w-100" alt="..." />
           </div>
         </div>
         <a
           class="carousel-control-prev"
-          href="#carouselExampleIndicators"
+          href="#carousel-block"
           role="button"
           data-slide="prev"
         >
@@ -49,7 +32,7 @@
         </a>
         <a
           class="carousel-control-next"
-          href="#carouselExampleIndicators"
+          href="#carousel-block"
           role="button"
           data-slide="next"
         >
@@ -66,5 +49,9 @@ export default {
   data() {
     return {};
   },
+  props: ["carouselData"],
 };
 </script>
+
+<style lang="scss" scoped>
+</style>

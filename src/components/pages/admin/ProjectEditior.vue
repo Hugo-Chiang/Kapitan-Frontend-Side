@@ -13,7 +13,10 @@
         }}
         方案
       </h6>
-      <div class="d-inline-block">
+      <div
+        class="d-inline-block"
+        v-if="inCreatingMode || breadCrumbData.currentPage != 2"
+      >
         <div id="rechoose-mode-link" class="d-flex justify-content-end">
           <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
             >重選模式
@@ -140,7 +143,7 @@
                 </option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label
                 :for="requiredInputTitle.projectAvatarPublicID"
                 class="form-label"
@@ -154,9 +157,37 @@
                   accept="image/png, image/jpeg"
                   @change="handleFileChange($event)"
                 />
-                <label class="custom-file-label" for="inputGroupFile01">{{
-                  vueCloudinaryData.file.name || "尚未選擇"
-                }}</label>
+                <label
+                  class="custom-file-label"
+                  :for="requiredInputTitle.projectAvatarPublicID"
+                  >{{
+                    vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
+                  }}</label
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label
+                :for="requiredInputTitle.projectCarouselImgs"
+                class="form-label"
+                >{{ requiredInputTitle.projectCarouselImgs }}</label
+              >
+              <div class="custom-file">
+                <input
+                  :id="requiredInputTitle.projectCarouselImgs"
+                  class="custom-file-input"
+                  type="file"
+                  multiple
+                  accept="image/png, image/jpeg"
+                  @change="handleFileChange($event)"
+                />
+                <label
+                  class="custom-file-label"
+                  :for="requiredInputTitle.projectCarouselImgs"
+                  >{{
+                    `已選擇 ${vueCloudinaryData.filesData.carouselImgs.length} 個檔案`
+                  }}</label
+                >
               </div>
             </div>
           </div>
@@ -270,26 +301,7 @@ export default {
           message: "",
           data: {},
         },
-        reaction: function () {
-          // console.log(this);
-          // switch (this.situation.event) {
-          //   case "伺服器異常":
-          //     setTimeout(
-          //       () => this.callBy.vm.$router.push({ name: "首頁" }),
-          //       1000
-          //     );
-          //     break;
-          //   case "訂購成功":
-          //     setTimeout(
-          //       () => this.callBy.vm.$router.push({ name: "首頁" }),
-          //       1000
-          //     );
-          //     break;
-          //   case "重複訂購":
-          //     this.methods.deleteInvalidProjects(this.situation.data);
-          //     break;
-          // }
-        },
+        reaction: function () {},
       },
       requiredInputTitle: {
         projectStatus: "方案狀態",
@@ -299,6 +311,7 @@ export default {
         projectCategory: "所屬分類",
         projectDepartureLocation: "會合地點",
         projectAvatarPublicID: "方案大頭貼",
+        projectCarouselImgs: "方案輪播圖",
       },
       renderData: {
         categoryList: [],
@@ -309,6 +322,7 @@ export default {
         projectStatus: "",
         projectName: "",
         projectAvatarPublicID: "",
+        projectCarouselImgs: [],
         projectSummary: "",
         projectDescription: "",
         projectPricePerPerson: 0,
@@ -338,11 +352,16 @@ export default {
       },
       // cloudinary-vue 雲端圖庫元件的配置或應用資料
       vueCloudinaryData: {
-        file: "",
-        filesSelected: "",
+        filesData: {
+          avatar: "",
+          carouselImgs: [],
+        },
+        preset: {
+          projectAvatar: "FE-SP-0001-Kapitan-Projects-Avatar",
+          projectContent: "FE-SP-0001-Kapitan-Projects-Content",
+          projectCarousel: "FE-SP-0001-Kapitan-Projects-Carousel",
+        },
         uploadStatus: "",
-        presetForProjectAvatar: "FE-SP-0001-Kapitan-Projects-Avatar",
-        presetForProjectContent: "FE-SP-0001-Kapitan-Projects-Content",
       },
     };
   },
@@ -381,7 +400,7 @@ export default {
     }
   },
   beforeDestroy() {
-    localStorage.removeItem("managingProject");
+    // localStorage.removeItem("managingProject");
   },
   components: {
     Breadcrumb,
@@ -425,9 +444,19 @@ export default {
     },
     // 方法：紀錄觀察上傳檔案的內容
     handleFileChange: function (e) {
-      console.log("上傳檔案更換：", e.target.files);
-      this.vueCloudinaryData.file = e.target.files[0];
-      this.vueCloudinaryData.filesSelected = e.target.files.length;
+      if (e.target.id == "方案大頭貼") {
+        this.vueCloudinaryData.filesData.avatar = e.target.files[0];
+        console.log("上傳檔案更換：", this.vueCloudinaryData.filesData.avatar);
+      } else if (e.target.id == "方案輪播圖") {
+        this.vueCloudinaryData.filesData.carouselImgs = [];
+        for (let i = 0; i < e.target.files.length; i++) {
+          this.vueCloudinaryData.filesData.carouselImgs.push(e.target.files[i]);
+        }
+        console.log(
+          "上傳檔案更換：",
+          this.vueCloudinaryData.filesData.carouselImgs
+        );
+      }
     },
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
     uploadAvatarAndUpdateData() {
@@ -435,58 +464,79 @@ export default {
 
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
       const vm = this;
-      let fileReader = new FileReader();
-
-      fileReader.addEventListener(
-        "load",
-        function () {
-          vm.modalData.situation.message = "圖檔上傳器已啟動中，請勿關閉視窗";
-          let formData = new FormData();
-          formData.append(
-            "upload_preset",
-            vm.vueCloudinaryData.presetForProjectAvatar
-          );
-          formData.append("file", fileReader.result);
-
-          let requestObj = {
-            url: cloudinaryUploadAPI,
-            method: "POST",
-            data: formData,
-            onUploadProgress: function (progressEvent) {
-              vm.modalData.situation.message = `正在處理：${progressEvent}`;
-              vm.progress = Math.round(
-                (progressEvent.loaded * 100.0) / progressEvent.total
-              );
-              vm.modalData.situation.message = `圖檔上傳進度：${vm.progress}％`;
-            },
-          };
-
-          axios(requestObj)
-            .then((response) => {
-              console.log(response.data);
-              vm.modalData.situation.message = `圖檔上傳成功！`;
-            })
-            .catch((error) => {
-              console.log(error);
-              // vm.modalData.situation.message = `圖檔上傳失敗！`;
-            })
-            .then(() => {
-              vm.updateProjectDetails();
-              vm.modalData.situation.message += `<br>方案內容已寫入資料庫！`;
-            })
-            .catch((error) => {
-              console.log(error);
-              vm.modalData.situation.message += `<br>方案內容寫入失敗！`;
-            });
-        },
-        false
-      );
 
       // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）
-      if (this.vueCloudinaryData.file && this.vueCloudinaryData.file.name) {
-        fileReader.readAsDataURL(this.vueCloudinaryData.file);
-      } else {
+      let avatarFile = this.vueCloudinaryData.filesData.avatar;
+      let carouselFiles = this.vueCloudinaryData.filesData.carouselImgs;
+
+      if (avatarFile == "" && !avatarFile.name && carouselFiles.length <= 0) {
         this.updateProjectDetails();
+      } else {
+        let totalUploadObj = this.vueCloudinaryData.filesData.carouselImgs;
+
+        if (avatarFile != "") {
+          let toolArr = [];
+          for (let prop in totalUploadObj) {
+            toolArr.push(totalUploadObj[prop]);
+          }
+          toolArr.unshift(avatarFile);
+          totalUploadObj = Object.assign({}, toolArr);
+        }
+
+        let objSize = Object.keys(totalUploadObj).length;
+        let objIndex = 1;
+
+        for (let prop in totalUploadObj) {
+          let fileReader = new FileReader();
+
+          fileReader.addEventListener(
+            "load",
+            function () {
+              let preset = "";
+              if (avatarFile != "" && prop == 0) {
+                preset = vm.vueCloudinaryData.preset.projectAvatar;
+              } else {
+                preset = vm.vueCloudinaryData.preset.projectCarousel;
+              }
+
+              let formData = new FormData();
+              formData.append("upload_preset", preset);
+              formData.append("file", fileReader.result);
+
+              let requestObj = {
+                url: cloudinaryUploadAPI,
+                method: "POST",
+                data: formData,
+                onUploadProgress: function (progressEvent) {
+                  vm.modalData.situation.message = `<p>開始處理上傳事件<p>`;
+                  vm.progress = Math.round(
+                    (progressEvent.loaded * 100.0) / progressEvent.total
+                  );
+                  vm.modalData.situation.message = `<p>正在上傳第 ${objIndex} 張圖片，總共有 ${objSize} 張圖片。<p>第 ${objIndex} 張圖片的上傳進度：${vm.progress}％`;
+                },
+              };
+
+              axios(requestObj)
+                .then((response) => {
+                  console.log(response.data);
+                  if (objIndex == objSize) {
+                    vm.modalData.situation.message = `<p>${objIndex} 張圖片全部上傳成功！</p>`;
+                    vm.updateProjectDetails();
+                  } else {
+                    vm.modalData.situation.message = `第 ${objIndex} 張圖片上傳成功`;
+                  }
+                  objIndex++;
+                })
+                .catch((error) => {
+                  console.log(error);
+                  // vm.modalData.situation.message = `圖片上傳失敗！`;
+                });
+            },
+            false
+          );
+
+          fileReader.readAsDataURL(totalUploadObj[prop]);
+        }
       }
     },
     // 方法：將方案更新數據寫入資料庫
@@ -505,9 +555,14 @@ export default {
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
           console.log(response);
+          vm.modalData.situation.message += response.data;
         })
         .catch((respponse) => {
           console.log(respponse);
+        })
+        .then(() => {
+          vm.vueCloudinaryData.filesData.avatar = "";
+          vm.vueCloudinaryData.filesData.carouselImgs = [];
         });
     },
     // 方法：自定義 vue2-editor 文本編輯器的圖片上傳方式，改為 Cloudinary 的上傳方式
@@ -520,7 +575,7 @@ export default {
       let formData = new FormData();
       formData.append(
         "upload_preset",
-        vm.vueCloudinaryData.presetForProjectAvatar
+        vm.vueCloudinaryData.preset.projectAvatar
       );
       formData.append("file", file);
 
@@ -597,7 +652,7 @@ export default {
 }
 .custom-file-label {
   &::after {
-    content: "選擇檔案";
+    content: "開啟";
   }
 }
 .quillWrapper {

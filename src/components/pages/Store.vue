@@ -43,12 +43,10 @@
           >
             <li class="card" :key="project['PROJECT_ID']">
               <cld-context cloudName="hugo-chiang">
-                <!-- <div class="card-img-top"> -->
                 <cld-image
                   class="card-img-top"
                   :publicId="project['PROJECT_AVATAR_URL'] || noImgUrl"
                 />
-                <!-- </div> -->
               </cld-context>
               <!-- <img
                 class="card-img-top"

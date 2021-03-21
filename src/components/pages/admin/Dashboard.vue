@@ -242,6 +242,6 @@ export default {
 }
 
 .fade-in {
-  animation: 7s fade-in;
+  animation: 5s fade-in;
 }
 </style>

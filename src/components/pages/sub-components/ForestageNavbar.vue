@@ -267,15 +267,19 @@ nav {
         .nav-link {
           font-size: 18px;
           color: $sail;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
           @include media-breakpoint-down(md) {
             font-size: 16px;
           }
           @include media-breakpoint-down(sm) {
             font-size: 13px;
           }
+          svg {
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+          }
         }
         .current-link {
-          color: $kapitan-logo !important;
+          color: $tangerine !important;
         }
         .text-link {
           font-size: 20px;
@@ -287,7 +291,11 @@ nav {
         .text-link,
         .icon-link {
           &:hover {
-            transform: translate3d(0, -5px, 0);
+            color: $prussian;
+            text-shadow: none;
+            svg {
+              filter: none;
+            }
           }
         }
         #logo-link {
