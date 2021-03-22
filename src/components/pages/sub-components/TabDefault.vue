@@ -126,8 +126,6 @@ export default {
       },
       confirmProject: {},
       confirmID: this.projectID,
-      noImgUrl:
-        "https://res.cloudinary.com/hugo-chiang/image/upload/v1615878592/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess/No-Img-Now_wlqtdk.jpg",
     };
   },
   props: ["selectedProject"],
@@ -170,8 +168,7 @@ export default {
           bookingProjectName: this.selectedProject.selectedProjectContent
             .projectName,
           bookingProjectAvatarUrl:
-            this.selectedProject.selectedProjectContent.projectAvatarUrl ||
-            this.noImgUrl,
+            this.selectedProject.selectedProjectContent.projectAvatarUrl || "",
           bookingProjectPricePerPerson: this.selectedProject
             .selectedProjectContent.projectPricePerPerson,
           bookingProjectDate: confirmDate,

@@ -191,8 +191,22 @@ export default {
       this.$http
         .post(api, JSON.stringify(vm.queryData))
         .then((response) => {
-          console.log(response.data);
-          vm.allOrdersArr = response.data;
+          let responseArr = response.data;
+
+          for (let i = 0; i < responseArr.length; i++) {
+            let projectDuplicate = false;
+
+            searching: for (let j = 0; j < vm.allOrdersArr.length; j++) {
+              if (
+                responseArr[i]["ORDER_ID"] == vm.allOrdersArr[j]["ORDER_ID"]
+              ) {
+                projectDuplicate = true;
+                break searching;
+              }
+            }
+
+            if (!projectDuplicate) vm.allOrdersArr.push(responseArr[i]);
+          }
         })
         .catch((respponse) => {
           console.log(respponse);

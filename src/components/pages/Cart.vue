@@ -189,20 +189,6 @@ export default {
     this.confirmProjectsArr = this.confirmProjectsArr || [];
   },
   methods: {
-    // 方法：刪除單一方案，覆寫 localStorage
-    deleteSingleProject(e) {
-      let storageArr = JSON.parse(localStorage.getItem("savingProjects"));
-      let deleteProjectElement = e.target.closest("div.project-row");
-      let deleteStorageID = deleteProjectElement.dataset.ID;
-      let deleteStorageIndex = storageArr.findIndex(
-        (project) => project.localstorageID == deleteStorageID
-      );
-
-      storageArr.splice(deleteStorageIndex, 1);
-
-      this.confirmProjectsArr = storageArr;
-      localStorage.setItem("savingProjects", JSON.stringify(storageArr));
-    },
     // 方法：清空購物車和 localStorage
     clearCart() {
       localStorage.removeItem("savingProjects");

@@ -20,7 +20,12 @@
     >
       <div class="project-avatar-block d-flex justify-content-center">
         <img
-          :src="srcPrefix + list[index].bookingProjectAvatarUrl"
+          :src="
+            srcPrefix +
+            (list[index].bookingProjectAvatarUrl == ''
+              ? noImgUrl
+              : list[index].bookingProjectAvatarUrl)
+          "
           alt=""
           class="project-avatar"
         />
@@ -110,10 +115,32 @@ export default {
   data() {
     return {
       srcPrefix: process.env.CLOUD_URL_PREFIX,
+      noImgUrl: process.env.CLOUD_NO_IMG_URL,
     };
   },
   props: ["list", "index", "listItem", "currentPage"],
   components: { NumberInput },
+  methods: {
+    // 方法：刪除單一方案，覆寫 localStorage
+    deleteSingleProject(e) {
+      let storageArr = JSON.parse(localStorage.getItem("savingProjects"));
+      let deleteProjectElement = e.target.closest("div.project-row-in-cart");
+      let deleteStorageID = deleteProjectElement.dataset.id;
+      let deleteStorageIndex = null;
+
+      for (let i = 0; i < storageArr.length; i++) {
+        if (deleteStorageID == storageArr[i].localstorageID) {
+          deleteStorageIndex = i;
+        }
+      }
+
+      if (deleteStorageIndex != -1) {
+        storageArr.splice(deleteStorageIndex, 1);
+        localStorage.setItem("savingProjects", JSON.stringify(storageArr));
+        this.list.splice(deleteStorageIndex, 1);
+      }
+    },
+  },
 };
 </script>
 
