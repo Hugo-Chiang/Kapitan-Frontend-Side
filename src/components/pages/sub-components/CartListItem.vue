@@ -20,7 +20,7 @@
     >
       <div class="project-avatar-block d-flex justify-content-center">
         <img
-          :src="list[index].bookingProjectAvatarUrl"
+          :src="srcPrefix + list[index].bookingProjectAvatarUrl"
           alt=""
           class="project-avatar"
         />
@@ -108,7 +108,9 @@ import NumberInput from "@/components/pages/sub-components/NumberInput";
 
 export default {
   data() {
-    return {};
+    return {
+      srcPrefix: process.env.CLOUD_URL_PREFIX,
+    };
   },
   props: ["list", "index", "listItem", "currentPage"],
   components: { NumberInput },

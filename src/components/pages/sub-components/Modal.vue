@@ -24,14 +24,14 @@
         </div>
         <div class="modal-footer">
           <button
+            class="btn"
+            type="button"
             v-for="button in returnButtons"
             :key="button.text"
             :value="button.value"
-            type="button"
-            class="btn"
             :class="button.class"
-            data-dismiss="modal"
-            @click.prevent="$eventBus.$emit('emitModalValue', button.value)"
+            :data-dismiss="button.dismiss ? 'modal' : ''"
+            @click.prevent="reaction(button.value)"
           >
             {{ button.text }}
           </button>
@@ -46,13 +46,37 @@ export default {
   data() {
     return {
       buttos: [
-        { type: "gotIt", text: "我知道了", class: ["btn-primary"] },
-        { type: "yesNo", text: "是", value: 1, class: ["btn-primary"] },
-        { type: "yesNo", text: "否", value: 0, class: ["btn-danger"] },
+        {
+          type: "checked",
+          text: "我知道了",
+          value: "checked",
+          class: ["btn-primary"],
+          dismiss: true,
+        },
+        {
+          type: "yesNo",
+          text: "是",
+          value: 1,
+          class: ["btn-primary"],
+          dismiss: false,
+        },
+        {
+          type: "yesNo",
+          text: "否",
+          value: 0,
+          class: ["btn-danger"],
+          dismiss: true,
+        },
       ],
     };
   },
   props: ["modalData"],
+  methods: {
+    reaction(buttonValue) {
+      this.$eventBus.$emit("emitModalValue", buttonValue);
+      this.modalData.correspond();
+    },
+  },
   computed: {
     returnButtons() {
       let btnArr = [];

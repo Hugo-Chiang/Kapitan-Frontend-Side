@@ -45,27 +45,29 @@ export default {
       },
       // 提示視窗資料
       modalData: {
-        callBy: { name: "結帳", vm: null },
+        callBy: null,
         propsMethods: {
           deleteInvalidProjects: null,
         },
         situation: {
           event: "",
           message: "",
+          buttonType: "checked",
           data: {},
         },
-        buttoText: "我知道了",
-        reaction: function () {
+        emitValue: null,
+        // 反應（方法）：根據不同情境做出應對
+        correspond() {
           switch (this.situation.event) {
             case "伺服器異常":
               setTimeout(
-                () => this.callBy.vm.$router.push({ name: "首頁" }),
+                () => this.callBy.$router.push({ name: "首頁" }),
                 1000
               );
               break;
             case "訂購成功":
               setTimeout(
-                () => this.callBy.vm.$router.push({ name: "首頁" }),
+                () => this.callBy.$router.push({ name: "首頁" }),
                 1000
               );
               break;
@@ -81,6 +83,11 @@ export default {
   components: {
     FormOrderInfo,
     FormContactInfo,
+  },
+  created() {
+    this.$eventBus.$on("emitModalValue", (value) => {
+      this.modalData.emitValue = value;
+    });
   },
   methods: {
     // 方法：進行結帳，透過 Ajax 與後端溝通，獲悉訂購成敗
@@ -109,14 +116,14 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.status == "訂購成功") {
-            vm.modalData.callBy.vm = vm;
+            vm.modalData.callBy = vm;
             vm.modalData.propsMethods.deleteInvalidProjects =
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "訂購成功";
             vm.modalData.situation.message = response.data.message;
             localStorage.removeItem("savingProjects");
           } else if (response.data.status == "重複訂購") {
-            vm.modalData.callBy.vm = vm;
+            vm.modalData.callBy = vm;
             vm.modalData.propsMethods.deleteInvalidProjects =
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "重複訂購";
@@ -126,7 +133,7 @@ export default {
         })
         .catch((response) => {
           console.log(response);
-          vm.modalData.callBy.vm = vm;
+          vm.modalData.callBy = vm;
           vm.modalData.situation.event = "伺服器異常";
           vm.modalData.situation.message =
             "伺服器異常，請稍後再試。系統現將引導您回到首頁。<br>造成您的不便，敬請見諒！";

@@ -299,20 +299,57 @@ export default {
         currentPage: 2,
       },
       modalData: {
-        callBy: { vm: null },
+        callBy: null,
         situation: {
           event: "",
           message: "",
-          buttonType: "gotIt",
+          buttonType: "checked",
           data: {},
         },
         emitValue: null,
-        reaction: function () {
-          if (this.situation.event.indexOf("失敗") != -1)
+        // 反應（方法）：根據不同情境做出應對
+        correspond() {
+          // 遭遇失敗情境將導回管理頁
+          if (this.situation.event.indexOf("失敗") != -1) {
             setTimeout(
-              () => this.callBy.vm.$router.push({ name: "管理系統：方案管理" }),
+              () => this.callBy.$router.push({ name: "管理系統：方案管理" }),
               1000
             );
+          }
+
+          // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
+          if (this.situation.event.indexOf("刪除方案") != -1) {
+            const deleteProjectAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteProject.php`;
+            const session = this.callBy.getKapitanSession();
+
+            let sendingObj = {
+              session: session,
+              projectID: this.callBy.managingProjectID,
+            };
+
+            if (this.emitValue == 1) {
+              this.situation.buttonType = "checked";
+
+              this.callBy.$http
+                .post(deleteProjectAPI, JSON.stringify(sendingObj))
+                .then((response) => {
+                  this.situation.event = "刪除方案成功";
+                  this.situation.message = response.data;
+                })
+                .catch((error) => {
+                  this.situation.event = "刪除方案失敗";
+                  this.situation.message = error.data;
+                });
+            } else if (this.emitValue == "checked") {
+              setTimeout(
+                () =>
+                  this.callBy.$router.push({
+                    name: "管理系統：方案管理",
+                  }),
+                1500
+              );
+            }
+          }
         },
       },
       requiredInputTitle: {
@@ -379,7 +416,7 @@ export default {
   },
   props: ["currentManager", "currentPath"],
   created() {
-    this.modalData.callBy.vm = this;
+    this.modalData.callBy = this;
     this.$eventBus.$on("emitModalValue", (value) => {
       this.modalData.emitValue = value;
     });
@@ -483,7 +520,7 @@ export default {
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
     uploadAvatarAndUpdateData() {
       this.$eventBus.$emit("emitModalData", this.modalData);
-      vm.modalData.situation.buttonType = "gotIt";
+      vm.modalData.situation.buttonType = "checked";
 
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
       const vm = this;
@@ -608,31 +645,10 @@ export default {
     // 方法：刪除方案
     deleteProject() {
       this.$eventBus.$emit("emitModalData", this.modalData);
-      const deleteProjectAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteProject.php`;
-      const vm = this;
-      const session = vm.getKapitanSession();
 
-      this.modalData.situation.event = "準備刪除方案";
+      this.modalData.situation.event = "刪除方案";
       this.modalData.situation.message = `確定要刪除 ${this.managingProjectID} 專案嗎？`;
       this.modalData.situation.buttonType = "yesNo";
-
-      vm.$forceUpdate();
-
-      let sendingObj = {
-        session: session,
-        projectID: vm.managingProjectID,
-      };
-
-      if (this.returnModalEmitValue == 1) {
-        vm.$http
-          .post(deleteProjectAPI, JSON.stringify(sendingObj))
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
     },
     // 方法：自定義 vue2-editor 文本編輯器的圖片上傳方式，改為 Cloudinary 的上傳方式
     uploadContentImg(file, editor, cursorLocation) {
@@ -691,14 +707,6 @@ export default {
       return this.modalData.emitValue;
     },
   },
-  // watch: {
-  //   modalData: {
-  //     handler(newObj) {
-  //       console.log(newObj);
-  //     },
-  //     deep: true,
-  //   },
-  // },
 };
 </script>
 
