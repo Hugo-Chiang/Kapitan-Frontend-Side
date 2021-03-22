@@ -15,6 +15,7 @@ import Dashboard from '@/components/pages/admin/Dashboard';
 import ChooseModeEntry from '@/components/pages/admin/ChooseModeEntry';
 import OrderSearching from '@/components/pages/admin/OrderSearching';
 import OrderEditior from '@/components/pages/admin/OrderEditior';
+import OrderDetailsEditior from '@/components/pages/admin/OrderDetailsEditior';
 import ProjectSearching from '@/components/pages/admin/ProjectSearching';
 import ProjectEditior from '@/components/pages/admin/ProjectEditior';
 import MembersManager from '@/components/pages/admin/MembersManager';
@@ -101,6 +102,12 @@ const router = new Router({
                   path: '/Admin/Orders-Manager/Order-Searching/Order-Editior',
                   name: '管理系統：編輯訂單',
                   component: OrderEditior,
+                  meta: { requiresAuth: true }
+                },
+                {
+                  path: '/Admin/Orders-Manager/Order-Editior/Order-Details-Editior',
+                  name: '管理系統：訂單細項',
+                  component: OrderDetailsEditior,
                   meta: { requiresAuth: true }
                 }
               ]
