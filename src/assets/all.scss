@@ -19,3 +19,6 @@ input[type=number] {
 }
 // 去除input樣式預設的增減按鈕結束
 
+.invalid-btn {
+    cursor: not-allowed;
+  }

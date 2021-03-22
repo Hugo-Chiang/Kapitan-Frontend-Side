@@ -271,6 +271,7 @@
           <input
             type="button"
             class="btn btn-primary mt-4"
+            :class="{ 'invalid-btn': invalid }"
             value="修改完成"
             :disabled="invalid"
             @click="updateOrderDetails"
@@ -499,6 +500,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../../assets/all.scss";
+
 h6 {
   font-weight: 600;
   .delete-project-btn {

@@ -176,6 +176,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../assets/all.scss";
+
 #order-details-page {
   height: 600px;
   .breadcrumb {

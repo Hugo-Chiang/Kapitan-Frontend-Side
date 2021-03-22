@@ -713,9 +713,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/all.scss";
 
-.invalid-btn {
-  cursor: not-allowed;
-}
 #project-details-page {
   height: 600px;
   .breadcrumb {

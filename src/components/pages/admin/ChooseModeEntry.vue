@@ -4,7 +4,10 @@
       v-if="$route.path == '/Admin/' + returnCurrentManager"
       class="query-mode-entry container d-flex flex-column align-items-center"
     >
-      <div class="d-flex justify-content-center align-items-center">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <h2 class="mb-4">
+          您正準備進入「{{ $route.name | filterSpecificRouterName }}」介面
+        </h2>
         <h3>請問您想進行什麼作業？</h3>
       </div>
       <div
@@ -43,6 +46,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$route);
     this.findOutCurrentManager();
   },
   methods: {
@@ -84,6 +88,11 @@ export default {
     },
     returnCurrentPath() {
       return this.$route.path;
+    },
+  },
+  filters: {
+    filterSpecificRouterName(str) {
+      return str.replace("管理系統：", "");
     },
   },
 };

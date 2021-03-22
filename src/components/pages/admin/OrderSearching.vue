@@ -182,6 +182,34 @@ export default {
     };
   },
   components: { Pagination },
+  created() {
+    // 於原型下創立時間格式化方法，以利資料庫與 input 間銜接順利
+    Date.prototype.Format = function (fmt) {
+      let o = {
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "m+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        S: this.getMilliseconds(),
+      };
+      if (/(y+)/.test(fmt))
+        fmt = fmt.replace(
+          RegExp.$1,
+          (this.getFullYear() + "").substr(4 - RegExp.$1.length)
+        );
+      for (let k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length == 1
+              ? o[k]
+              : ("00" + o[k]).substr(("" + o[k]).length)
+          );
+      return fmt;
+    };
+  },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
     submitOrdersQuery() {
@@ -191,6 +219,7 @@ export default {
       this.$http
         .post(api, JSON.stringify(vm.queryData))
         .then((response) => {
+          vm.allOrdersArr = [];
           let responseArr = response.data;
 
           for (let i = 0; i < responseArr.length; i++) {
@@ -205,7 +234,12 @@ export default {
               }
             }
 
-            if (!projectDuplicate) vm.allOrdersArr.push(responseArr[i]);
+            if (!projectDuplicate) {
+              responseArr[i]["ORDER_DATE"] = new Date(
+                responseArr[i]["ORDER_DATE"]
+              ).Format("yyyy-MM-dd");
+              vm.allOrdersArr.push(responseArr[i]);
+            }
           }
         })
         .catch((respponse) => {

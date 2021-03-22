@@ -270,8 +270,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-5 ml-auto">
-          <!-- 操作按鈕開始 -->
+        <!-- 操作按鈕開始 -->
+        <div class="col-1 mt-4">
+          <input
+            type="button"
+            class="btn btn-info"
+            value="編輯細項"
+            @click.prevent="$router.push({ name: '管理系統：訂單細項' })"
+          />
+        </div>
+        <div class="col-4 ml-auto">
           <div
             class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
           >
@@ -289,18 +297,12 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="$router.push({ name: '管理系統：訂單細項' })"
-              >編輯細項</a
-            >
-            <a
-              class="d-inline-block"
-              href=""
               @click.prevent="$router.push({ name: '管理系統：訂單管理' })"
               >不儲存關閉</a
             >
           </div>
-          <!-- 操作按鈕結束 -->
         </div>
+        <!-- 操作按鈕結束 -->
       </div>
       <!-- 訂單編輯區結束 -->
     </ValidationObserver>
@@ -537,6 +539,15 @@ export default {
       a {
         color: darkred;
       }
+    }
+  }
+}
+.action-buttons-block {
+  a {
+    font-size: 14px;
+    color: black;
+    &:hover {
+      opacity: 0.8;
     }
   }
 }

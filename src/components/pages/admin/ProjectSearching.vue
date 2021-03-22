@@ -228,11 +228,10 @@ export default {
       this.$http
         .post(QueryProjectsAPI, JSON.stringify(vm.queryData))
         .then((response) => {
-          console.log(response.data);
           vm.allProjectsArr = response.data;
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
