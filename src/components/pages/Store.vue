@@ -94,7 +94,7 @@
           v-show="currentPageContentArr.length > 0"
           :allContentArr="allProjectsArr"
           :itemsNumPerPage="itemsNumPerPage"
-          @emitCurrentPageContentArr="getCurrentPageContentArr"
+          @emitCurrentContentAndSerial="getCurrentContentAndSerial"
         ></Pagination>
       </div>
     </div>
@@ -120,6 +120,7 @@ export default {
       selectedCategories: [],
       allProjectsArr: [],
       currentPageContentArr: [],
+      currentPageContentArrSerial: [],
       itemsNumPerPage: 9,
       currentPageNum: 1,
       srcPrefix: process.env.CLOUD_URL_PREFIX,
@@ -147,8 +148,9 @@ export default {
   },
   methods: {
     // 方法：獲得頁碼元件傳回的當前頁面內容
-    getCurrentPageContentArr(arr) {
+    getCurrentContentAndSerial(arr, num) {
       this.currentPageContentArr = arr;
+      this.currentPageContentArrSerial = num;
     },
   },
   watch: {

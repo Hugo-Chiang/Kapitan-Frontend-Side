@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="project-searching" class="position-relative">
     <!-- 查詢輸入表單區域開始 -->
     <div class="row">
       <div class="col-10">
@@ -112,73 +112,80 @@
     </div>
     <!-- 查詢輸入表單區域結束 -->
     <!-- 查詢結果表格區開始 -->
-    <div>
-      <h6 class="my-4">查詢結果：</h6>
-      <table class="table table-striped queryResultsTable">
-        <thead>
-          <tr>
-            <th class="text-center" scope="col">序號</th>
-            <th class="text-center" scope="col">方案編號</th>
-            <th class="text-center" scope="col">方案名稱</th>
-            <th class="text-center" scope="col">所屬分類</th>
-            <th class="text-center" scope="col">人均價格</th>
-            <th class="text-center" scope="col">最小人數</th>
-            <th class="text-center" scope="col">會合地點</th>
-            <th class="text-center" scope="col">方案狀態</th>
-          </tr>
-        </thead>
-        <tbody v-for="(order, index) in currentPageContentArr" :key="index">
-          <tr
-            class="order-item"
-            @click.prevent="
-              checkProjectDetails(currentPageContentArr[index].PROJECT_ID)
-            "
-          >
-            <th class="text-center" scope="row">{{ index + 1 }}</th>
-            <td>{{ currentPageContentArr[index].PROJECT_ID }}</td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].PROJECT_NAME }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].CATEGORY_NAME }}
-            </td>
-            <td class="text-center">
-              {{
-                currentPageContentArr[index].PROJECT_ORIGINAL_PRICE_PER_PERSON
-              }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].PROJECT_MIN_NUM_OF_PEOPLE }}
-            </td>
-            <td class="text-center">
-              {{ currentPageContentArr[index].LOCATION_NAME }}
-            </td>
-            <td class="text-center">
-              {{
-                currentPageContentArr[index].PROJECT_STATUS == 0
-                  ? "已下線"
-                  : "上線中"
-              }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div
-        class="text-danger mt-5 text-center"
-        v-if="currentPageContentArr.length <= 0"
-      >
-        查無資料
-      </div>
-      <div id="paginationContainer" class="d-flex justify-content-center mt-4">
-        <Pagination
-          v-show="currentPageContentArr.length > 0"
-          :allContentArr="allProjectsArr"
-          :itemsNumPerPage="itemsNumPerPage"
-          @emitCurrentPageContentArr="getCurrentPageContentArr"
-        ></Pagination>
+    <div class="row">
+      <div class="col-12">
+        <h6 class="my-4">查詢結果：</h6>
+        <table class="table table-striped queryResultsTable">
+          <thead>
+            <tr>
+              <th class="text-center" scope="col">序號</th>
+              <th class="text-center" scope="col">方案編號</th>
+              <th class="text-center" scope="col">方案名稱</th>
+              <th class="text-center" scope="col">所屬分類</th>
+              <th class="text-center" scope="col">人均價格</th>
+              <th class="text-center" scope="col">最小人數</th>
+              <th class="text-center" scope="col">會合地點</th>
+              <th class="text-center" scope="col">方案狀態</th>
+            </tr>
+          </thead>
+          <tbody v-for="(order, index) in currentPageContentArr" :key="index">
+            <tr
+              class="order-item"
+              @click.prevent="
+                checkProjectDetails(currentPageContentArr[index].PROJECT_ID)
+              "
+            >
+              <th class="text-center" scope="row">
+                {{ currentPageContentSerial[index] }}
+              </th>
+              <td>{{ currentPageContentArr[index].PROJECT_ID }}</td>
+              <td class="text-center">
+                {{ currentPageContentArr[index].PROJECT_NAME }}
+              </td>
+              <td class="text-center">
+                {{ currentPageContentArr[index].CATEGORY_NAME }}
+              </td>
+              <td class="text-center">
+                {{
+                  currentPageContentArr[index].PROJECT_ORIGINAL_PRICE_PER_PERSON
+                }}
+              </td>
+              <td class="text-center">
+                {{ currentPageContentArr[index].PROJECT_MIN_NUM_OF_PEOPLE }}
+              </td>
+              <td class="text-center">
+                {{ currentPageContentArr[index].LOCATION_NAME }}
+              </td>
+              <td class="text-center">
+                {{
+                  currentPageContentArr[index].PROJECT_STATUS == 0
+                    ? "已下線"
+                    : "上線中"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="text-danger mt-5 text-center"
+          v-if="currentPageContentArr.length <= 0"
+        >
+          查無資料
+        </div>
       </div>
     </div>
     <!-- 查詢結果表格區結束 -->
+    <div
+      id="pagination-container"
+      class="d-flex justify-content-center mt-4 position-absolute"
+    >
+      <Pagination
+        v-show="currentPageContentArr.length > 0"
+        :allContentArr="allProjectsArr"
+        :itemsNumPerPage="itemsNumPerPage"
+        @emitCurrentContentAndSerial="getCurrentContentAndSerial"
+      ></Pagination>
+    </div>
   </section>
 </template>
 
@@ -208,6 +215,7 @@ export default {
       allProjectsArr: [],
       itemsNumPerPage: 5,
       currentPageContentArr: [],
+      currentPageContentSerial: [],
     };
   },
   components: { Breadcrumb, Pagination },
@@ -228,15 +236,28 @@ export default {
       this.$http
         .post(QueryProjectsAPI, JSON.stringify(vm.queryData))
         .then((response) => {
-          vm.allProjectsArr = response.data;
+          let unSortArr = response.data;
+          let sortedArr = [];
+          sortedArr.length = unSortArr.length;
+
+          for (let i = 0; i < unSortArr.length; i++) {
+            for (let j = 0; j < unSortArr.length; j++) {
+              if (unSortArr[i]["SORT_INDEX"] == j) {
+                sortedArr[j] = unSortArr[i];
+              }
+            }
+          }
+
+          vm.allProjectsArr = sortedArr;
         })
         .catch((error) => {
           console.log(error);
         });
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
-    getCurrentPageContentArr(arr) {
+    getCurrentContentAndSerial(arr, num) {
       this.currentPageContentArr = arr;
+      this.currentPageContentSerial = num;
     },
     // 方法：點擊訂單進行入詳情頁
     checkProjectDetails(manageProjectID) {
@@ -249,39 +270,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h5 {
-  span {
-    font-size: 12px;
-    color: green;
-  }
-}
-#rechoose-mode-link {
-  a {
-    color: black;
-    &:hover {
-      opacity: 0.7;
-    }
-  }
-}
-.remarks {
-  font-size: 12px;
-}
-.project-price-str {
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: -2px;
-}
-.queryResultsTable {
-  tr {
-    th {
-      font-size: 14px;
-    }
-    td {
+section {
+  height: 700px;
+  h5 {
+    span {
       font-size: 12px;
+      color: green;
     }
   }
-  .order-item {
-    cursor: pointer;
+  #rechoose-mode-link {
+    a {
+      color: black;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+  .remarks {
+    font-size: 12px;
+  }
+  .project-price-str {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: -2px;
+  }
+  .queryResultsTable {
+    tr {
+      th {
+        font-size: 14px;
+      }
+      td {
+        font-size: 12px;
+      }
+    }
+    .order-item {
+      cursor: pointer;
+    }
+  }
+  #pagination-container {
+    transform: translate3d(-50%, -50%, 0);
+    left: 50%;
+    bottom: 8%;
   }
 }
 </style>

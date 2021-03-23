@@ -40,7 +40,7 @@
           v-show="inEditingIndex == index || inEditingIndex == -1"
         >
           <th class="text-center" scope="row">
-            {{ currentSerialNum[index] }}
+            {{ currentPageContentSerial[index] }}
           </th>
           <td>{{ currentPageContentArr[index].ORDER_DETAIL_ID }}</td>
           <td class="text-center">
@@ -62,6 +62,7 @@
         <tr>
           <td
             colspan="7"
+            class="py-0"
             :class="
               inCreatingMode
                 ? editorClass.creatingMode
@@ -84,7 +85,7 @@
         v-show="currentPageContentArr.length > 0 && !inCreatingMode"
         :allContentArr="allOrderDetailsArr"
         :itemsNumPerPage="itemsNumPerPage"
-        @emitCurrentPageContentArr="getCurrentPageContentArr"
+        @emitCurrentContentAndSerial="getCurrentContentAnsSerial"
       ></Pagination>
     </div>
   </section>
@@ -158,7 +159,7 @@ export default {
       allOrderDetailsArr: [],
       itemsNumPerPage: 5,
       currentPageContentArr: [],
-      currentSerialNum: [],
+      currentPageContentSerial: [],
       editWhichOrderDetail: "",
       inEditingIndex: -1,
       editorClass: {
@@ -206,9 +207,9 @@ export default {
       }
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
-    getCurrentPageContentArr(arr, num) {
+    getCurrentContentAnsSerial(arr, num) {
       this.currentPageContentArr = arr;
-      this.currentSerialNum = num;
+      this.currentPageContentSerial = num;
     },
   },
   computed: {
@@ -241,7 +242,7 @@ export default {
 @import "../../../assets/all.scss";
 
 #order-details-page {
-  height: 600px;
+  height: 700px;
   .breadcrumb {
     padding: 0;
   }
@@ -278,7 +279,7 @@ export default {
   #pagination-container {
     transform: translate3d(-50%, -50%, 0);
     left: 50%;
-    bottom: -15px;
+    bottom: 8%;
   }
 }
 </style>

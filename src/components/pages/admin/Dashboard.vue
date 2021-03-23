@@ -221,6 +221,7 @@ export default {
         }
       }
       .card-body {
+        height: 100%;
         .welcome-page {
           height: 550px;
           img {

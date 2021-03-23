@@ -63,22 +63,22 @@ export default {
       this.currentPageNum = newPageNum;
       this.updateContentByPage(this.currentPageNum);
 
+      if (this.currentPageNum == 0) {
+        this.currentPageNum = 1;
+      } else if (this.currentPageNum > this.totalPagination) {
+        this.currentPageNum = this.totalPagination;
+      }
+
       let serialNum = [];
       for (let i = 1; i <= this.itemsNumPerPage; i++) {
         serialNum.push(i + (this.currentPageNum - 1) * this.itemsNumPerPage);
       }
 
       this.$emit(
-        "emitCurrentPageContentArr",
+        "emitCurrentContentAndSerial",
         this.currentPageContentArr,
         serialNum
       );
-
-      if (this.currentPageNum == 0) {
-        this.currentPageNum = 1;
-      } else if (this.currentPageNum > this.totalPagination) {
-        this.currentPageNum = this.totalPagination;
-      }
     },
     // 方法：根據所在頁碼渲染內容
     updateContentByPage(newPageNum = 1) {
@@ -120,6 +120,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../assets/all.scss";
+
 li {
   cursor: pointer;
 }
