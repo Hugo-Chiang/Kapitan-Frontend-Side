@@ -4,20 +4,20 @@
     <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
     <!-- 麵包屑元件結束 -->
     <h6 class="mt-2 mb-4 mr-4 d-inline-block">
-      正在<span v-if="!inCreatingMode">
-        編輯：{{ managingOrder }}號訂單的細項</span
+      <span v-if="!inCreatingMode">
+        正在編輯：{{ managingOrder }}號訂單的細項</span
       >
-      <span v-else>
-        新增號訂單細項
-        <a href="" @click.prevent="inEditingIndex++"> 新增一項 </a>
-      </span>
+      <span v-else> 正在新增：{{ creatingID }} 號訂單細項 </span>
     </h6>
-    <!-- <OrderDetailsForm
-      v-if="inCreatingMode"
-      :inCreatingMode="inCreatingMode"
-    ></OrderDetailsForm> -->
-    <table class="table table-striped query-resultsTable">
-      <thead>
+    <table
+      class="table"
+      :class="
+        inCreatingMode
+          ? 'creating-mode-table'
+          : ['table-striped', 'eidting-mode-table']
+      "
+    >
+      <thead v-if="!inCreatingMode">
         <tr>
           <th class="text-center" scope="col">序號</th>
           <th class="text-center" scope="col">項目編號</th>
@@ -39,7 +39,9 @@
           "
           v-show="inEditingIndex == index || inEditingIndex == -1"
         >
-          <th class="text-center" scope="row">{{ index + 1 }}</th>
+          <th class="text-center" scope="row">
+            {{ currentSerialNum[index] }}
+          </th>
           <td>{{ currentPageContentArr[index].ORDER_DETAIL_ID }}</td>
           <td class="text-center">
             {{ currentPageContentArr[index].PROJECT_NAME }}
@@ -58,7 +60,14 @@
           </td>
         </tr>
         <tr>
-          <td colspan="7" class="order-details-editor px-3 py-0">
+          <td
+            colspan="7"
+            :class="
+              inCreatingMode
+                ? editorClass.creatingMode
+                : editorClass.editingMode
+            "
+          >
             <OrderDetailsForm
               v-show="inEditingIndex != -1"
               :inCreatingMode="inCreatingMode"
@@ -72,7 +81,7 @@
     </table>
     <div id="pagination-container" class="position-absolute">
       <Pagination
-        v-show="currentPageContentArr.length > 0"
+        v-show="currentPageContentArr.length > 0 && !inCreatingMode"
         :allContentArr="allOrderDetailsArr"
         :itemsNumPerPage="itemsNumPerPage"
         @emitCurrentPageContentArr="getCurrentPageContentArr"
@@ -90,6 +99,7 @@ export default {
   data() {
     return {
       inCreatingMode: null,
+      creatingID: null,
       managingOrder: "",
       modalData: {
         callBy: null,
@@ -146,10 +156,15 @@ export default {
         },
       },
       allOrderDetailsArr: [],
-      itemsNumPerPage: 10,
+      itemsNumPerPage: 5,
       currentPageContentArr: [],
+      currentSerialNum: [],
       editWhichOrderDetail: "",
       inEditingIndex: -1,
+      editorClass: {
+        creatingMode: ["creating-editor"],
+        eidtingMode: ["eidting-editor", "px-3", "py-0"],
+      },
     };
   },
   props: ["currentManager", "currentPath"],
@@ -161,33 +176,39 @@ export default {
   methods: {
     // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
     initializeEditor() {
-      if (this.currentPath.indexOf("Order-Details-Creation") == -1)
-        this.inCreatingMode = false;
-      else this.inCreatingMode = true;
-
       const queryOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
+      const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
       const vm = this;
 
-      let api = "";
+      if (this.currentPath.indexOf("Order-Details-Creation") == -1) {
+        this.inCreatingMode = false;
 
-      if (this.inCreatingMode) {
-        api = queryOrderDetailsAPI;
+        this.$http
+          .post(queryOrderDetailsAPI, vm.managingOrder)
+          .then((response) => {
+            vm.allOrderDetailsArr = response.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        api = queryOrderDetailsAPI;
-      }
+        this.inCreatingMode = true;
+        this.inEditingIndex = 0;
 
-      this.$http
-        .post(api, vm.managingOrder)
-        .then((response) => {
-          vm.allOrderDetailsArr = response.data;
-        })
-        .catch((respponse) => {
-          console.log(respponse);
-        });
+        this.$http
+          .post(queryCreatingIDAPI, "Order-Details")
+          .then((response) => {
+            vm.creatingID = response.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
-    getCurrentPageContentArr(arr) {
+    getCurrentPageContentArr(arr, num) {
       this.currentPageContentArr = arr;
+      this.currentSerialNum = num;
     },
   },
   computed: {
@@ -233,7 +254,7 @@ export default {
       }
     }
   }
-  .query-resultsTable {
+  .eidting-mode-table {
     tr {
       th {
         font-size: 14px;
@@ -241,6 +262,14 @@ export default {
       td {
         font-size: 12px;
       }
+    }
+    .order-item {
+      cursor: pointer;
+    }
+  }
+  .creating-mode-table {
+    td {
+      background-color: transparent !important;
     }
     .order-item {
       cursor: pointer;

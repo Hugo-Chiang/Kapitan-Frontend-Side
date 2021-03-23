@@ -45,7 +45,6 @@ export default {
       currentPageContentArr: [],
     };
   },
-
   created() {
     // 根據總內容陣列渲染頁碼樣式及回傳當前頁面內容
     if (this.allContentArr.length <= 0) {
@@ -63,7 +62,17 @@ export default {
     selectPage(newPageNum) {
       this.currentPageNum = newPageNum;
       this.updateContentByPage(this.currentPageNum);
-      this.$emit("emitCurrentPageContentArr", this.currentPageContentArr);
+
+      let serialNum = [];
+      for (let i = 1; i <= this.itemsNumPerPage; i++) {
+        serialNum.push(i + (this.currentPageNum - 1) * this.itemsNumPerPage);
+      }
+
+      this.$emit(
+        "emitCurrentPageContentArr",
+        this.currentPageContentArr,
+        serialNum
+      );
 
       if (this.currentPageNum == 0) {
         this.currentPageNum = 1;

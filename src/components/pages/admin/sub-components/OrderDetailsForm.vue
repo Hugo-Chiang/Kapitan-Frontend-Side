@@ -14,285 +14,312 @@
         >
       </span>
     </h6>
-    <!-- 驗證套件 vee-validate 監看區域開始 -->
-    <ValidationObserver v-slot="{ invalid }">
-      <div class="form-row">
-        <!-- 主要聯絡人姓名 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.MCname">{{
-              requiredInputTitle.MCname
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.MCname"
-              placeholder="聯絡人姓名"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_NAME']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 主要聯絡人姓名 input 結束 -->
-        <!-- 主要聯絡人手機 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.MCphone">{{
-              requiredInputTitle.MCphone
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.MCphone"
-              placeholder="0900000000"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_PHONE']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 主要聯絡人手機 input 結束 -->
-        <!-- 主要聯絡人電子信箱 input 開始 -->
-        <div class="form-group col-md-4">
-          <ValidationProvider
-            :rules="{ required: true, email: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.MCemail">{{
-              requiredInputTitle.MCemail
-            }}</label>
-            <input
-              type="email"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.MCemail"
-              placeholder="Hello-World@email.com"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_EMAIL']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 主要聯絡人電子信箱 select 結束 -->
-        <!-- 細項狀態 input 開始 -->
-        <div class="form-group col-md-2">
-          <label :for="requiredInputTitle.orderDetailStatus">{{
-            requiredInputTitle.orderDetailStatus
-          }}</label>
-          <select
-            :id="requiredInputTitle.orderDetailStatus"
-            class="form-control form-select-lg"
-            v-model="returneContentArr[returneIndex]['ORDER_DETAIL_STATUS']"
-          >
-            <option value="2">已完成</option>
-            <option value="1">進行中</option>
-            <option value="0">已取消</option>
-          </select>
-        </div>
-        <!-- 細項狀態 select 結束 -->
-        <!-- 細項金額 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.orderDetailAmount">{{
-              requiredInputTitle.orderDetailAmount
-            }}</label>
-            <input
-              type="number"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.orderDetailAmount"
-              placeholder="例：3000"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_AMOUNT']"
-            />
-            <span class="invalid-feedback">{{
-              errors[0]
-            }}</span></ValidationProvider
-          >
-        </div>
-        <!-- 細項金額 input 結束 -->
+    <div class="row">
+      <div class="col-12">
+        <!-- 驗證套件 vee-validate 監看區域開始 -->
+        <ValidationObserver v-slot="{ invalid }">
+          <div class="form-row">
+            <!-- 主要聯絡人姓名 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.MCname">{{
+                  requiredInputTitle.MCname
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.MCname"
+                  placeholder="聯絡人姓名"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_MC_NAME']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 主要聯絡人姓名 input 結束 -->
+            <!-- 主要聯絡人手機 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.MCphone">{{
+                  requiredInputTitle.MCphone
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.MCphone"
+                  placeholder="0900000000"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_MC_PHONE']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 主要聯絡人手機 input 結束 -->
+            <!-- 主要聯絡人電郵 input 開始 -->
+            <div class="form-group" :class="inCreatingMode ? 'col-3' : 'col-4'">
+              <ValidationProvider
+                :rules="{ required: true, email: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.MCemail">{{
+                  requiredInputTitle.MCemail
+                }}</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.MCemail"
+                  placeholder="Hello-World@email.com"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_MC_EMAIL']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 主要聯絡人電郵 select 結束 -->
+            <!-- 細項狀態 input 開始 -->
+            <div class="form-group col-2">
+              <label :for="requiredInputTitle.orderDetailStatus">{{
+                requiredInputTitle.orderDetailStatus
+              }}</label>
+              <select
+                :id="requiredInputTitle.orderDetailStatus"
+                class="form-control form-select-lg"
+                v-model="returneContentArr[returneIndex]['ORDER_DETAIL_STATUS']"
+              >
+                <option value="2">已完成</option>
+                <option value="1">進行中</option>
+                <option value="0">已取消</option>
+              </select>
+            </div>
+            <!-- 細項狀態 select 結束 -->
+            <!-- 細項金額 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.orderDetailAmount">{{
+                  requiredInputTitle.orderDetailAmount
+                }}</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.orderDetailAmount"
+                  placeholder="例：3000"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_AMOUNT']
+                  "
+                />
+                <span class="invalid-feedback">{{
+                  errors[0]
+                }}</span></ValidationProvider
+              >
+            </div>
+            <!-- 細項金額 input 結束 -->
+          </div>
+          <div class="form-row">
+            <!-- 緊急聯絡人姓名 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.ECname">{{
+                  requiredInputTitle.ECname
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.ECname"
+                  placeholder="聯絡人姓名"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_EC_NAME']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 緊急聯絡人姓名 input 結束 -->
+            <!-- 緊急聯絡人手機 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.ECphone">{{
+                  requiredInputTitle.ECphone
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.ECphone"
+                  placeholder="0900000000"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_EC_PHONE']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 緊急聯絡人手機 input 結束 -->
+            <!-- 緊急聯絡人電郵 input 開始 -->
+            <div class="form-group" :class="inCreatingMode ? 'col-3' : 'col-4'">
+              <ValidationProvider
+                :rules="{ required: true, email: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.ECemail">{{
+                  requiredInputTitle.ECemail
+                }}</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.ECemail"
+                  placeholder="Hello-World@email.com"
+                  v-model="
+                    returneContentArr[returneIndex]['ORDER_DETAIL_EC_EMAIL']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 緊急聯絡人電郵 input 結束 -->
+            <!-- 訂單編號 input 開始 -->
+            <div class="form-group col-3">
+              <ValidationProvider
+                :rules="{ required: true, regex: /^OD\d{7}/, length: 9 }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.newOrderID">{{
+                  requiredInputTitle.newOrderID
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.newOrderID"
+                  placeholder="OD0000001"
+                  v-model="
+                    returneContentArr[returneIndex]['FK_ORDER_ID_for_ODD']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 訂單編號 input 結束 -->
+          </div>
+          <div class="form-row">
+            <!-- 方案編號 input 開始 -->
+            <div class="form-group" :class="inCreatingMode ? 'col-3' : 'col-2'">
+              <ValidationProvider
+                :rules="{ required: true, regex: /^PJ\d{7}/, length: 9 }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.projectID">{{
+                  requiredInputTitle.projectID
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.projectID"
+                  placeholder="PJ0000001"
+                  v-model="returneContentArr[returneIndex]['PROJECT_ID']"
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 方案編號 input 結束 -->
+            <!-- 預約人數 input 開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.bookingNumOfPeople">{{
+                  requiredInputTitle.bookingNumOfPeople
+                }}</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.bookingNumOfPeople"
+                  placeholder="例：3"
+                  v-model="
+                    returneContentArr[returneIndex]['BOOKING_NUM_OF_PEOPLE']
+                  "
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 預約人數 input 結束 -->
+            <!-- 預約時間 input 開始 -->
+            <div class="form-group col-3">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.bookingDate">{{
+                  requiredInputTitle.bookingDate
+                }}</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.bookingDate"
+                  v-model="returneContentArr[returneIndex]['BOOKING_DATE']"
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 預約時間 input 結束 -->
+            <div v-if="inCreatingMode" class="col-4"></div>
+            <!-- 操作按鈕開始 -->
+            <div class="form-group button-block col-3 ml-auto mr-1">
+              <input
+                type="button"
+                class="btn btn-primary mt-4"
+                :class="{ 'invalid-btn': invalid }"
+                :value="inCreatingMode ? '進行新增' : '修改完成'"
+                :disabled="invalid"
+                @click="updateOrderDetails"
+                data-toggle="modal"
+                data-target="#modal"
+                data-backdrop="static"
+              />
+              <a
+                class="d-inline-block position-relative"
+                href=""
+                @click.prevent="
+                  inCreatingMode
+                    ? $router.push({ name: '管理系統：新增訂單' })
+                    : $emit('update:inEditingIndex', -1)
+                "
+                >不儲存關閉</a
+              >
+            </div>
+            <!-- 操作按鈕結束 -->
+          </div>
+        </ValidationObserver>
+        <!-- 驗證套件 vee-validate 監看區域結束 -->
       </div>
-      <div class="form-row">
-        <!-- 緊急聯絡人姓名 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.ECname">{{
-              requiredInputTitle.ECname
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.ECname"
-              placeholder="聯絡人姓名"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_NAME']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 緊急聯絡人姓名 input 結束 -->
-        <!-- 緊急聯絡人手機 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.ECphone">{{
-              requiredInputTitle.ECphone
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.ECphone"
-              placeholder="0900000000"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_PHONE']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 緊急聯絡人手機 input 結束 -->
-        <!-- 緊急聯絡人電子信箱 input 開始 -->
-        <div class="form-group col-md-4">
-          <ValidationProvider
-            :rules="{ required: true, email: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.ECemail">{{
-              requiredInputTitle.ECemail
-            }}</label>
-            <input
-              type="email"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.ECemail"
-              placeholder="Hello-World@email.com"
-              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_EMAIL']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 緊急聯絡人電子信箱 input 結束 -->
-        <!-- 訂單編號 input 開始 -->
-        <div class="form-group col-md-3">
-          <ValidationProvider
-            :rules="{ required: true, regex: /^OD\d{7}/, length: 9 }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.newOrderID">{{
-              requiredInputTitle.newOrderID
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.newOrderID"
-              placeholder="OD0000001"
-              v-model="returneContentArr[returneIndex]['FK_ORDER_ID_for_ODD']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 訂單編號 input 結束 -->
-      </div>
-      <div class="form-row">
-        <!-- 方案編號 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true, regex: /^PJ\d{7}/, length: 9 }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.projectID">{{
-              requiredInputTitle.projectID
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.projectID"
-              placeholder="PJ0000001"
-              v-model="returneContentArr[returneIndex]['PROJECT_ID']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 方案編號 input 結束 -->
-        <!-- 預約人數 input 開始 -->
-        <div class="form-group col-md-2">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.bookingNumOfPeople">{{
-              requiredInputTitle.bookingNumOfPeople
-            }}</label>
-            <input
-              type="number"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.bookingNumOfPeople"
-              placeholder="例：3"
-              v-model="returneContentArr[returneIndex]['BOOKING_NUM_OF_PEOPLE']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 預約人數 input 結束 -->
-        <!-- 預約時間 input 開始 -->
-        <div class="form-group col-md-3">
-          <ValidationProvider
-            :rules="{ required: true }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.bookingDate">{{
-              requiredInputTitle.bookingDate
-            }}</label>
-            <input
-              type="date"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.bookingDate"
-              v-model="returneContentArr[returneIndex]['BOOKING_DATE']"
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 預約時間 input 結束 -->
-        <!-- 操作按鈕開始 -->
-        <div class="form-group button-block col-md-3 ml-auto mr-1">
-          <input
-            type="button"
-            class="btn btn-primary mt-4"
-            :class="{ 'invalid-btn': invalid }"
-            :value="inCreatingMode ? '進行新增' : '修改完成'"
-            :disabled="invalid"
-            @click="updateOrderDetails"
-            data-toggle="modal"
-            data-target="#modal"
-            data-backdrop="static"
-          />
-          <a
-            class="d-inline-block position-relative"
-            href=""
-            @click.prevent="$emit('update:inEditingIndex', -1)"
-            >不儲存關閉</a
-          >
-        </div>
-        <!-- 操作按鈕結束 -->
-      </div>
-    </ValidationObserver>
-    <!-- 驗證套件 vee-validate 監看區域結束 -->
+    </div>
   </div>
 </template>
 
@@ -319,69 +346,88 @@ export default {
             );
           }
 
-          // 執行資料庫寫入後，成敗與否都將關閉編輯細項
-          if (this.situation.event.indexOf("資料庫寫入") != -1) {
-            // 若有進行轉單，則於畫面上移除該細項
-            if (
-              this.situation.message.indexOf("完成") != -1 &&
-              !this.callBy.inCreatingMode
-            ) {
-              let originalOrderID = localStorage.getItem("managingOrder");
-              let editedOrderID = this.callBy.currentPageContentArr[
-                this.callBy.inEditingIndex
-              ]["FK_ORDER_ID_for_ODD"];
+          if (this.callBy.inCreatingMode) {
+            // 在非新增模式執行資料庫寫入後，成敗與否都將清空表單
+            if (this.situation.event.indexOf("資料庫寫入") != -1) {
+              this.callBy.creatDetails = [
+                {
+                  ORDER_DETAIL_ID: "",
+                  ORDER_DETAIL_STATUS: 1,
+                  ORDER_DETAIL_AMOUNT: "",
+                  ORDER_DETAIL_MC_NAME: "",
+                  ORDER_DETAIL_MC_PHONE: "",
+                  ORDER_DETAIL_MC_EMAIL: "",
+                  ORDER_DETAIL_EC_NAME: "",
+                  ORDER_DETAIL_EC_PHONE: "",
+                  ORDER_DETAIL_EC_EMAIL: "",
+                  PROJECT_ID: "",
+                  BOOKING_DATE: "",
+                  FK_ORDER_ID_for_ODD: "",
+                },
+              ];
+            }
+          } else {
+            // 在非新增模式執行資料庫寫入後，成敗與否都將關閉編輯細項
+            if (this.situation.event.indexOf("資料庫寫入") != -1) {
+              // 若有進行轉單，則於畫面上移除該細項
+              if (this.situation.message.indexOf("完成") != -1) {
+                let originalOrderID = localStorage.getItem("managingOrder");
+                let editedOrderID = this.callBy.currentPageContentArr[
+                  this.callBy.inEditingIndex
+                ]["FK_ORDER_ID_for_ODD"];
 
-              if (originalOrderID != editedOrderID) {
-                let deleteIndex = this.callBy.inEditingIndex;
-                this.callBy.currentPageContentArr.splice(deleteIndex, 1);
+                if (originalOrderID != editedOrderID) {
+                  let deleteIndex = this.callBy.inEditingIndex;
+                  this.callBy.currentPageContentArr.splice(deleteIndex, 1);
+                }
               }
-            }
 
-            // 若有任何資料輸入錯誤，將請求父層重新渲染，使表單恢復原狀
-            if (this.situation.message.indexOf("不存在") != -1) {
-              this.callBy.$emit("emitRerenderRequest");
-            }
+              // 若有任何資料輸入錯誤，將請求父層重新渲染，使表單恢復原狀
+              if (this.situation.message.indexOf("不存在") != -1) {
+                this.callBy.$emit("emitRerenderRequest");
+              }
 
-            this.callBy.$emit(
-              "update:currentPageContentArr",
-              this.callBy.currentPageContentArr
-            );
-            this.callBy.$emit("update:inEditingIndex", -1);
-          }
-
-          // 刪除訂單細項詢問經確認後進行刪除，成敗與否都將關閉編輯細項
-          if (this.situation.event.indexOf("刪除訂單細項") != -1) {
-            const deleteOrderDetailAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrderDetail.php`;
-            const session = this.callBy.getKapitanSession();
-
-            let sendingObj = {
-              session: session,
-              orderDetailID: this.callBy.currentPageContentArr[
-                this.callBy.inEditingIndex
-              ]["ORDER_DETAIL_ID"],
-            };
-
-            if (this.emitValue == 1) {
-              this.situation.buttonType = "checked";
-
-              this.callBy.$http
-                .post(deleteOrderDetailAPI, JSON.stringify(sendingObj))
-                .then((response) => {
-                  this.situation.event = "刪除訂單細項成功";
-                  this.situation.message = response.data;
-                })
-                .catch((error) => {
-                  this.situation.event = "刪除訂單細項失敗";
-                  this.situation.message = error.data;
-                });
-            } else if (this.emitValue == "checked") {
-              let deleteIndex = this.callBy.inEditingIndex;
               this.callBy.$emit(
                 "update:currentPageContentArr",
                 this.callBy.currentPageContentArr
               );
               this.callBy.$emit("update:inEditingIndex", -1);
-              this.callBy.currentPageContentArr.splice(deleteIndex, 1);
+            }
+
+            // 刪除訂單細項詢問經確認後進行刪除，成敗與否都將關閉編輯細項
+            if (this.situation.event.indexOf("刪除訂單細項") != -1) {
+              const deleteOrderDetailAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrderDetail.php`;
+              const session = this.callBy.getKapitanSession();
+
+              let sendingObj = {
+                session: session,
+                orderDetailID: this.callBy.currentPageContentArr[
+                  this.callBy.inEditingIndex
+                ]["ORDER_DETAIL_ID"],
+              };
+
+              if (this.emitValue == 1) {
+                this.situation.buttonType = "checked";
+
+                this.callBy.$http
+                  .post(deleteOrderDetailAPI, JSON.stringify(sendingObj))
+                  .then((response) => {
+                    this.situation.event = "刪除訂單細項成功";
+                    this.situation.message = response.data;
+                  })
+                  .catch((error) => {
+                    this.situation.event = "刪除訂單細項失敗";
+                    this.situation.message = error.data;
+                  });
+              } else if (this.emitValue == "checked") {
+                let deleteIndex = this.callBy.inEditingIndex;
+                this.callBy.$emit(
+                  "update:currentPageContentArr",
+                  this.callBy.currentPageContentArr
+                );
+                this.callBy.$emit("update:inEditingIndex", -1);
+                this.callBy.currentPageContentArr.splice(deleteIndex, 1);
+              }
             }
           }
         },
@@ -390,11 +436,11 @@ export default {
         orderDetailStatus: "細項狀態",
         orderDetailAmount: "細項金額",
         MCname: "主要聯絡人姓名",
-        MCphone: "主要聯絡人手機號碼",
-        MCemail: "主要聯絡人電子信箱",
+        MCphone: "主要聯絡人手機",
+        MCemail: "主要聯絡人電郵",
         ECname: "緊急聯絡人姓名",
-        ECphone: "緊急聯絡人手機號碼",
-        ECemail: "緊急聯絡人電子信箱",
+        ECphone: "緊急聯絡人手機",
+        ECemail: "緊急聯絡人電郵",
         projectID: "方案編號",
         bookingNumOfPeople: "預約人數",
         bookingDate: "預約日期",
@@ -553,8 +599,9 @@ h6 {
 }
 .button-block {
   a {
+    font-size: 14px;
     transform: translate3d(-50%, -50%, 0);
-    left: 18%;
+    left: 20%;
     top: 35%;
     color: black;
   }
