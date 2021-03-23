@@ -93,6 +93,18 @@ const router = new Router({
               meta: { requiresAuth: true },
               children: [
                 {
+                  path: '/Admin/Orders-Manager/Order-Creation',
+                  name: '管理系統：新增訂單',
+                  component: OrderEditior,
+                  meta: { requiresAuth: true }
+                },
+                {
+                  path: '/Admin/Orders-Manager/Order-Creation/Order-Details-Creation',
+                  name: '管理系統：新增細項',
+                  component: OrderDetailsEditior,
+                  meta: { requiresAuth: true }
+                },
+                {
                   path: '/Admin/Orders-Manager/Order-Searching',
                   name: '管理系統：查詢訂單',
                   component: OrderSearching,
@@ -106,7 +118,7 @@ const router = new Router({
                 },
                 {
                   path: '/Admin/Orders-Manager/Order-Editior/Order-Details-Editior',
-                  name: '管理系統：訂單細項',
+                  name: '管理系統：編輯細項',
                   component: OrderDetailsEditior,
                   meta: { requiresAuth: true }
                 }

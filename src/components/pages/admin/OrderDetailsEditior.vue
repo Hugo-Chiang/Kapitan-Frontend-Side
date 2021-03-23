@@ -1,11 +1,21 @@
 <template>
   <section id="order-details-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+    <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
     <!-- 麵包屑元件結束 -->
     <h6 class="mt-2 mb-4 mr-4 d-inline-block">
-      正在編輯：{{ managingOrder.managingOrderID }} 號訂單的細項
+      正在<span v-if="!inCreatingMode">
+        編輯：{{ managingOrder }}號訂單的細項</span
+      >
+      <span v-else>
+        新增號訂單細項
+        <a href="" @click.prevent="inEditingIndex++"> 新增一項 </a>
+      </span>
     </h6>
+    <!-- <OrderDetailsForm
+      v-if="inCreatingMode"
+      :inCreatingMode="inCreatingMode"
+    ></OrderDetailsForm> -->
     <table class="table table-striped query-resultsTable">
       <thead>
         <tr>
@@ -51,8 +61,10 @@
           <td colspan="7" class="order-details-editor px-3 py-0">
             <OrderDetailsForm
               v-show="inEditingIndex != -1"
+              :inCreatingMode="inCreatingMode"
               :currentPageContentArr.sync="currentPageContentArr"
               :inEditingIndex.sync="inEditingIndex"
+              @emitRerenderRequest="initializeEditor"
             ></OrderDetailsForm>
           </td>
         </tr>
@@ -77,15 +89,8 @@ import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetai
 export default {
   data() {
     return {
-      managingOrder: {},
-      breadCrumbData: {
-        pagesArr: [
-          "管理系統：查詢訂單",
-          "管理系統：編輯訂單",
-          "管理系統：訂單細項",
-        ],
-        currentPage: 3,
-      },
+      inCreatingMode: null,
+      managingOrder: "",
       modalData: {
         callBy: null,
         situation: {
@@ -112,7 +117,7 @@ export default {
 
             let sendingObj = {
               session: session,
-              orderID: this.callBy.managingOrder.managingOrderID,
+              orderID: this.callBy.managingOrder,
             };
 
             if (this.emitValue == 1) {
@@ -147,19 +152,32 @@ export default {
       inEditingIndex: -1,
     };
   },
+  props: ["currentManager", "currentPath"],
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   created() {
-    this.managingOrder = JSON.parse(localStorage.getItem("managingOrder"));
-    this.queryOrderDetails();
+    this.managingOrder = localStorage.getItem("managingOrder");
+    this.initializeEditor();
   },
   methods: {
-    // 方法：
-    queryOrderDetails() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
+    // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
+    initializeEditor() {
+      if (this.currentPath.indexOf("Order-Details-Creation") == -1)
+        this.inCreatingMode = false;
+      else this.inCreatingMode = true;
+
+      const queryOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderDetails.php`;
       const vm = this;
 
+      let api = "";
+
+      if (this.inCreatingMode) {
+        api = queryOrderDetailsAPI;
+      } else {
+        api = queryOrderDetailsAPI;
+      }
+
       this.$http
-        .post(api, vm.managingOrder.managingOrderID)
+        .post(api, vm.managingOrder)
         .then((response) => {
           vm.allOrderDetailsArr = response.data;
         })
@@ -170,6 +188,29 @@ export default {
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentPageContentArr(arr) {
       this.currentPageContentArr = arr;
+    },
+  },
+  computed: {
+    returnBreadCrumbData() {
+      let breadCrumbData = {};
+
+      if (this.inCreatingMode) {
+        breadCrumbData = {
+          pagesArr: ["管理系統：新增訂單", "管理系統：新增細項"],
+          currentPage: 2,
+        };
+      } else {
+        breadCrumbData = {
+          pagesArr: [
+            "管理系統：查詢訂單",
+            "管理系統：編輯訂單",
+            "管理系統：編輯細項",
+          ],
+          currentPage: 3,
+        };
+      }
+
+      return breadCrumbData;
     },
   },
 };

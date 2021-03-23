@@ -1,7 +1,7 @@
 <template>
-  <div class="order-details-form" v-if="inEditingIndex >= 0">
-    <h6 class="my-3">
-      正在編輯：{{ currentPageContentArr[inEditingIndex]["ORDER_DETAIL_ID"] }}
+  <div class="order-details-form" v-if="inCreatingMode || returneIndex >= 0">
+    <h6 class="my-3" v-if="!inCreatingMode">
+      正在編輯：{{ returneContentArr[returneIndex]["ORDER_DETAIL_ID"] }}
       訂單細項
       <span class="delete-project-btn ml-1">
         <a
@@ -32,9 +32,7 @@
               :class="classes"
               :id="requiredInputTitle.MCname"
               placeholder="聯絡人姓名"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_MC_NAME']
-              "
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_NAME']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -54,10 +52,8 @@
               class="form-control"
               :class="classes"
               :id="requiredInputTitle.MCphone"
-              placeholder="例：0933128872"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_MC_PHONE']
-              "
+              placeholder="0900000000"
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_PHONE']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -77,10 +73,8 @@
               class="form-control"
               :class="classes"
               :id="requiredInputTitle.MCemail"
-              placeholder="例：Hello-World@email.com"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_MC_EMAIL']
-              "
+              placeholder="Hello-World@email.com"
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_MC_EMAIL']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -94,9 +88,7 @@
           <select
             :id="requiredInputTitle.orderDetailStatus"
             class="form-control form-select-lg"
-            v-model="
-              currentPageContentArr[inEditingIndex]['ORDER_DETAIL_STATUS']
-            "
+            v-model="returneContentArr[returneIndex]['ORDER_DETAIL_STATUS']"
           >
             <option value="2">已完成</option>
             <option value="1">進行中</option>
@@ -104,6 +96,29 @@
           </select>
         </div>
         <!-- 細項狀態 select 結束 -->
+        <!-- 細項金額 input 開始 -->
+        <div class="form-group col-md-2">
+          <ValidationProvider
+            :rules="{ required: true }"
+            v-slot="{ errors, classes }"
+          >
+            <label :for="requiredInputTitle.orderDetailAmount">{{
+              requiredInputTitle.orderDetailAmount
+            }}</label>
+            <input
+              type="number"
+              class="form-control"
+              :class="classes"
+              :id="requiredInputTitle.orderDetailAmount"
+              placeholder="例：3000"
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_AMOUNT']"
+            />
+            <span class="invalid-feedback">{{
+              errors[0]
+            }}</span></ValidationProvider
+          >
+        </div>
+        <!-- 細項金額 input 結束 -->
       </div>
       <div class="form-row">
         <!-- 緊急聯絡人姓名 input 開始 -->
@@ -121,9 +136,7 @@
               :class="classes"
               :id="requiredInputTitle.ECname"
               placeholder="聯絡人姓名"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_EC_NAME']
-              "
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_NAME']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -143,10 +156,8 @@
               class="form-control"
               :class="classes"
               :id="requiredInputTitle.ECphone"
-              placeholder="例：0933128872"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_EC_PHONE']
-              "
+              placeholder="0900000000"
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_PHONE']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -166,40 +177,34 @@
               class="form-control"
               :class="classes"
               :id="requiredInputTitle.ECemail"
-              placeholder="例：Hello-World@email.com"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_EC_EMAIL']
-              "
+              placeholder="Hello-World@email.com"
+              v-model="returneContentArr[returneIndex]['ORDER_DETAIL_EC_EMAIL']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <!-- 緊急聯絡人電子信箱 input 結束 -->
-        <!-- 細項金額 input 開始 -->
-        <div class="form-group col-md-2">
+        <!-- 訂單編號 input 開始 -->
+        <div class="form-group col-md-3">
           <ValidationProvider
-            :rules="{ required: true }"
+            :rules="{ required: true, regex: /^OD\d{7}/, length: 9 }"
             v-slot="{ errors, classes }"
           >
-            <label :for="requiredInputTitle.orderDetailAmount">{{
-              requiredInputTitle.orderDetailAmount
+            <label :for="requiredInputTitle.newOrderID">{{
+              requiredInputTitle.newOrderID
             }}</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               :class="classes"
-              :id="requiredInputTitle.orderDetailAmount"
-              placeholder="例：3000"
-              v-model="
-                currentPageContentArr[inEditingIndex]['ORDER_DETAIL_AMOUNT']
-              "
+              :id="requiredInputTitle.newOrderID"
+              placeholder="OD0000001"
+              v-model="returneContentArr[returneIndex]['FK_ORDER_ID_for_ODD']"
             />
-            <span class="invalid-feedback">{{
-              errors[0]
-            }}</span></ValidationProvider
-          >
+            <span class="invalid-feedback">{{ errors[0] }}</span>
+          </ValidationProvider>
         </div>
-        <!-- 細項金額 input 結束 -->
+        <!-- 訂單編號 input 結束 -->
       </div>
       <div class="form-row">
         <!-- 方案編號 input 開始 -->
@@ -217,12 +222,33 @@
               :class="classes"
               :id="requiredInputTitle.projectID"
               placeholder="PJ0000001"
-              v-model="currentPageContentArr[inEditingIndex]['PROJECT_ID']"
+              v-model="returneContentArr[returneIndex]['PROJECT_ID']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <!-- 方案編號 input 結束 -->
+        <!-- 預約人數 input 開始 -->
+        <div class="form-group col-md-2">
+          <ValidationProvider
+            :rules="{ required: true }"
+            v-slot="{ errors, classes }"
+          >
+            <label :for="requiredInputTitle.bookingNumOfPeople">{{
+              requiredInputTitle.bookingNumOfPeople
+            }}</label>
+            <input
+              type="number"
+              class="form-control"
+              :class="classes"
+              :id="requiredInputTitle.bookingNumOfPeople"
+              placeholder="例：3"
+              v-model="returneContentArr[returneIndex]['BOOKING_NUM_OF_PEOPLE']"
+            />
+            <span class="invalid-feedback">{{ errors[0] }}</span>
+          </ValidationProvider>
+        </div>
+        <!-- 預約人數 input 結束 -->
         <!-- 預約時間 input 開始 -->
         <div class="form-group col-md-3">
           <ValidationProvider
@@ -237,42 +263,19 @@
               class="form-control"
               :class="classes"
               :id="requiredInputTitle.bookingDate"
-              v-model="currentPageContentArr[inEditingIndex]['BOOKING_DATE']"
+              v-model="returneContentArr[returneIndex]['BOOKING_DATE']"
             />
             <span class="invalid-feedback">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <!-- 預約時間 input 結束 -->
-        <!-- 訂單編號 input 開始 -->
-        <div class="form-group col-md-3">
-          <ValidationProvider
-            :rules="{ required: true, regex: /^OD\d{7}/, length: 9 }"
-            v-slot="{ errors, classes }"
-          >
-            <label :for="requiredInputTitle.newOrderID">{{
-              requiredInputTitle.newOrderID
-            }}</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="classes"
-              :id="requiredInputTitle.newOrderID"
-              placeholder="OD0000000001"
-              v-model="
-                currentPageContentArr[inEditingIndex]['FK_ORDER_ID_for_ODD']
-              "
-            />
-            <span class="invalid-feedback">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <!-- 訂單編號 input 結束 -->
         <!-- 操作按鈕開始 -->
         <div class="form-group button-block col-md-3 ml-auto mr-1">
           <input
             type="button"
             class="btn btn-primary mt-4"
             :class="{ 'invalid-btn': invalid }"
-            value="修改完成"
+            :value="inCreatingMode ? '進行新增' : '修改完成'"
             :disabled="invalid"
             @click="updateOrderDetails"
             data-toggle="modal"
@@ -319,14 +322,24 @@ export default {
           // 執行資料庫寫入後，成敗與否都將關閉編輯細項
           if (this.situation.event.indexOf("資料庫寫入") != -1) {
             // 若有進行轉單，則於畫面上移除該細項
-            if (this.situation.event.indexOf("成功") != -1) {
-              if (
-                this.callBy.editDetails.originalOrderID !=
-                this.callBy.editDetails.newOrderID
-              ) {
+            if (
+              this.situation.message.indexOf("完成") != -1 &&
+              !this.callBy.inCreatingMode
+            ) {
+              let originalOrderID = localStorage.getItem("managingOrder");
+              let editedOrderID = this.callBy.currentPageContentArr[
+                this.callBy.inEditingIndex
+              ]["FK_ORDER_ID_for_ODD"];
+
+              if (originalOrderID != editedOrderID) {
                 let deleteIndex = this.callBy.inEditingIndex;
                 this.callBy.currentPageContentArr.splice(deleteIndex, 1);
               }
+            }
+
+            // 若有任何資料輸入錯誤，將請求父層重新渲染，使表單恢復原狀
+            if (this.situation.message.indexOf("不存在") != -1) {
+              this.callBy.$emit("emitRerenderRequest");
             }
 
             this.callBy.$emit(
@@ -383,69 +396,85 @@ export default {
         ECphone: "緊急聯絡人手機號碼",
         ECemail: "緊急聯絡人電子信箱",
         projectID: "方案編號",
+        bookingNumOfPeople: "預約人數",
         bookingDate: "預約日期",
         newOrderID: "所屬訂單",
       },
-      editDetails: {
-        orderDetailID: "",
-        orderDetailStatus: "",
-        orderDetailAmount: "",
-        MCname: "",
-        MCphone: "",
-        MCemail: "",
-        ECname: "",
-        ECphone: "",
-        ECemail: "",
-        projectID: "",
-        bookingDate: "",
-        originalOrderID: "",
-        newOrderID: "",
-      },
+      creatDetails: [
+        {
+          ORDER_DETAIL_ID: "",
+          ORDER_DETAIL_STATUS: 1,
+          ORDER_DETAIL_AMOUNT: "",
+          ORDER_DETAIL_MC_NAME: "",
+          ORDER_DETAIL_MC_PHONE: "",
+          ORDER_DETAIL_MC_EMAIL: "",
+          ORDER_DETAIL_EC_NAME: "",
+          ORDER_DETAIL_EC_PHONE: "",
+          ORDER_DETAIL_EC_EMAIL: "",
+          PROJECT_ID: "",
+          BOOKING_DATE: "",
+          FK_ORDER_ID_for_ODD: "",
+        },
+      ],
     };
   },
-  props: ["currentPageContentArr", "inEditingIndex"],
+  props: ["inCreatingMode", "currentPageContentArr", "inEditingIndex"],
   created() {
-    this.modalData.callBy = this;
-    this.$eventBus.$on("emitModalValue", (value) => {
-      this.modalData.emitValue = value;
-    });
+    this.initializeEditor();
   },
   methods: {
+    // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
+    initializeEditor() {
+      this.modalData.callBy = this;
+      this.$eventBus.$on("emitModalValue", (value) => {
+        this.modalData.emitValue = value;
+      });
+    },
     // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
+      const insertNewOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewOrderDetails.php`;
+      const updateOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
       const vm = this;
       const session = vm.getKapitanSession();
       let currentArr = this.currentPageContentArr;
       let currentIndex = this.inEditingIndex;
+      let api = "";
+      let editDetails = {};
+      let sendingObj = {};
 
-      vm.editDetails.orderDetailID =
-        currentArr[currentIndex]["ORDER_DETAIL_ID"];
-      vm.editDetails.orderDetailStatus =
-        currentArr[currentIndex]["ORDER_DETAIL_STATUS"];
-      vm.editDetails.orderDetailAmount =
-        currentArr[currentIndex]["ORDER_DETAIL_AMOUNT"];
-      vm.editDetails.MCname = currentArr[currentIndex]["ORDER_DETAIL_MC_NAME"];
-      vm.editDetails.MCphone =
-        currentArr[currentIndex]["ORDER_DETAIL_MC_PHONE"];
-      vm.editDetails.MCemail =
-        currentArr[currentIndex]["ORDER_DETAIL_MC_EMAIL"];
-      vm.editDetails.ECname = currentArr[currentIndex]["ORDER_DETAIL_EC_NAME"];
-      vm.editDetails.ECphone =
-        currentArr[currentIndex]["ORDER_DETAIL_EC_PHONE"];
-      vm.editDetails.ECemail =
-        currentArr[currentIndex]["ORDER_DETAIL_EC_EMAIL"];
-      vm.editDetails.projectID = currentArr[currentIndex]["PROJECT_ID"];
-      vm.editDetails.bookingDate = currentArr[currentIndex]["BOOKING_DATE"];
-      vm.editDetails.newOrderID =
-        currentArr[currentIndex]["FK_ORDER_ID_for_ODD"];
+      if (this.inCreatingMode) {
+        sendingObj = {
+          session: session,
+          creatDetails: this.creatDetails,
+        };
+        api = insertNewOrderDetailsAPI;
+      } else {
+        editDetails.orderDetailID = currentArr[currentIndex]["ORDER_DETAIL_ID"];
+        editDetails.orderDetailStatus =
+          currentArr[currentIndex]["ORDER_DETAIL_STATUS"];
+        editDetails.orderDetailAmount =
+          currentArr[currentIndex]["ORDER_DETAIL_AMOUNT"];
+        editDetails.MCname = currentArr[currentIndex]["ORDER_DETAIL_MC_NAME"];
+        editDetails.MCphone = currentArr[currentIndex]["ORDER_DETAIL_MC_PHONE"];
+        editDetails.MCemail = currentArr[currentIndex]["ORDER_DETAIL_MC_EMAIL"];
+        editDetails.ECname = currentArr[currentIndex]["ORDER_DETAIL_EC_NAME"];
+        editDetails.ECphone = currentArr[currentIndex]["ORDER_DETAIL_EC_PHONE"];
+        editDetails.ECemail = currentArr[currentIndex]["ORDER_DETAIL_EC_EMAIL"];
+        editDetails.projectID = currentArr[currentIndex]["PROJECT_ID"];
+        editDetails.bookingNumOfPeople =
+          currentArr[currentIndex]["BOOKING_NUM_OF_PEOPLE"];
+        editDetails.bookingDate = currentArr[currentIndex]["BOOKING_DATE"];
+        editDetails.newOrderID =
+          currentArr[currentIndex]["FK_ORDER_ID_for_ODD"];
 
-      let sendingObj = {
-        session: session,
-        editedDetails: vm.editDetails,
-      };
+        sendingObj = {
+          session: session,
+          editedDetails: editDetails,
+        };
+        api = updateOrderDetailsAPI;
+      }
 
       vm.$http
         .post(api, JSON.stringify(sendingObj))
@@ -481,6 +510,22 @@ export default {
       return session;
     },
   },
+  computed: {
+    returneContentArr() {
+      if (!this.inCreatingMode) {
+        return this.currentPageContentArr;
+      } else {
+        return this.creatDetails;
+      }
+    },
+    returneIndex() {
+      if (!this.inCreatingMode) {
+        return this.inEditingIndex;
+      } else {
+        return 0;
+      }
+    },
+  },
   watch: {
     // 監看（方法）：若本頁內容有變，便將新內容傳入 data
     currentPageContentArr() {
@@ -489,11 +534,6 @@ export default {
     // 監看（方法）：若欲編輯項目索引有變，便將新內容傳入 data
     inEditingIndex() {
       this.inEditingIndex = this.inEditingIndex;
-      if (this.inEditingIndex != -1) {
-        this.editDetails.originalOrderID = this.currentPageContentArr[
-          this.inEditingIndex
-        ]["FK_ORDER_ID_for_ODD"];
-      }
     },
   },
 };

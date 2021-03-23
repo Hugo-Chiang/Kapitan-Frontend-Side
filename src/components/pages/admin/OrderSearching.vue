@@ -111,33 +111,30 @@
           <tr
             class="order-item"
             @click.prevent="
-              checkOrderDetails(
-                currentPageContentArr[index].ORDER_ID,
-                currentPageContentArr[index].ORDER_DATE
-              )
+              checkOrderDetails(currentPageContentArr[index]['ORDER_ID'])
             "
           >
             <th class="text-center" scope="row">{{ index + 1 }}</th>
-            <td>{{ currentPageContentArr[index].ORDER_ID }}</td>
+            <td>{{ currentPageContentArr[index]["ORDER_ID"] }}</td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_NAME }}
+              {{ currentPageContentArr[index]["ORDER_MC_NAME"] }}
             </td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_PHONE }}
+              {{ currentPageContentArr[index]["ORDER_MC_PHONE"] }}
             </td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_MC_EMAIL }}
+              {{ currentPageContentArr[index]["ORDER_MC_EMAIL"] }}
             </td>
             <td class="text-center">
-              {{ currentPageContentArr[index].ORDER_DATE }}
+              {{ currentPageContentArr[index]["ORDER_DATE"] }}
             </td>
             <td class="text-center">
-              {{ currentPageContentArr[index].FK_MEMBER_ID_for_OD }}
+              {{ currentPageContentArr[index]["FK_MEMBER_ID_for_OD"] }}
             </td>
             <td class="text-center">
               {{
-                currentPageContentArr[index].ORDER_TOTAL_CONSUMPTION -
-                currentPageContentArr[index].ORDER_TOTAL_DISCOUNT
+                currentPageContentArr[index]["ORDER_TOTAL_CONSUMPTION"] -
+                currentPageContentArr[index]["ORDER_TOTAL_DISCOUNT"]
               }}
             </td>
           </tr>
@@ -182,34 +179,6 @@ export default {
     };
   },
   components: { Pagination },
-  created() {
-    // 於原型下創立時間格式化方法，以利資料庫與 input 間銜接順利
-    Date.prototype.Format = function (fmt) {
-      let o = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        S: this.getMilliseconds(),
-      };
-      if (/(y+)/.test(fmt))
-        fmt = fmt.replace(
-          RegExp.$1,
-          (this.getFullYear() + "").substr(4 - RegExp.$1.length)
-        );
-      for (let k in o)
-        if (new RegExp("(" + k + ")").test(fmt))
-          fmt = fmt.replace(
-            RegExp.$1,
-            RegExp.$1.length == 1
-              ? o[k]
-              : ("00" + o[k]).substr(("" + o[k]).length)
-          );
-      return fmt;
-    };
-  },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
     submitOrdersQuery() {
@@ -251,14 +220,9 @@ export default {
       this.currentPageContentArr = arr;
     },
     // 方法：點擊訂單進行入詳情頁
-    checkOrderDetails(managingOrderID, managingOrderDate) {
-      let manageObj = {
-        managingOrderID: managingOrderID,
-        managingOrderDate: managingOrderDate,
-      };
-
+    checkOrderDetails(managingOrderID) {
       localStorage.removeItem("managingOrder");
-      localStorage.setItem("managingOrder", JSON.stringify(manageObj));
+      localStorage.setItem("managingOrder", managingOrderID);
       this.$router.push({ name: "管理系統：編輯訂單" });
     },
   },

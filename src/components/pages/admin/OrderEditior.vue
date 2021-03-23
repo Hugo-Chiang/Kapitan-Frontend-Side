@@ -1,10 +1,16 @@
 <template>
   <section id="order-details-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+    <Breadcrumb
+      v-if="!inCreatingMode"
+      :breadCrumbData="breadCrumbData"
+    ></Breadcrumb>
     <!-- 麵包屑元件結束 -->
     <h6 class="mt-2 mb-4 mr-4 d-inline-block">
-      正在編輯：{{ managingOrder.managingOrderID }} 號訂單
+      正在<span v-if="inCreatingMode">新增</span><span v-else>編輯</span>：{{
+        managingOrder
+      }}
+      號訂單
       <span v-if="!inCreatingMode" class="delete-project-btn ml-1">
         <a
           href=""
@@ -147,6 +153,7 @@
                   :class="classes"
                   :id="requiredInputTitle.MCname"
                   v-model="editDetails.MCname"
+                  :placeholder="requiredInputTitle.MCname"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -169,6 +176,7 @@
                   :class="classes"
                   :id="requiredInputTitle.MCphone"
                   v-model="editDetails.MCphone"
+                  placeholder="0933128872"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -191,6 +199,7 @@
                   :class="classes"
                   :id="requiredInputTitle.MCemail"
                   v-model="editDetails.MCemail"
+                  placeholder="Hello-World@email.com"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -215,6 +224,7 @@
                   :class="classes"
                   :id="requiredInputTitle.ECname"
                   v-model="editDetails.ECname"
+                  :placeholder="requiredInputTitle.ECname"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -237,6 +247,7 @@
                   :class="classes"
                   :id="requiredInputTitle.ECphone"
                   v-model="editDetails.ECphone"
+                  placeholder="0933128872"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -259,6 +270,7 @@
                   :class="classes"
                   :id="requiredInputTitle.ECemail"
                   v-model="editDetails.ECemail"
+                  placeholder="Hello-World@email.com"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -275,8 +287,14 @@
           <input
             type="button"
             class="btn btn-info"
-            value="編輯細項"
-            @click.prevent="$router.push({ name: '管理系統：訂單細項' })"
+            :value="inCreatingMode ? '新增細項' : '編輯細項'"
+            @click.prevent="
+              $router.push(
+                inCreatingMode
+                  ? { name: '管理系統：新增細項' }
+                  : { name: '管理系統：編輯細項' }
+              )
+            "
           />
         </div>
         <div class="col-4 ml-auto">
@@ -317,8 +335,8 @@ import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetai
 export default {
   data() {
     return {
-      inCreatingMode: false,
-      managingOrder: {},
+      inCreatingMode: null,
+      managingOrder: "",
       breadCrumbData: {
         pagesArr: ["管理系統：查詢訂單", "管理系統：編輯訂單"],
         currentPage: 2,
@@ -349,7 +367,7 @@ export default {
 
             let sendingObj = {
               session: session,
-              orderID: this.callBy.managingOrder.managingOrderID,
+              orderID: this.callBy.managingOrder,
             };
 
             if (this.emitValue == 1) {
@@ -411,83 +429,87 @@ export default {
       this.modalData.emitValue = value;
     });
     this.initializeEditor();
-    this.managingOrder = JSON.parse(localStorage.getItem("managingOrder"));
-    this.queryOrderContent();
   },
   beforeDestroy() {
     // localStorage.removeItem("managingOrder");
   },
+  props: ["currentManager", "currentPath"],
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   methods: {
-    // 方法：
+    // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
     initializeEditor() {
-      // 於原型下創立時間格式化方法，以利資料庫與 input 間銜接順利
-      Date.prototype.Format = function (fmt) {
-        let o = {
-          "M+": this.getMonth() + 1,
-          "d+": this.getDate(),
-          "h+": this.getHours(),
-          "m+": this.getMinutes(),
-          "s+": this.getSeconds(),
-          "q+": Math.floor((this.getMonth() + 3) / 3),
-          S: this.getMilliseconds(),
-        };
-        if (/(y+)/.test(fmt))
-          fmt = fmt.replace(
-            RegExp.$1,
-            (this.getFullYear() + "").substr(4 - RegExp.$1.length)
-          );
-        for (let k in o)
-          if (new RegExp("(" + k + ")").test(fmt))
-            fmt = fmt.replace(
-              RegExp.$1,
-              RegExp.$1.length == 1
-                ? o[k]
-                : ("00" + o[k]).substr(("" + o[k]).length)
-            );
-        return fmt;
-      };
-    },
-    // 方法：
-    queryOrderContent() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderData.php`;
+      if (this.currentPath.indexOf("Order-Creation") == -1)
+        this.inCreatingMode = false;
+      else this.inCreatingMode = true;
+
+      const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
+      const queryOrderDataAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderData.php`;
       const vm = this;
 
-      this.$http
-        .post(api, vm.managingOrder.managingOrderID)
-        .then((response) => {
-          console.log(response.data);
-          vm.editDetails.orderStatus = response.data["ORDER_STATUS"];
-          vm.editDetails.orderDate = new Date(
-            response.data["ORDER_DATE"]
-          ).Format("yyyy-MM-ddThh:mm");
-          vm.editDetails.orderTotalConsumption =
-            response.data["ORDER_TOTAL_CONSUMPTION"];
-          vm.editDetails.orderTotalDiscount =
-            response.data["ORDER_TOTAL_DISCOUNT"];
-          vm.editDetails.MCname = response.data["ORDER_MC_NAME"];
-          vm.editDetails.MCphone = response.data["ORDER_MC_PHONE"];
-          vm.editDetails.MCemail = response.data["ORDER_MC_EMAIL"];
-          vm.editDetails.ECname = response.data["ORDER_EC_NAME"];
-          vm.editDetails.ECphone = response.data["ORDER_EC_PHONE"];
-          vm.editDetails.ECemail = response.data["ORDER_EC_EMAIL"];
-          vm.editDetails.memberID = response.data["FK_MEMBER_ID_for_OD"];
-        })
-        .catch((respponse) => {
-          console.log(respponse);
-        });
+      vm.editDetails.orderStatus = 1;
+      vm.editDetails.orderDate = new Date().Format("yyyy-MM-ddThh:mm");
+      vm.editDetails.orderTotalConsumption = 0;
+      vm.editDetails.orderTotalDiscount = 0;
+      vm.editDetails.MCname = "";
+      vm.editDetails.MCphone = "";
+      vm.editDetails.MCemail = "";
+      vm.editDetails.ECname = "";
+      vm.editDetails.ECphone = "";
+      vm.editDetails.ECemail = "";
+      vm.editDetails.memberID = "";
+
+      if (this.inCreatingMode) {
+        this.$http
+          .post(queryCreatingIDAPI, this.currentManager)
+          .then((response) => {
+            console.log(response);
+            vm.managingOrder = response.data;
+            localStorage.setItem("managingOrder", vm.managingOrder);
+          });
+      } else {
+        vm.managingOrder = localStorage.getItem("managingOrder");
+
+        this.$http
+          .post(queryOrderDataAPI, vm.managingOrder)
+          .then((response) => {
+            vm.editDetails.orderStatus = response.data["ORDER_STATUS"];
+            vm.editDetails.orderDate = new Date(
+              response.data["ORDER_DATE"]
+            ).Format("yyyy-MM-ddThh:mm");
+            vm.editDetails.orderTotalConsumption =
+              response.data["ORDER_TOTAL_CONSUMPTION"];
+            vm.editDetails.orderTotalDiscount =
+              response.data["ORDER_TOTAL_DISCOUNT"];
+            vm.editDetails.MCname = response.data["ORDER_MC_NAME"];
+            vm.editDetails.MCphone = response.data["ORDER_MC_PHONE"];
+            vm.editDetails.MCemail = response.data["ORDER_MC_EMAIL"];
+            vm.editDetails.ECname = response.data["ORDER_EC_NAME"];
+            vm.editDetails.ECphone = response.data["ORDER_EC_PHONE"];
+            vm.editDetails.ECemail = response.data["ORDER_EC_EMAIL"];
+            vm.editDetails.memberID = response.data["FK_MEMBER_ID_for_OD"];
+          })
+          .catch((respponse) => {
+            console.log(respponse);
+          });
+      }
     },
     // 方法：
     updateOrderData() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderData.php`;
+      const createNewOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewOrder.php`;
+      const updateOrderDataAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderData.php`;
       const vm = this;
       const session = vm.getKapitanSession();
 
+      let api = "";
+
+      if (this.inCreatingMode) api = createNewOrderAPI;
+      else api = updateOrderDataAPI;
+
       let sendingObj = {
         session: session,
-        orderID: vm.managingOrder.managingOrderID,
+        orderID: vm.managingOrder,
         editedDetails: vm.editDetails,
       };
 
@@ -507,7 +529,7 @@ export default {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
       this.modalData.situation.event = "刪除訂單";
-      this.modalData.situation.message = `確定要刪除 ${this.managingOrder.managingOrderID} 訂單嗎？`;
+      this.modalData.situation.message = `確定要刪除 ${this.managingOrder} 訂單嗎？`;
       this.modalData.situation.buttonType = "yesNo";
     },
     // 方法：抓取存在 cookie 中的 session

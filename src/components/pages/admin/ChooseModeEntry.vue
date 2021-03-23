@@ -65,7 +65,7 @@ export default {
     returnCreatePath() {
       switch (this.currentManager) {
         case "Orders-Manager":
-          return (this.createPath = "");
+          return (this.createPath = "/Admin/Orders-Manager/Order-Creation");
         case "Projects-Manager":
           return (this.createPath = "/Admin/Projects-Manager/Project-Creation");
         case "Members-Manager":
