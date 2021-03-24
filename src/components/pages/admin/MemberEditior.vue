@@ -25,10 +25,10 @@
     <ValidationObserver v-slot="{ invalid }">
       <!-- 會員編輯區開始 -->
       <div class="row">
-        <div class="col-9">
+        <div class="col-8">
           <div class="form-row">
             <!-- 會員狀態開始 -->
-            <div class="form-group col-md-2">
+            <div class="form-group col-2">
               <label :for="requiredInputTitle.memberStatus">{{
                 requiredInputTitle.memberStatus
               }}</label>
@@ -44,7 +44,7 @@
             </div>
             <!-- 會員狀態結束 -->
             <!-- 註冊日期開始 -->
-            <div class="form-group col-md-5">
+            <div class="form-group col-6">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -67,8 +67,8 @@
             <!-- 會員日期結束 -->
           </div>
           <div class="form-row">
-            <!-- 會員電子帳號開始 -->
-            <div class="form-group col-md-4">
+            <!-- 會員帳號開始 -->
+            <div class="form-group col-5">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -77,35 +77,73 @@
                   requiredInputTitle.memberAccount
                 }}</label>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
-                  :class="classes"
+                  :class="[classes, { 'is-invalid': repeatRegister }]"
                   :id="requiredInputTitle.memberAccount"
                   v-model="editDetails.memberAccount"
                   placeholder="Hello-World@email.com"
+                  @blur="queryMemberAccount"
                 />
-                <span class="invalid-feedback">{{
+                <span
+                  class="invalid-feedback"
+                  :class="repeatRegister ? 'd-inline-block' : 'd-none'"
+                  >此帳號已註冊過</span
+                >
+                <span class="invalid-feedback" v-show="!repeatRegister">{{
                   errors[0]
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 會員電子帳號結束 -->
+            <!-- 會員帳號結束 -->
             <!-- 會員密碼開始 -->
-            <div class="form-group col-md-4">
+            <div class="form-group col-5">
               <ValidationProvider
-                :rules="{ required: true }"
+                :rules="{
+                  required: inCreatingMode ? true : false,
+                  regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
+                }"
                 v-slot="{ errors, classes }"
               >
-                <label :for="requiredInputTitle.memberPassword">{{
-                  requiredInputTitle.memberPassword
-                }}</label>
+                <label
+                  :for="
+                    inCreatingMode
+                      ? requiredInputTitle.memberPassword
+                      : requiredInputTitle.reSetPassword
+                  "
+                  >{{
+                    inCreatingMode
+                      ? requiredInputTitle.memberPassword
+                      : requiredInputTitle.reSetPassword
+                  }}</label
+                ><span
+                  id="password-remark-trigger"
+                  @mouseenter="showRemark = true"
+                  @mouseleave="showRemark = false"
+                  >［?］</span
+                ><span
+                  id="password-remark"
+                  class="position-absolute"
+                  v-show="showRemark"
+                  >8到16位字符，至少1個大寫字母、1個小寫字母、1個數字。</span
+                >
                 <input
+                  v-if="inCreatingMode"
                   type="password"
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.memberPassword"
-                  placeholder="例：399"
+                  placeholder="問號處可得格式提示"
                   v-model="editDetails.memberPassword"
+                />
+                <input
+                  v-else
+                  type="password"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.reSetPassword"
+                  placeholder="問號處可得格式提示"
+                  v-model="editDetails.reSetPassword"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -116,53 +154,35 @@
           </div>
           <div class="form-row">
             <!-- 會員姓名開始 -->
-            <div class="form-group col-md-3">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.MCname">{{
-                  requiredInputTitle.MCname
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.MCname"
-                  v-model="editDetails.MCname"
-                  :placeholder="requiredInputTitle.MCname"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+            <div class="form-group col-4">
+              <label :for="requiredInputTitle.MCname">{{
+                requiredInputTitle.MCname
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.MCname"
+                v-model="editDetails.MCname"
+                :placeholder="requiredInputTitle.MCname"
+              />
             </div>
             <!-- 會員姓名結束 -->
             <!-- 會員電話開始 -->
-            <div class="form-group col-md-3">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.MCphone">{{
-                  requiredInputTitle.MCphone
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.MCphone"
-                  v-model="editDetails.MCphone"
-                  placeholder="0933128872"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+            <div class="form-group col-3">
+              <label :for="requiredInputTitle.MCphone">{{
+                requiredInputTitle.MCphone
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.MCphone"
+                v-model="editDetails.MCphone"
+                placeholder="0900000000"
+              />
             </div>
             <!-- 會員電話結束 -->
             <!-- 會員大頭貼開始 -->
-            <div class="form-group col-md-4">
+            <div class="form-group col-5">
               <label
                 :for="requiredInputTitle.memberAvatarURL"
                 class="form-label"
@@ -189,88 +209,75 @@
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
-            <div class="form-group col-md-3">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.ECname">{{
-                  requiredInputTitle.ECname
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.ECname"
-                  v-model="editDetails.ECname"
-                  :placeholder="requiredInputTitle.ECname"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+            <div class="form-group col-4">
+              <label :for="requiredInputTitle.ECname">{{
+                requiredInputTitle.ECname
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.ECname"
+                v-model="editDetails.ECname"
+                :placeholder="requiredInputTitle.ECname"
+              />
             </div>
             <!-- 緊急聯絡人姓名結束 -->
             <!-- 緊急聯絡人電話開始 -->
-            <div class="form-group col-md-3">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.ECphone">{{
-                  requiredInputTitle.ECphone
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.ECphone"
-                  v-model="editDetails.ECphone"
-                  placeholder="0933128872"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+            <div class="form-group col-3">
+              <label :for="requiredInputTitle.ECphone">{{
+                requiredInputTitle.ECphone
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.ECphone"
+                v-model="editDetails.ECphone"
+                placeholder="0900000000"
+              />
             </div>
             <!-- 緊急聯絡人電話結束 -->
-            <!-- 緊急聯絡人電子信箱開始 -->
-            <div class="form-group col-md-4">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.ECemail">{{
-                  requiredInputTitle.ECemail
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.ECemail"
-                  v-model="editDetails.ECemail"
-                  placeholder="Hello-World@email.com"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+            <!-- 緊急聯絡人電郵開始 -->
+            <div class="form-group col-5">
+              <label :for="requiredInputTitle.ECemail">{{
+                requiredInputTitle.ECemail
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.ECemail"
+                v-model="editDetails.ECemail"
+                placeholder="Hello-World@email.com"
+              />
             </div>
-            <!-- 緊急聯絡人電子信箱結束 -->
+            <!-- 緊急聯絡人電郵結束 -->
           </div>
         </div>
-        <div class="col-3">
-          <h5>大頭貼預覽</h5>
-          <div class="avatar-preview-block">
-            <img src="" alt="" />
+        <div
+          id="member-avatar-area"
+          class="col-4 position-relative d-flex flex-column align-items-center"
+        >
+          <h5>會員大頭貼</h5>
+          <div
+            class="avatar-preview-block my-2 d-flex justify-content-center align-items-center"
+            @click="triggerFileInput"
+          >
+            <div class="d-flex justify-content-center align-items-center">
+              <img
+                :src="
+                  editDetails.memberAvatarURL == ''
+                    ? srcPrefix + noAvatarUrl
+                    : srcPrefix + editDetails.memberAvatarURL
+                "
+                alt=""
+              />
+            </div>
           </div>
-          <h6>重點紀錄</h6>
-          <div class="records"></div>
+          <!-- <h6>重點紀錄</h6>
+          <div class="records"></div> -->
         </div>
       </div>
       <div class="row">
         <!-- 操作按鈕開始 -->
-        <div class="col-1 mt-4"></div>
         <div class="col-4 ml-auto">
           <div
             class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
@@ -312,6 +319,10 @@ export default {
     return {
       inCreatingMode: null,
       managingMember: "",
+      repeatRegister: false,
+      showRemark: false,
+      srcPrefix: process.env.CLOUD_URL_PREFIX,
+      noAvatarUrl: process.env.CLOUD_NO_AVATAR_URL,
       breadCrumbData: {
         pagesArr: ["管理系統：查詢會員", "管理系統：編輯會員"],
         currentPage: 2,
@@ -368,6 +379,13 @@ export default {
               );
             }
           }
+
+          // 執行資料庫寫入後，成敗與否都將初始化編輯器和提示訊息
+          if (this.situation.event.indexOf("資料庫寫入") != -1) {
+            this.callBy.initializeEditor();
+            this.situation.event = "";
+            this.situation.message = "";
+          }
         },
       },
       requiredInputTitle: {
@@ -375,6 +393,7 @@ export default {
         memberStatus: "會員狀態",
         memberAccount: "會員帳號",
         memberPassword: "會員密碼",
+        reSetPassword: "重設會員密碼",
         MCname: "會員姓名",
         MCphone: "會員手機",
         memberAvatarURL: "會員大頭貼",
@@ -387,6 +406,7 @@ export default {
         memberStatus: "",
         memberAccount: "",
         memberPassword: "",
+        reSetPassword: "",
         MCname: "",
         MCphone: "",
         memberAvatarURL: "",
@@ -413,9 +433,6 @@ export default {
     });
     this.initializeEditor();
   },
-  beforeDestroy() {
-    // localStorage.removeItem("managingOrder");
-  },
   props: ["currentManager", "currentPath"],
   components: { Breadcrumb },
   methods: {
@@ -433,6 +450,7 @@ export default {
       vm.editDetails.memberRegDate = new Date().Format("yyyy-MM-ddThh:mm");
       vm.editDetails.memberAccount = "";
       vm.editDetails.memberPassword = "";
+      vm.editDetails.reSetPassword = "";
       vm.editDetails.MCname = "";
       vm.editDetails.MCphone = "";
       vm.editDetails.memberAvatarURL = "";
@@ -471,6 +489,40 @@ export default {
             console.log(respponse);
           });
       }
+    },
+    // 方法：
+    queryMemberAccount() {
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMemberAccount.php`;
+      const vm = this;
+      let memberAccount = vm.editDetails.memberAccount;
+      vm.repeatRegister = false;
+
+      this.$http
+        .post(api, memberAccount)
+        .then((response) => {
+          console.log(response.data);
+          let responseAccount = response.data["MEMBER_ACCOUNT"];
+          let responseID = response.data["MEMBER_ID"];
+          console.log(responseID);
+
+          if (this.inCreatingMode) {
+            if (memberAccount == responseAccount) vm.repeatRegister = true;
+          } else {
+            if (
+              memberAccount == responseAccount &&
+              vm.managingMember != responseID
+            )
+              vm.repeatRegister = true;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    // 方法：
+    triggerFileInput() {
+      let fileInput = document.querySelectorAll(".custom-file-input")[0];
+      fileInput.click();
     },
     // 方法：紀錄觀察上傳檔案的內容
     handleFileChange: function (e) {
@@ -543,15 +595,21 @@ export default {
     updateMemberInfo() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
-      const createNewOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewOrder.php`;
+      const createNewMemberAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewMember.php`;
       const updateMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateMemberInfo.php`;
       const vm = this;
       const session = vm.getKapitanSession();
 
       let api = "";
 
-      if (this.inCreatingMode) api = createNewOrderAPI;
-      else api = updateMemberInfoAPI;
+      if (this.inCreatingMode) {
+        api = createNewMemberAPI;
+      } else {
+        api = updateMemberInfoAPI;
+        if (vm.editDetails.reSetPassword != "") {
+          vm.editDetails.memberPassword = vm.editDetails.reSetPassword;
+        }
+      }
 
       let sendingObj = {
         session: session,
@@ -564,10 +622,12 @@ export default {
         .then((response) => {
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message += response.data;
+          this.vueCloudinaryData.filesData.avatar = "";
         })
         .catch((error) => {
           vm.modalData.situation.event = "資料庫寫入失敗。";
           vm.modalData.situation.message += error.data;
+          this.vueCloudinaryData.filesData.avatar = "";
         });
     },
     // 方法：
@@ -595,7 +655,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#order-details-page {
+@import "../../../assets/all.scss";
+
+#member-info-page {
   height: 600px;
   .breadcrumb {
     padding: 0;
@@ -606,6 +668,59 @@ export default {
       font-size: 13px;
       a {
         color: darkred;
+      }
+    }
+  }
+}
+#password-remark-trigger,
+#password-remark {
+  font-size: 12px;
+}
+#password-remark {
+  color: darkred;
+  display: inline-block;
+  width: 180px;
+  top: -10px;
+}
+.custom-file-label {
+  &::after {
+    content: "開啟";
+  }
+}
+#member-avatar-area {
+  top: -30px;
+  .avatar-preview-block {
+    width: 150px;
+    height: 150px;
+    border-radius: 150px;
+    background-color: #1c4e80;
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    div {
+      width: 90%;
+      height: 90%;
+      border-radius: 90%;
+      overflow: hidden;
+      background-color: #f1f1f1;
+      img {
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        &:hover {
+          ::after {
+            content: "點擊更換大頭貼";
+            width: 120px;
+            height: 30px;
+            background-color: black;
+            color: $sail;
+            opacity: 1;
+            position: absolute;
+            text-align: center;
+            line-height: 30px;
+          }
+        }
       }
     }
   }

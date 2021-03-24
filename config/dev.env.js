@@ -10,4 +10,5 @@ module.exports = merge(prodEnv, {
   CLOUD_NAME: '"hugo-chiang"',
   CLOUD_URL_PREFIX: '"https://res.cloudinary.com/hugo-chiang/image/upload/"',
   CLOUD_NO_IMG_URL: '"Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Avatar/x8lajfn9a6zcknrg51v6"',
+  CLOUD_NO_AVATAR_URL: '"Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Members-Avatar/m0uyfclhnsaauzzmot5g"'
 })
