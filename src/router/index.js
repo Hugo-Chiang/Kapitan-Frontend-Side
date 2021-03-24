@@ -13,12 +13,13 @@ import Backstage from '@/components/Backstage';
 import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
 import Dashboard from '@/components/pages/admin/Dashboard';
 import ChooseModeEntry from '@/components/pages/admin/ChooseModeEntry';
-import OrderSearching from '@/components/pages/admin/OrderSearching';
+import OrdersSearching from '@/components/pages/admin/OrdersSearching';
 import OrderEditior from '@/components/pages/admin/OrderEditior';
-import OrderDetailsEditior from '@/components/pages/admin/OrderDetailsEditior';
-import ProjectSearching from '@/components/pages/admin/ProjectSearching';
+import OrderDetailEditior from '@/components/pages/admin/OrderDetailEditior';
+import ProjectsSearching from '@/components/pages/admin/ProjectsSearching';
 import ProjectEditior from '@/components/pages/admin/ProjectEditior';
-import MembersManager from '@/components/pages/admin/MembersManager';
+import MembersSearching from '@/components/pages/admin/MembersSearching';
+import MemberEditior from '@/components/pages/admin/MemberEditior';
 
 Vue.use(Router);
 
@@ -101,25 +102,25 @@ const router = new Router({
                 {
                   path: '/Admin/Orders-Manager/Order-Creation/Order-Details-Creation',
                   name: '管理系統：新增細項',
-                  component: OrderDetailsEditior,
+                  component: OrderDetailEditior,
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Orders-Manager/Order-Searching',
+                  path: '/Admin/Orders-Manager/Orders-Searching',
                   name: '管理系統：查詢訂單',
-                  component: OrderSearching,
+                  component: OrdersSearching,
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Orders-Manager/Order-Searching/Order-Editior',
+                  path: '/Admin/Orders-Manager/Orders-Searching/Order-Editior',
                   name: '管理系統：編輯訂單',
                   component: OrderEditior,
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Orders-Manager/Order-Editior/Order-Details-Editior',
+                  path: '/Admin/Orders-Manager/Order-Editior/Order-Detail-Editior',
                   name: '管理系統：編輯細項',
-                  component: OrderDetailsEditior,
+                  component: OrderDetailEditior,
                   meta: { requiresAuth: true }
                 }
               ]
@@ -137,13 +138,13 @@ const router = new Router({
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Projects-Manager/Project-Searching/',
+                  path: '/Admin/Projects-Manager/Projects-Searching/',
                   name: '管理系統：查詢方案',
-                  component: ProjectSearching,
+                  component: ProjectsSearching,
                   meta: { requiresAuth: true },
                 },
                 {
-                  path: '/Admin/Projects-Manager/Project-Edition/Project-Editior',
+                  path: '/Admin/Projects-Manager/Project-Editior',
                   name: '管理系統：編輯方案',
                   component: ProjectEditior,
                   meta: { requiresAuth: true }
@@ -153,8 +154,28 @@ const router = new Router({
             {
               path: '/Admin/Members-Manager',
               name: '管理系統：會員管理',
-              component: MembersManager,
-              meta: { requiresAuth: true }
+              component: ChooseModeEntry,
+              meta: { requiresAuth: true },
+              children: [
+                {
+                  path: '/Admin/Members-Manager/Member-Creation',
+                  name: '管理系統：新增會員',
+                  component: MemberEditior,
+                  meta: { requiresAuth: true }
+                },
+                {
+                  path: '/Admin/Members-Manager/Members-Searching/',
+                  name: '管理系統：查詢會員',
+                  component: MembersSearching,
+                  meta: { requiresAuth: true },
+                },
+                {
+                  path: '/Admin/Members-Manager/Member-Editior',
+                  name: '管理系統：編輯會員',
+                  component: MemberEditior,
+                  meta: { requiresAuth: true }
+                }
+              ]
             }
           ]
         }

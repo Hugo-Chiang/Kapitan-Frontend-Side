@@ -6,7 +6,7 @@
     >
       <div class="d-flex flex-column justify-content-center align-items-center">
         <h2 class="mb-4">
-          您正準備進入「{{ $route.name | filterSpecificRouterName }}」介面
+          準備進入「{{ $route.name | filterSpecificRouterName }}」介面
         </h2>
         <h3>請問您想進行什麼作業？</h3>
       </div>
@@ -69,17 +69,17 @@ export default {
         case "Projects-Manager":
           return (this.createPath = "/Admin/Projects-Manager/Project-Creation");
         case "Members-Manager":
-          return (this.createPath = "");
+          return (this.createPath = "/Admin/Members-Manager/Member-Creation");
       }
     },
     returnEditPath() {
       switch (this.currentManager) {
         case "Orders-Manager":
-          return (this.editPath = "/Admin/Orders-Manager/Order-Searching");
+          return (this.editPath = "/Admin/Orders-Manager/Orders-Searching");
         case "Projects-Manager":
-          return (this.editPath = "/Admin/Projects-Manager/Project-Searching");
+          return (this.editPath = "/Admin/Projects-Manager/Projects-Searching");
         case "Members-Manager":
-          return (this.editPath = "");
+          return (this.editPath = "/Admin/Members-Manager/Members-Searching/");
       }
     },
     returnCurrentManager() {

@@ -10,7 +10,7 @@
               type="text"
               class="form-control"
               id="order-id"
-              placeholder="OD0000000001"
+              placeholder="OD0000001"
               v-model="queryData.orderID"
             />
           </div>
@@ -64,12 +64,12 @@
               type="text"
               class="form-control"
               id="orderer-phone"
-              placeholder="0933128872"
+              placeholder="0900000000"
               v-model="queryData.ordererPhone"
             />
           </div>
           <div class="form-group col-md-4">
-            <label for="orderer-email">訂購人電子信箱</label>
+            <label for="orderer-email">訂購人電郵</label>
             <input
               type="email"
               class="form-control"
@@ -102,7 +102,7 @@
               <th class="text-center" scope="col">訂單編號</th>
               <th class="text-center" scope="col">訂購人姓名</th>
               <th class="text-center" scope="col">訂購人手機</th>
-              <th class="text-center" scope="col">訂購人電子信箱</th>
+              <th class="text-center" scope="col">訂購人電郵</th>
               <th class="text-center" scope="col">訂購單日期</th>
               <th class="text-center" scope="col">會員編號</th>
               <th class="text-center" scope="col">訂單總額</th>
@@ -200,13 +200,14 @@ export default {
         .then((response) => {
           vm.allOrdersArr = [];
           let responseArr = response.data;
-          let unSortArr = [];
 
           for (let i = 0; i < responseArr.length; i++) {
             let projectDuplicate = false;
 
-            searching: for (let j = 0; j < unSortArr.length; j++) {
-              if (responseArr[i]["ORDER_ID"] == unSortArr[j]["ORDER_ID"]) {
+            searching: for (let j = 0; j < vm.allOrdersArr.length; j++) {
+              if (
+                responseArr[i]["ORDER_ID"] == vm.allOrdersArr[j]["ORDER_ID"]
+              ) {
                 projectDuplicate = true;
                 break searching;
               }
@@ -216,22 +217,13 @@ export default {
               responseArr[i]["ORDER_DATE"] = new Date(
                 responseArr[i]["ORDER_DATE"]
               ).Format("yyyy-MM-dd");
-              unSortArr.push(responseArr[i]);
+              vm.allOrdersArr.push(responseArr[i]);
             }
           }
 
-          let sortedArr = [];
-          sortedArr.length = unSortArr.length;
-
-          for (let i = 0; i < unSortArr.length; i++) {
-            for (let j = 0; j < unSortArr.length; j++) {
-              if (unSortArr[i]["SORT_INDEX"] == j) {
-                sortedArr[j] = unSortArr[i];
-              }
-            }
-          }
-
-          vm.allOrdersArr = sortedArr;
+          vm.allOrdersArr.sort((a, b) => {
+            return a["SORT_INDEX"] - b["SORT_INDEX"];
+          });
         })
         .catch((respponse) => {
           console.log(respponse);

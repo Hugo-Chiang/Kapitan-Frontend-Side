@@ -132,33 +132,35 @@
             <tr
               class="order-item"
               @click.prevent="
-                checkProjectDetails(currentPageContentArr[index].PROJECT_ID)
+                checkProjectDetails(currentPageContentArr[index]['PROJECT_ID'])
               "
             >
               <th class="text-center" scope="row">
                 {{ currentPageContentSerial[index] }}
               </th>
-              <td>{{ currentPageContentArr[index].PROJECT_ID }}</td>
+              <td>{{ currentPageContentArr[index]["PROJECT_ID"] }}</td>
               <td class="text-center">
-                {{ currentPageContentArr[index].PROJECT_NAME }}
+                {{ currentPageContentArr[index]["PROJECT_NAME"] }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index].CATEGORY_NAME }}
+                {{ currentPageContentArr[index]["CATEGORY_NAME"] }}
               </td>
               <td class="text-center">
                 {{
-                  currentPageContentArr[index].PROJECT_ORIGINAL_PRICE_PER_PERSON
+                  currentPageContentArr[index][
+                    "PROJECT_ORIGINAL_PRICE_PER_PERSON"
+                  ]
                 }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index].PROJECT_MIN_NUM_OF_PEOPLE }}
+                {{ currentPageContentArr[index]["PROJECT_MIN_NUM_OF_PEOPLE"] }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index].LOCATION_NAME }}
+                {{ currentPageContentArr[index]["LOCATION_NAME"] }}
               </td>
               <td class="text-center">
                 {{
-                  currentPageContentArr[index].PROJECT_STATUS == 0
+                  currentPageContentArr[index]["PROJECT_STATUS"] == 0
                     ? "已下線"
                     : "上線中"
                 }}
@@ -236,19 +238,11 @@ export default {
       this.$http
         .post(QueryProjectsAPI, JSON.stringify(vm.queryData))
         .then((response) => {
-          let unSortArr = response.data;
-          let sortedArr = [];
-          sortedArr.length = unSortArr.length;
+          vm.allProjectsArr = response.data;
 
-          for (let i = 0; i < unSortArr.length; i++) {
-            for (let j = 0; j < unSortArr.length; j++) {
-              if (unSortArr[i]["SORT_INDEX"] == j) {
-                sortedArr[j] = unSortArr[i];
-              }
-            }
-          }
-
-          vm.allProjectsArr = sortedArr;
+          vm.allProjectsArr.sort((a, b) => {
+            return a["SORT_INDEX"] - b["SORT_INDEX"];
+          });
         })
         .catch((error) => {
           console.log(error);
