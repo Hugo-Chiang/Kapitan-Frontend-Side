@@ -1,5 +1,5 @@
 <template>
-  <section id="order-details-page" class="position-relative">
+  <section id="member-info-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -8,137 +8,114 @@
     <!-- 麵包屑元件結束 -->
     <h6 class="mt-2 mb-4 mr-4 d-inline-block">
       正在<span v-if="inCreatingMode">新增</span><span v-else>編輯</span>：{{
-        managingOrder
+        managingMember
       }}
-      號訂單
+      號會員
       <span v-if="!inCreatingMode" class="delete-project-btn ml-1">
         <a
           href=""
-          @click.prevent="deleteOrder"
+          @click.prevent="deleteMember"
           data-toggle="modal"
           data-target="#modal"
           data-backdrop="static"
-          >刪除訂單</a
+          >刪除會員</a
         >
       </span>
     </h6>
     <ValidationObserver v-slot="{ invalid }">
-      <!-- 訂單編輯區開始 -->
+      <!-- 會員編輯區開始 -->
       <div class="row">
-        <div class="col-10">
+        <div class="col-9">
           <div class="form-row">
-            <!-- 訂單狀態開始 -->
+            <!-- 會員狀態開始 -->
             <div class="form-group col-md-2">
-              <label :for="requiredInputTitle.orderStatus">{{
-                requiredInputTitle.orderStatus
+              <label :for="requiredInputTitle.memberStatus">{{
+                requiredInputTitle.memberStatus
               }}</label>
               <select
-                :id="requiredInputTitle.orderStatus"
+                :id="requiredInputTitle.memberStatus"
                 class="form-control form-select-lg"
-                v-model="editDetails.orderStatus"
+                v-model="editDetails.memberStatus"
               >
-                <option value="2">已完成</option>
-                <option value="1">進行中</option>
-                <option value="0">已取消</option>
+                <option value="1">正常</option>
+                <option value="2">警告</option>
+                <option value="0">停權</option>
               </select>
             </div>
-            <!-- 訂單狀態結束 -->
-            <!-- 所屬會員ID開始 -->
-            <div class="form-group col-md-3">
-              <ValidationProvider
-                :rules="{ required: true, regex: /^MB\d{7}$/, length: 9 }"
-                v-slot="{ errors, classes }"
-              >
-                <label :for="requiredInputTitle.memberID">{{
-                  requiredInputTitle.memberID
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.memberID"
-                  placeholder="MB0000001"
-                  v-model="editDetails.memberID"
-                />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
-            </div>
-            <!-- 所屬會員ID結束 -->
-            <!-- 訂單日期開始 -->
+            <!-- 會員狀態結束 -->
+            <!-- 註冊日期開始 -->
             <div class="form-group col-md-5">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
               >
-                <label :for="requiredInputTitle.orderDate">{{
-                  requiredInputTitle.orderDate
+                <label :for="requiredInputTitle.memberRegDate">{{
+                  requiredInputTitle.memberRegDate
                 }}</label>
                 <input
                   type="datetime-local"
                   class="form-control"
                   :class="classes"
-                  :id="requiredInputTitle.orderDate"
-                  v-model="editDetails.orderDate"
+                  :id="requiredInputTitle.memberRegDate"
+                  v-model="editDetails.memberRegDate"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 訂單日期結束 -->
+            <!-- 會員日期結束 -->
           </div>
           <div class="form-row">
-            <!-- 訂單未折扣總計開始 -->
-            <div class="form-group col-md-3">
+            <!-- 會員電子帳號開始 -->
+            <div class="form-group col-md-4">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
               >
-                <label :for="requiredInputTitle.orderTotalConsumption">{{
-                  requiredInputTitle.orderTotalConsumption
+                <label :for="requiredInputTitle.memberAccount">{{
+                  requiredInputTitle.memberAccount
                 }}</label>
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   :class="classes"
-                  :id="requiredInputTitle.orderTotalConsumption"
-                  placeholder="例：30000"
-                  v-model="editDetails.orderTotalConsumption"
+                  :id="requiredInputTitle.memberAccount"
+                  v-model="editDetails.memberAccount"
+                  placeholder="Hello-World@email.com"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 訂單未折扣總計結束 -->
-            <!-- 訂單應折扣總額開始 -->
-            <div class="form-group col-md-3">
+            <!-- 會員電子帳號結束 -->
+            <!-- 會員密碼開始 -->
+            <div class="form-group col-md-4">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
               >
-                <label :for="requiredInputTitle.orderTotalDiscount">{{
-                  requiredInputTitle.orderTotalDiscount
+                <label :for="requiredInputTitle.memberPassword">{{
+                  requiredInputTitle.memberPassword
                 }}</label>
                 <input
-                  type="number"
+                  type="password"
                   class="form-control"
                   :class="classes"
-                  :id="requiredInputTitle.orderTotalDiscount"
+                  :id="requiredInputTitle.memberPassword"
                   placeholder="例：399"
-                  v-model="editDetails.orderTotalDiscount"
+                  v-model="editDetails.memberPassword"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 訂單應折扣總額結束 -->
+            <!-- 會員密碼結束 -->
           </div>
           <div class="form-row">
-            <!-- 訂購人姓名開始 -->
+            <!-- 會員姓名開始 -->
             <div class="form-group col-md-3">
               <ValidationProvider
                 :rules="{ required: true }"
@@ -160,8 +137,8 @@
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 訂購人姓名結束 -->
-            <!-- 訂購人電話開始 -->
+            <!-- 會員姓名結束 -->
+            <!-- 會員電話開始 -->
             <div class="form-group col-md-3">
               <ValidationProvider
                 :rules="{ required: true }"
@@ -183,30 +160,32 @@
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 訂購人電話結束 -->
-            <!-- 訂購人電子信箱開始 -->
+            <!-- 會員電話結束 -->
+            <!-- 會員大頭貼開始 -->
             <div class="form-group col-md-4">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
+              <label
+                :for="requiredInputTitle.memberAvatarURL"
+                class="form-label"
+                >{{ requiredInputTitle.memberAvatarURL }}</label
               >
-                <label :for="requiredInputTitle.MCemail">{{
-                  requiredInputTitle.MCemail
-                }}</label>
+              <div class="custom-file">
                 <input
-                  type="text"
-                  class="form-control"
-                  :class="classes"
-                  :id="requiredInputTitle.MCemail"
-                  v-model="editDetails.MCemail"
-                  placeholder="Hello-World@email.com"
+                  :id="requiredInputTitle.memberAvatarURL"
+                  class="custom-file-input"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  @change="handleFileChange($event)"
                 />
-                <span class="invalid-feedback">{{
-                  errors[0]
-                }}</span></ValidationProvider
-              >
+                <label
+                  class="custom-file-label"
+                  :for="requiredInputTitle.memberAvatarURL"
+                  >{{
+                    vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
+                  }}</label
+                >
+              </div>
             </div>
-            <!-- 訂購人電子信箱結束 -->
+            <!-- 會員大頭貼結束 -->
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
@@ -280,23 +259,18 @@
             <!-- 緊急聯絡人電子信箱結束 -->
           </div>
         </div>
+        <div class="col-3">
+          <h5>大頭貼預覽</h5>
+          <div class="avatar-preview-block">
+            <img src="" alt="" />
+          </div>
+          <h6>重點紀錄</h6>
+          <div class="records"></div>
+        </div>
       </div>
       <div class="row">
         <!-- 操作按鈕開始 -->
-        <div class="col-1 mt-4">
-          <input
-            type="button"
-            class="btn btn-info"
-            :value="inCreatingMode ? '新增細項' : '編輯細項'"
-            @click.prevent="
-              $router.push(
-                inCreatingMode
-                  ? { name: '管理系統：新增細項' }
-                  : { name: '管理系統：編輯細項' }
-              )
-            "
-          />
-        </div>
+        <div class="col-1 mt-4"></div>
         <div class="col-4 ml-auto">
           <div
             class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
@@ -307,7 +281,7 @@
               :class="{ 'invalid-btn': invalid }"
               :value="inCreatingMode ? '新增完成' : '修改完成'"
               :disabled="invalid"
-              @click.prevent="updateOrderData"
+              @click.prevent="uploadImgAndUpdateData"
               data-toggle="modal"
               data-target="#modal"
               data-backdrop="static"
@@ -315,30 +289,31 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="$router.push({ name: '管理系統：訂單管理' })"
+              @click.prevent="$router.push({ name: '管理系統：查詢會員' })"
               >不儲存關閉</a
             >
           </div>
         </div>
         <!-- 操作按鈕結束 -->
       </div>
-      <!-- 訂單編輯區結束 -->
+      <!-- 會員編輯區結束 -->
     </ValidationObserver>
   </section>
 </template>
 
 <script>
+// 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-import Pagination from "@/components/pages/sub-components/Pagination";
-import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetailsForm";
+// 導入 axios 元件
+import axios from "axios";
 
 export default {
   data() {
     return {
       inCreatingMode: null,
-      managingOrder: "",
+      managingMember: "",
       breadCrumbData: {
-        pagesArr: ["管理系統：查詢訂單", "管理系統：編輯訂單"],
+        pagesArr: ["管理系統：查詢會員", "管理系統：編輯會員"],
         currentPage: 2,
       },
       modalData: {
@@ -355,39 +330,39 @@ export default {
           // 遭遇失敗情境將導回管理頁
           if (this.situation.event.indexOf("失敗") != -1) {
             setTimeout(
-              () => this.callBy.$router.push({ name: "管理系統：方案管理" }),
+              () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
               1000
             );
           }
 
-          // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
-          if (this.situation.event.indexOf("刪除訂單") != -1) {
-            const deleteOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrder.php`;
+          // 刪除會員詢問經確認後進行刪除，成敗與否都將倒回管理頁
+          if (this.situation.event.indexOf("刪除會員") != -1) {
+            const deleteMemberAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteMember.php`;
             const session = this.callBy.getKapitanSession();
 
             let sendingObj = {
               session: session,
-              orderID: this.callBy.managingOrder,
+              memberID: this.callBy.managingMember,
             };
 
             if (this.emitValue == 1) {
               this.situation.buttonType = "checked";
 
               this.callBy.$http
-                .post(deleteOrderAPI, JSON.stringify(sendingObj))
+                .post(deleteMemberAPI, JSON.stringify(sendingObj))
                 .then((response) => {
-                  this.situation.event = "刪除訂單成功";
+                  this.situation.event = "刪除會員成功";
                   this.situation.message = response.data;
                 })
                 .catch((error) => {
-                  this.situation.event = "刪除訂單失敗";
+                  this.situation.event = "刪除會員失敗";
                   this.situation.message = error.data;
                 });
             } else if (this.emitValue == "checked") {
               setTimeout(
                 () =>
                   this.callBy.$router.push({
-                    name: "管理系統：訂單管理",
+                    name: "管理系統：會員管理",
                   }),
                 1500
               );
@@ -396,30 +371,38 @@ export default {
         },
       },
       requiredInputTitle: {
-        orderStatus: "訂單狀態",
-        orderDate: "訂單日期",
-        orderTotalConsumption: "未折扣總計",
-        orderTotalDiscount: "應折扣總額",
-        MCname: "訂購人姓名",
-        MCphone: "訂購人手機號碼",
-        MCemail: "訂購人電子信箱",
+        memberRegDate: "註冊日期",
+        memberStatus: "會員狀態",
+        memberAccount: "會員帳號",
+        memberPassword: "會員密碼",
+        MCname: "會員姓名",
+        MCphone: "會員手機",
+        memberAvatarURL: "會員大頭貼",
         ECname: "緊急聯絡人姓名",
-        ECphone: "緊急聯絡人手機號碼",
-        ECemail: "緊急聯絡人電子信箱",
-        memberID: "所屬會員ID",
+        ECphone: "緊急聯絡人手機",
+        ECemail: "緊急聯絡人電郵",
       },
       editDetails: {
-        orderStatus: "",
-        orderDate: "",
-        orderTotalConsumption: "",
-        orderTotalDiscount: "",
+        memberRegDate: "",
+        memberStatus: "",
+        memberAccount: "",
+        memberPassword: "",
         MCname: "",
         MCphone: "",
-        MCemail: "",
+        memberAvatarURL: "",
         ECname: "",
         ECphone: "",
         ECemail: "",
-        memberID: "",
+      },
+      // cloudinary-vue 雲端圖庫元件的配置或應用資料
+      vueCloudinaryData: {
+        filesData: {
+          avatar: "",
+        },
+        preset: {
+          membersAvatar: "FE-SP-0001-Kapitan-Members-Avatar",
+        },
+        uploadStatus: "",
       },
     };
   },
@@ -434,82 +417,145 @@ export default {
     // localStorage.removeItem("managingOrder");
   },
   props: ["currentManager", "currentPath"],
-  components: { Breadcrumb, Pagination, OrderDetailsForm },
+  components: { Breadcrumb },
   methods: {
     // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
     initializeEditor() {
-      if (this.currentPath.indexOf("Order-Creation") == -1)
+      if (this.currentPath.indexOf("Member-Creation") == -1)
         this.inCreatingMode = false;
       else this.inCreatingMode = true;
 
       const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
-      const queryOrderDataAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderData.php`;
+      const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMemberInfo.php`;
       const vm = this;
 
-      vm.editDetails.orderStatus = 1;
-      vm.editDetails.orderDate = new Date().Format("yyyy-MM-ddThh:mm");
-      vm.editDetails.orderTotalConsumption = 0;
-      vm.editDetails.orderTotalDiscount = 0;
+      vm.editDetails.memberStatus = 1;
+      vm.editDetails.memberRegDate = new Date().Format("yyyy-MM-ddThh:mm");
+      vm.editDetails.memberAccount = "";
+      vm.editDetails.memberPassword = "";
       vm.editDetails.MCname = "";
       vm.editDetails.MCphone = "";
-      vm.editDetails.MCemail = "";
+      vm.editDetails.memberAvatarURL = "";
       vm.editDetails.ECname = "";
       vm.editDetails.ECphone = "";
       vm.editDetails.ECemail = "";
-      vm.editDetails.memberID = "";
 
       if (this.inCreatingMode) {
         this.$http
           .post(queryCreatingIDAPI, this.currentManager)
           .then((response) => {
             console.log(response);
-            vm.managingOrder = response.data;
-            localStorage.setItem("managingOrder", vm.managingOrder);
+            vm.managingMember = response.data;
+            localStorage.setItem("managingMember", vm.managingMember);
           });
       } else {
-        vm.managingOrder = localStorage.getItem("managingOrder");
+        vm.managingMember = localStorage.getItem("managingMember");
 
         this.$http
-          .post(queryOrderDataAPI, vm.managingOrder)
+          .post(queryMemberInfoAPI, vm.managingMember)
           .then((response) => {
-            vm.editDetails.orderStatus = response.data["ORDER_STATUS"];
-            vm.editDetails.orderDate = new Date(
-              response.data["ORDER_DATE"]
+            vm.editDetails.memberStatus = response.data["MEMBER_STATUS"];
+            vm.editDetails.memberRegDate = new Date(
+              response.data["MEMBER_REGISTERED_DATE"]
             ).Format("yyyy-MM-ddThh:mm");
-            vm.editDetails.orderTotalConsumption =
-              response.data["ORDER_TOTAL_CONSUMPTION"];
-            vm.editDetails.orderTotalDiscount =
-              response.data["ORDER_TOTAL_DISCOUNT"];
-            vm.editDetails.MCname = response.data["ORDER_MC_NAME"];
-            vm.editDetails.MCphone = response.data["ORDER_MC_PHONE"];
-            vm.editDetails.MCemail = response.data["ORDER_MC_EMAIL"];
-            vm.editDetails.ECname = response.data["ORDER_EC_NAME"];
-            vm.editDetails.ECphone = response.data["ORDER_EC_PHONE"];
-            vm.editDetails.ECemail = response.data["ORDER_EC_EMAIL"];
-            vm.editDetails.memberID = response.data["FK_MEMBER_ID_for_OD"];
+            vm.editDetails.memberAccount = response.data["MEMBER_ACCOUNT"];
+            vm.editDetails.memberPassword = response.data["MEMBER_PASSWORD"];
+            vm.editDetails.MCname = response.data["MEMBER_NAME"];
+            vm.editDetails.MCphone = response.data["MEMBER_PHONE"];
+            vm.editDetails.memberAvatarURL = response.data["MEMBER_AVATAR_URL"];
+            vm.editDetails.ECname = response.data["MEMBER_EC_NAME"];
+            vm.editDetails.ECphone = response.data["MEMBER_EC_PHONE"];
+            vm.editDetails.ECemail = response.data["MEMBER_EC_EMAIL"];
           })
           .catch((respponse) => {
             console.log(respponse);
           });
       }
     },
+    // 方法：紀錄觀察上傳檔案的內容
+    handleFileChange: function (e) {
+      this.vueCloudinaryData.filesData.avatar = e.target.files[0];
+      console.log("上傳檔案更換：", this.vueCloudinaryData.filesData.avatar);
+    },
+    // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
+    uploadImgAndUpdateData() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+      this.modalData.situation.buttonType = "checked";
+
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const vm = this;
+
+      // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）
+      let avatarFile = this.vueCloudinaryData.filesData.avatar;
+      console.log(avatarFile);
+
+      if (avatarFile == "" && !avatarFile.name) {
+        this.updateMemberInfo();
+      } else {
+        let fileReader = new FileReader();
+
+        fileReader.addEventListener(
+          "load",
+          function () {
+            let formData = new FormData();
+            formData.append(
+              "upload_preset",
+              vm.vueCloudinaryData.preset.membersAvatar
+            );
+            formData.append("file", fileReader.result);
+
+            let requestObj = {
+              url: cloudinaryUploadAPI,
+              method: "POST",
+              data: formData,
+              onUploadProgress: function (progressEvent) {
+                vm.modalData.situation.message = `<p>開始處理上傳事件<p>`;
+                vm.progress = Math.round(
+                  (progressEvent.loaded * 100.0) / progressEvent.total
+                );
+                vm.modalData.situation.message = `<p>上傳進度：${vm.progress}％`;
+              },
+            };
+
+            axios(requestObj)
+              .then((response) => {
+                console.log(response.data);
+                vm.modalData.situation.event = "會員大頭貼上傳成功。";
+                vm.modalData.situation.message = `<p>會員大頭貼上傳成功！</p>`;
+                vm.editDetails.memberAvatarURL = response.data.public_id;
+                vm.updateMemberInfo();
+              })
+              .catch((error) => {
+                console.log(error);
+                vm.modalData.situation.event = "會員大頭貼上傳失敗。";
+                vm.modalData.situation.message = `會員大頭貼上傳失敗！請稍後再試。`;
+              });
+          },
+          false
+        );
+
+        console.log(avatarFile);
+
+        fileReader.readAsDataURL(avatarFile);
+      }
+    },
     // 方法：
-    updateOrderData() {
+    updateMemberInfo() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
       const createNewOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewOrder.php`;
-      const updateOrderDataAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderData.php`;
+      const updateMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateMemberInfo.php`;
       const vm = this;
       const session = vm.getKapitanSession();
 
       let api = "";
 
       if (this.inCreatingMode) api = createNewOrderAPI;
-      else api = updateOrderDataAPI;
+      else api = updateMemberInfoAPI;
 
       let sendingObj = {
         session: session,
-        orderID: vm.managingOrder,
+        memberID: vm.managingMember,
         editedDetails: vm.editDetails,
       };
 
@@ -517,19 +563,19 @@ export default {
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
           vm.modalData.situation.event = "資料庫寫入成功。";
-          vm.modalData.situation.message = response.data;
+          vm.modalData.situation.message += response.data;
         })
         .catch((error) => {
           vm.modalData.situation.event = "資料庫寫入失敗。";
-          vm.modalData.situation.message = error.data;
+          vm.modalData.situation.message += error.data;
         });
     },
     // 方法：
-    deleteOrder() {
+    deleteMember() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
-      this.modalData.situation.event = "刪除訂單";
-      this.modalData.situation.message = `確定要刪除 ${this.managingOrder} 訂單嗎？`;
+      this.modalData.situation.event = "刪除會員";
+      this.modalData.situation.message = `確定要刪除會員 ${this.managingMember} 嗎？`;
       this.modalData.situation.buttonType = "yesNo";
     },
     // 方法：抓取存在 cookie 中的 session

@@ -91,7 +91,7 @@
               type="button"
               class="btn btn-primary"
               value="進行查詢"
-              @click.prevent="submitOrdersQuery"
+              @click.prevent="submitMembersQuery"
             />
           </div>
           <!-- 操作按鈕結束 -->
@@ -119,7 +119,7 @@
             <tr
               class="order-item"
               @click.prevent="
-                checkOrderDetails(currentPageContentArr[index]['MEMBER_ID'])
+                checkMemberInfo(currentPageContentArr[index]['MEMBER_ID'])
               "
             >
               <th class="text-center" scope="row">
@@ -170,6 +170,7 @@
 </template>
 
 <script>
+// 導入
 import Pagination from "@/components/pages/sub-components/Pagination";
 
 export default {
@@ -191,7 +192,7 @@ export default {
   components: { Pagination },
   methods: {
     // 方法：向後端送出查詢表單，以拿回相關訂單進行頁面渲染
-    submitOrdersQuery() {
+    submitMembersQuery() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMembers.php`;
       const vm = this;
 
@@ -227,8 +228,8 @@ export default {
             return a["SORT_INDEX"] - b["SORT_INDEX"];
           });
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
@@ -236,11 +237,11 @@ export default {
       this.currentPageContentArr = arr;
       this.currentPageContentArrSerial = num;
     },
-    // 方法：點擊訂單進行入詳情頁
-    checkOrderDetails(managingOrderID) {
-      localStorage.removeItem("managingOrder");
-      localStorage.setItem("managingOrder", managingOrderID);
-      this.$router.push({ name: "管理系統：編輯訂單" });
+    // 方法：點擊會員進行入詳情頁
+    checkMemberInfo(managingMemberID) {
+      localStorage.removeItem("managingMember");
+      localStorage.setItem("managingMember", managingMemberID);
+      this.$router.push({ name: "管理系統：編輯會員" });
     },
   },
 };

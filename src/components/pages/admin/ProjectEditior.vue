@@ -263,7 +263,7 @@
               :class="{ 'invalid-btn': invalid }"
               :value="inCreatingMode ? '新增完成' : '修改完成'"
               :disabled="invalid"
-              @click.prevent="uploadAvatarAndUpdateData"
+              @click.prevent="uploadImgAndUpdateData"
               data-toggle="modal"
               data-target="#modal"
               data-backdrop="static"
@@ -518,9 +518,9 @@ export default {
       }
     },
     // 方法：透過 axios 將圖檔上傳至指定的 Cloudinary 位置（並旋即啟動更新資料庫的方法）
-    uploadAvatarAndUpdateData() {
+    uploadImgAndUpdateData() {
       this.$eventBus.$emit("emitModalData", this.modalData);
-      vm.modalData.situation.buttonType = "checked";
+      this.modalData.situation.buttonType = "checked";
 
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
       const vm = this;
