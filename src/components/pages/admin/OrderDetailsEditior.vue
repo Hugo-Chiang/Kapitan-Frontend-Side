@@ -270,6 +270,7 @@ export default {
   }
   .creating-mode-table {
     td {
+      border: none;
       background-color: transparent !important;
     }
     .order-item {

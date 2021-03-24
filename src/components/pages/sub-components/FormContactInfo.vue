@@ -90,7 +90,7 @@
                 :key="'input-main-phone-number' + (index + 1)"
                 class="form-control"
                 :class="classes"
-                placeholder="例：0933128872"
+                placeholder="0900000000"
                 v-model="inputContantInfoArr[index].MCphone"
                 @keyup="unsyncOrdererContactInfo(index)"
               />
@@ -112,7 +112,7 @@
                 :id="'input-main-email' + (index + 1)"
                 :name="requiredInputTitle.ECemeal"
                 :key="'input-main-email' + (index + 1)"
-                placeholder="例：Hello-World@email.com"
+                placeholder="Hello-World@email.com"
                 v-model="inputContantInfoArr[index].MCemail"
                 @keyup="unsyncOrdererContactInfo(index)"
               />
@@ -162,7 +162,7 @@
                 :key="'input-sub-phone-number' + (index + 2)"
                 class="form-control"
                 :class="classes"
-                placeholder="例：0933128872"
+                placeholder="0900000000"
                 v-model="inputContantInfoArr[index].ECphone"
                 @keyup="unsyncOrdererContactInfo(index)"
               />
@@ -184,7 +184,7 @@
                 :id="'input-sub-email' + (index + 2)"
                 :name="requiredInputTitle.ECemail"
                 :key="'input-sub-email' + (index + 2)"
-                placeholder="例：Hello-World@email.com"
+                placeholder="Hello-World@email.com"
                 v-model="inputContantInfoArr[index].ECemail"
                 @keyup="unsyncOrdererContactInfo(index)"
               />

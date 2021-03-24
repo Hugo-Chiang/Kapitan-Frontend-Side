@@ -9,7 +9,14 @@
           <!-- 管理員大頭貼開始 -->
           <div class="admin-avatar-block">
             <div class="admin-avatar">
-              <img :src="adminInfo.avatarUrl" alt="" />
+              <img
+                :src="
+                  adminInfo.avatarUrl != null
+                    ? srcPrefix + adminInfo.avatarUrl
+                    : srcPrefix + noImgUrl
+                "
+                alt=""
+              />
             </div>
           </div>
           <!-- 管理員大頭貼開始結束 -->
@@ -82,6 +89,8 @@ export default {
   data() {
     return {
       currentPage: "歡迎使用",
+      srcPrefix: process.env.CLOUD_URL_PREFIX,
+      noImgUrl: process.env.CLOUD_NO_IMG_URL,
       adminInfo: {
         name: "",
         level: "",
@@ -97,7 +106,6 @@ export default {
   created() {
     // 執行：根據 session 向後端詢問管理員的個資，以便做個性化渲染
     const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminInfo.php`;
-    // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminInfo.php`;
     const vm = this;
     const session = vm.getKapitanSession();
 
@@ -224,6 +232,9 @@ export default {
         height: 100%;
         .welcome-page {
           height: 550px;
+          h2 {
+            font-weight: 500;
+          }
           img {
             width: 250px;
           }

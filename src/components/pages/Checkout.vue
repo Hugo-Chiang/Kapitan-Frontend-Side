@@ -37,11 +37,11 @@ export default {
     return {
       requiredInputTitle: {
         MCname: "主要聯絡人姓名",
-        MCphone: "主要聯絡人手機號碼",
-        MCemail: "主要聯絡人電子信箱",
+        MCphone: "主要聯絡人手機",
+        MCemail: "主要聯絡人電郵",
         ECname: "緊急聯絡人姓名",
-        ECphone: "緊急聯絡人手機號碼",
-        ECemail: "緊急聯絡人電子信箱",
+        ECphone: "緊急聯絡人手機",
+        ECemail: "緊急聯絡人電郵",
       },
       // 提示視窗資料
       modalData: {

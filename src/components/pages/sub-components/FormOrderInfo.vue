@@ -48,15 +48,15 @@
             :rules="{ required: true, length: 10, regex: /^09\d{8}$/ }"
             v-slot="{ errors, classes }"
           >
-            <label for="inputM-main-phone-number">訂購人手機號碼</label>
+            <label for="inputM-main-phone-number">訂購人手機</label>
             <input
               type="text"
               maxlength="10"
               id="inputM-main-phone-number"
-              name="訂購人手機號碼"
+              name="訂購人手機"
               class="form-control"
               :class="classes"
-              placeholder="例：0933128872"
+              placeholder="0900000000"
               v-model="inputOrdererInfo.MCphone"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
@@ -69,14 +69,14 @@
             :rules="{ required: true, email: true }"
             v-slot="{ errors, classes }"
           >
-            <label for="input-main-email">訂購人電子信箱</label>
+            <label for="input-main-email">訂購人電郵</label>
             <input
               type="email"
               class="form-control"
               :class="classes"
               id="input-main-email"
-              name="訂購人電子信箱"
-              placeholder="例：Hello-World@email.com"
+              name="訂購人電郵"
+              placeholder="Hello-World@email.com"
               v-model="inputOrdererInfo.MCemail"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
@@ -121,7 +121,7 @@
               :name="requiredInputTitle.ECphone"
               class="form-control"
               :class="classes"
-              placeholder="例：0933128872"
+              placeholder="0900000000"
               v-model="inputOrdererInfo.ECphone"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
@@ -143,7 +143,7 @@
               :class="classes"
               id="input-sub-email"
               :name="requiredInputTitle.ECemail"
-              placeholder="例：Hello-World@email.com"
+              placeholder="Hello-World@email.com"
               v-model="inputOrdererInfo.ECemail"
               @blur="$eventBus.$emit('emitInputOrdererInfo', inputOrdererInfo)"
               @keyup="syncMemberContactInfo = false"
@@ -200,6 +200,7 @@
           <ValidationProvider
             :rules="{
               required: true,
+              length: 5,
             }"
             v-slot="{ errors, classes }"
           >
@@ -210,7 +211,7 @@
               name="有效期"
               class="form-control credit-card-data-input-block"
               :class="classes"
-              placeholder="例：08/2025"
+              placeholder="例：0825"
               v-model="creditCardData.date"
               @input="formatCreditCardExpDate"
             />
@@ -229,7 +230,7 @@
               name="安全碼（CVV）"
               class="form-control credit-card-data-input-block"
               :class="classes"
-              placeholder="背面三碼"
+              placeholder="000"
               v-model="creditCardData.cvv"
               maxlength="3"
               @input="formatCreditCardCVV"
@@ -330,23 +331,21 @@ export default {
       let removeSpaceAndChar = this.creditCardData.date
         .replace(/\s+/g, "")
         .replace(/[^0-9]/gi, "");
-      let limitLength = removeSpaceAndChar.match(/\d{2,6}/g);
-      console.log(limitLength);
+      let limitLength = removeSpaceAndChar.match(/\d{2,4}/g);
       let twoToSixNumbers = (limitLength && limitLength[0]) || "";
       let creditCardExpDateArr = [];
 
       creditCardExpDateArr.push(twoToSixNumbers.substring(0, 2));
       creditCardExpDateArr.push(twoToSixNumbers.substring(2));
 
-      console.log(creditCardExpDateArr);
-
       if (creditCardExpDateArr.length > 0) {
         if (creditCardExpDateArr[0] != "" && creditCardExpDateArr[1] != "") {
           this.creditCardData.date = creditCardExpDateArr.join("/");
+        } else {
+          this.creditCardData.date = removeSpaceAndChar;
         }
       } else {
         this.creditCardData.date = removeSpaceAndChar;
-        console.log(this.creditCardData.date);
       }
     },
     // 方法：限制信用卡安全碼輸入的內容，需趨向 3 個整數
