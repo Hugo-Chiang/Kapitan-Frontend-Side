@@ -253,6 +253,7 @@
           </div>
         </div>
         <div
+          v-if="!inCreatingMode"
           id="member-avatar-area"
           class="col-4 position-relative d-flex flex-column align-items-center"
         >
@@ -264,7 +265,7 @@
             <div class="d-flex justify-content-center align-items-center">
               <img
                 :src="
-                  editDetails.memberAvatarURL == ''
+                  editDetails.memberAvatarURL == null
                     ? srcPrefix + noAvatarUrl
                     : srcPrefix + editDetails.memberAvatarURL
                 "
