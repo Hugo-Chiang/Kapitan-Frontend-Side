@@ -275,7 +275,6 @@ export default {
       this.$http
         .post(api, JSON.stringify(this.loginData.input))
         .then((response) => {
-          console.log(response.data);
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);

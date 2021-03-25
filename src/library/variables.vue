@@ -9,6 +9,7 @@ const membersAvatarPreset = "FE-SP-0001-Kapitan-Members-Avatar";
 const projectAvatarPreset = "FE-SP-0001-Kapitan-Projects-Avatar";
 const projectContentPreset = "FE-SP-0001-Kapitan-Projects-Content";
 const projectCarouselPreset = "FE-SP-0001-Kapitan-Projects-Carousel";
+let signInedID = "";
 
 export default {
   cloudName,
@@ -19,5 +20,6 @@ export default {
   projectAvatarPreset,
   projectContentPreset,
   projectCarouselPreset,
+  signInedID,
 };
 </script>
