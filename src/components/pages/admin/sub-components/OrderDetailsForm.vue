@@ -397,7 +397,9 @@ export default {
             // 刪除訂單細項詢問經確認後進行刪除，成敗與否都將關閉編輯細項
             if (this.situation.event.indexOf("刪除訂單細項") != -1) {
               const deleteOrderDetailAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrderDetail.php`;
-              const session = this.callBy.getKapitanSession();
+              const session = this.callBy.GlobalFunctions.getKapitanSession(
+                "backstage"
+              );
 
               let sendingObj = {
                 session: session,
@@ -483,7 +485,7 @@ export default {
       const insertNewOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewOrderDetails.php`;
       const updateOrderDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateOrderDetails.php`;
       const vm = this;
-      const session = vm.getKapitanSession();
+      const session = vm.GlobalFunctions.getKapitanSession("backstage");
       let currentArr = this.currentPageContentArr;
       let currentIndex = this.inEditingIndex;
       let api = "";
@@ -542,22 +544,6 @@ export default {
         this.currentPageContentArr[this.inEditingIndex]["ORDER_DETAIL_ID"]
       } 訂單細項嗎？`;
       this.modalData.situation.buttonType = "yesNo";
-    },
-    // 方法：抓取存在 cookie 中的 session（後台）
-    getKapitanSession() {
-      let cookie = document.cookie;
-      let startIndex = 0;
-      let keyLength = 0;
-      let backstageKey = 'kapitanAdminSession="';
-
-      startIndex = cookie.indexOf(backstageKey);
-      keyLength = backstageKey.length;
-
-      let rawSession = cookie.substring(startIndex + keyLength);
-      let endIndex = rawSession.indexOf('"');
-      let session = rawSession.substring(0, endIndex);
-
-      return session;
     },
   },
   computed: {

@@ -200,7 +200,7 @@
           <ValidationProvider
             :rules="{
               required: true,
-              length: 5,
+              max: 5,
             }"
             v-slot="{ errors, classes }"
           >
@@ -294,7 +294,7 @@ export default {
       this.creditCardData = {
         name: "測試者",
         number: "1234 2234 3234 4234",
-        date: "04/2028",
+        date: "04/25",
         cvv: "168",
       };
 

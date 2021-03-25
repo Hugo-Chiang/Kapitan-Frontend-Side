@@ -12,8 +12,9 @@
               <img
                 :src="
                   adminInfo.avatarUrl != null
-                    ? srcPrefix + adminInfo.avatarUrl
-                    : srcPrefix + noImgUrl
+                    ? GlobalVariables.cloudUrlprefix + adminInfo.avatarUrl
+                    : GlobalVariables.cloudUrlprefix +
+                      GlobalVariables.cloudNoImgUrl
                 "
                 alt=""
               />
@@ -89,8 +90,6 @@ export default {
   data() {
     return {
       currentPage: "歡迎使用",
-      srcPrefix: process.env.CLOUD_URL_PREFIX,
-      noImgUrl: process.env.CLOUD_NO_IMG_URL,
       adminInfo: {
         name: "",
         level: "",
@@ -107,7 +106,7 @@ export default {
     // 執行：根據 session 向後端詢問管理員的個資，以便做個性化渲染
     const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminInfo.php`;
     const vm = this;
-    const session = vm.getKapitanSession();
+    const session = vm.GlobalFunctions.getKapitanSession("backstage");
 
     this.$http.post(api, session).then((response) => {
       vm.adminInfo.name = response.data.adminName;
@@ -122,22 +121,6 @@ export default {
       setTimeout(() => {
         this.$router.push({ name: "管理系統：登入頁" });
       }, 1000);
-    },
-    // 方法：抓取存在 cookie 中的 session（後台）
-    getKapitanSession() {
-      let cookie = document.cookie;
-      let startIndex = 0;
-      let keyLength = 0;
-      let backstageKey = 'kapitanAdminSession="';
-
-      startIndex = cookie.indexOf(backstageKey);
-      keyLength = backstageKey.length;
-
-      let rawSession = cookie.substring(startIndex + keyLength);
-      let endIndex = rawSession.indexOf('"');
-      let session = rawSession.substring(0, endIndex);
-
-      return session;
     },
     // 方法：根據傳入的頁面名稱切換頁面
     switchPage(pageName) {

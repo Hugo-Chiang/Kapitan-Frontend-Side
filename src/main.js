@@ -29,10 +29,19 @@ import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue";
 // 導入 HTML 編輯器套件 vue2-editor 相關內容開始
 import { VueEditor } from "vue2-editor";
 // 導入 HTML 編輯器套件 vue2-editor 相關內容結束
+// 導入自定義全域變數開始
+import GlobalVariables from '@/library/variables.vue';
+// 導入自定義全域變數結束
+// 導入自定義全域函式開始
+import GlobalFunctions from '@/library/functions.vue';
+// 導入自定義全域函式結束
 
+// 掛載 jQuery
 window.$ = $;
 
 Vue.config.productionTip = false;
+
+// 掛載上述引用個元件、檔案等等
 Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, Cloudinary, {
   configuration: { cloudName: "demo" },
   components: {
@@ -40,6 +49,12 @@ Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, Cloudi
     CldTransformation
   }
 }, VueEditor);
+
+// 掛載上述引用的自定義變數和函式等等
+Vue.prototype.GlobalVariables = GlobalVariables;
+Vue.prototype.GlobalFunctions = GlobalFunctions;
+// 於 Date 原型下創立時間格式化方法，以利資料庫內容與 input 間銜接順利
+Date.prototype.Format = GlobalFunctions.format;
 
 // 導出驗證套件 vee-validate 的所有規則
 Object.keys(rules).forEach((rule) => {
@@ -71,33 +86,6 @@ Vue.filter("currency", function (n) {
 Vue.filter("dollarSign", function (n) {
   return `$ ${n}`;
 });
-
-// 於原型下創立時間格式化方法，以利資料庫內容與 input 間銜接順利
-Date.prototype.Format = function (fmt) {
-  let o = {
-    "M+": this.getMonth() + 1,
-    "d+": this.getDate(),
-    "h+": this.getHours(),
-    "m+": this.getMinutes(),
-    "s+": this.getSeconds(),
-    "q+": Math.floor((this.getMonth() + 3) / 3),
-    S: this.getMilliseconds(),
-  };
-  if (/(y+)/.test(fmt))
-    fmt = fmt.replace(
-      RegExp.$1,
-      (this.getFullYear() + "").substr(4 - RegExp.$1.length)
-    );
-  for (let k in o)
-    if (new RegExp("(" + k + ")").test(fmt))
-      fmt = fmt.replace(
-        RegExp.$1,
-        RegExp.$1.length == 1
-          ? o[k]
-          : ("00" + o[k]).substr(("" + o[k]).length)
-      );
-  return fmt;
-};
 
 // 我們熟悉的 Vue 實體
 new Vue({

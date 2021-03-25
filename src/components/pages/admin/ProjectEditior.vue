@@ -320,7 +320,7 @@ export default {
           // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除方案") != -1) {
             const deleteProjectAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteProject.php`;
-            const session = this.callBy.getKapitanSession();
+            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
 
             let sendingObj = {
               session: session,
@@ -404,11 +404,6 @@ export default {
         filesData: {
           avatar: "",
           carouselImgs: [],
-        },
-        preset: {
-          projectAvatar: "FE-SP-0001-Kapitan-Projects-Avatar",
-          projectContent: "FE-SP-0001-Kapitan-Projects-Content",
-          projectCarousel: "FE-SP-0001-Kapitan-Projects-Carousel",
         },
         uploadStatus: "",
       },
@@ -554,9 +549,9 @@ export default {
             function () {
               let preset = "";
               if (avatarFile != "" && prop == 0) {
-                preset = vm.vueCloudinaryData.preset.projectAvatar;
+                preset = vm.GlobalVariables.projectAvatarPreset;
               } else {
-                preset = vm.vueCloudinaryData.preset.projectCarousel;
+                preset = vm.GlobalVariables.projectCarouselPreset;
               }
 
               let formData = new FormData();
@@ -616,7 +611,7 @@ export default {
       const updateProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdatepProjectDetails.php`;
       const createProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewProject.php`;
       const vm = this;
-      const session = vm.getKapitanSession();
+      const session = vm.GlobalFunctions.getKapitanSession("backstage");
 
       let sendingObj = {
         session: session,
@@ -658,10 +653,7 @@ export default {
       console.log("圖檔上傳器已啟動");
 
       let formData = new FormData();
-      formData.append(
-        "upload_preset",
-        vm.vueCloudinaryData.preset.projectAvatar
-      );
+      formData.append("upload_preset", vm.GlobalVariables.projectContentPreset);
       formData.append("file", file);
 
       let requestObj = {
@@ -688,22 +680,6 @@ export default {
           console.log("上傳失敗！");
           console.log(error);
         });
-    },
-    // 方法：抓取存在 cookie 中的 session（後台）
-    getKapitanSession() {
-      let cookie = document.cookie;
-      let startIndex = 0;
-      let keyLength = 0;
-      let backstageKey = 'kapitanAdminSession="';
-
-      startIndex = cookie.indexOf(backstageKey);
-      keyLength = backstageKey.length;
-
-      let rawSession = cookie.substring(startIndex + keyLength);
-      let endIndex = rawSession.indexOf('"');
-      let session = rawSession.substring(0, endIndex);
-
-      return session;
     },
   },
   computed: {

@@ -266,8 +266,10 @@
               <img
                 :src="
                   editDetails.memberAvatarURL == null
-                    ? srcPrefix + noAvatarUrl
-                    : srcPrefix + editDetails.memberAvatarURL
+                    ? GlobalVariables.cloudUrlprefix +
+                      GlobalVariables.cloudNoAvatarUrl
+                    : GlobalVariables.cloudUrlprefix +
+                      editDetails.memberAvatarURL
                 "
                 alt=""
               />
@@ -322,8 +324,6 @@ export default {
       managingMember: "",
       repeatRegister: false,
       showRemark: false,
-      srcPrefix: process.env.CLOUD_URL_PREFIX,
-      noAvatarUrl: process.env.CLOUD_NO_AVATAR_URL,
       breadCrumbData: {
         pagesArr: ["管理系統：查詢會員", "管理系統：編輯會員"],
         currentPage: 2,
@@ -350,7 +350,7 @@ export default {
           // 刪除會員詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除會員") != -1) {
             const deleteMemberAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteMember.php`;
-            const session = this.callBy.getKapitanSession();
+            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
 
             let sendingObj = {
               session: session,
@@ -419,9 +419,6 @@ export default {
       vueCloudinaryData: {
         filesData: {
           avatar: "",
-        },
-        preset: {
-          membersAvatar: "FE-SP-0001-Kapitan-Members-Avatar",
         },
         uploadStatus: "",
       },
@@ -552,7 +549,7 @@ export default {
             let formData = new FormData();
             formData.append(
               "upload_preset",
-              vm.vueCloudinaryData.preset.membersAvatar
+              vm.GlobalVariables.membersAvatarPreset
             );
             formData.append("file", fileReader.result);
 
@@ -598,7 +595,7 @@ export default {
       const createNewMemberAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewMember.php`;
       const updateMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateMemberInfo.php`;
       const vm = this;
-      const session = vm.getKapitanSession();
+      const session = vm.GlobalFunctions.getKapitanSession("backstage");
 
       let api = "";
 
@@ -637,22 +634,6 @@ export default {
       this.modalData.situation.event = "刪除會員";
       this.modalData.situation.message = `確定要刪除會員 ${this.managingMember} 嗎？`;
       this.modalData.situation.buttonType = "yesNo";
-    },
-    // 方法：抓取存在 cookie 中的 session（後台）
-    getKapitanSession() {
-      let cookie = document.cookie;
-      let startIndex = 0;
-      let keyLength = 0;
-      let backstageKey = 'kapitanAdminSession="';
-
-      startIndex = cookie.indexOf(backstageKey);
-      keyLength = backstageKey.length;
-
-      let rawSession = cookie.substring(startIndex + keyLength);
-      let endIndex = rawSession.indexOf('"');
-      let session = rawSession.substring(0, endIndex);
-
-      return session;
     },
   },
 };

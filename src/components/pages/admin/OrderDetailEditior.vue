@@ -124,7 +124,7 @@ export default {
           // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除訂單") != -1) {
             const deleteOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrder.php`;
-            const session = this.callBy.getKapitanSession();
+            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
 
             let sendingObj = {
               session: session,
@@ -210,22 +210,6 @@ export default {
     getCurrentContentAnsSerial(arr, num) {
       this.currentPageContentArr = arr;
       this.currentPageContentSerial = num;
-    },
-    // 方法：抓取存在 cookie 中的 session（後台）
-    getKapitanSession() {
-      let cookie = document.cookie;
-      let startIndex = 0;
-      let keyLength = 0;
-      let backstageKey = 'kapitanAdminSession="';
-
-      startIndex = cookie.indexOf(backstageKey);
-      keyLength = backstageKey.length;
-
-      let rawSession = cookie.substring(startIndex + keyLength);
-      let endIndex = rawSession.indexOf('"');
-      let session = rawSession.substring(0, endIndex);
-
-      return session;
     },
   },
   computed: {

@@ -46,8 +46,10 @@
                 class="card-img-top"
                 :src="
                   project['PROJECT_AVATAR_URL'] != null
-                    ? srcPrefix + project['PROJECT_AVATAR_URL']
-                    : srcPrefix + noImgUrl
+                    ? GlobalVariables.cloudUrlprefix +
+                      project['PROJECT_AVATAR_URL']
+                    : GlobalVariables.cloudUrlprefix +
+                      GlobalVariables.cloudNoImgUrl
                 "
                 alt="這裡是卡片頂圖"
               />
@@ -123,8 +125,6 @@ export default {
       currentPageContentArrSerial: [],
       itemsNumPerPage: 9,
       currentPageNum: 1,
-      srcPrefix: process.env.CLOUD_URL_PREFIX,
-      noImgUrl: process.env.CLOUD_NO_IMG_URL,
     };
   },
   components: {

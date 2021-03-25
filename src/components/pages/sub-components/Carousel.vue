@@ -19,7 +19,7 @@
             :class="index == 0 ? 'active' : ''"
           >
             <img
-              :src="srcPrefix + carouselItem"
+              :src="GlobalVariables.cloudUrlprefix + carouselItem"
               class="d-block w-100"
               alt="..."
             />
@@ -51,9 +51,7 @@
 <script>
 export default {
   data() {
-    return {
-      srcPrefix: process.env.CLOUD_URL_PREFIX,
-    };
+    return {};
   },
   props: ["carouselData"],
 };
