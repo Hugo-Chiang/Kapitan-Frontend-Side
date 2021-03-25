@@ -202,8 +202,13 @@ router.beforeEach((to, from, next) => {
     // 判斷所前往頁面是前台還後台，會有不同的應對
     if (to.path.indexOf('Admin') != -1) {
       axios.post(adminSignInAuthAPI, adminSession).then((response) => {
-        if (response.data.sessionCheck) next();
-        else next({ name: '管理系統：登入頁' });
+        if (response.data.sessionCheck) {
+          next();
+        }
+        else {
+          localStorage.setItem('BackstageBlockBefore', to.path)
+          next({ name: '管理系統：登入頁' });
+        }
       }).catch((response) => {
         console.log(response);
       })
@@ -211,9 +216,9 @@ router.beforeEach((to, from, next) => {
 
       axios.post(membersSignInAuthAPI, membersSession).then((response) => {
         if (response.data.sessionCheck) {
-          if (response.data.sessionCheck) next();
-          else next({ name: '登入註冊' });
+          next();
         } else {
+          localStorage.setItem('ForestageBlockBefore', to.path)
           next({ name: '登入註冊' });
         }
       }).catch((response) => {

@@ -7,33 +7,33 @@
       />
       <h3 class="h3 mb-3 font-weight-normal">請登入管理系統</h3>
       <div
-        class="inpitArea"
+        class="input-area"
         :class="{ shaking: signInFailedFeedback.signInFailedAnime }"
       >
-        <label for="inputEmail" class="sr-only" key="emailLabel"
+        <label for="input-email" class="sr-only" key="emailLabel"
           >請輸入帳號</label
         >
         <input
           type="email"
-          id="inputEmail"
+          id="input-email"
           class="form-control"
           :placeholder="signInForm.emailPlaceHolder"
           required
           autofocus
           v-model="signInData.account"
-          key="inputEmail"
+          key="input-email"
         />
-        <label for="inputPassword" class="sr-only" key="passwordLabel"
+        <label for="input-password" class="sr-only" key="passwordLabel"
           >請輸入密碼</label
         >
         <input
           type="password"
-          id="inputPassword"
+          id="input-password"
           class="form-control"
           :placeholder="signInForm.passwordPlaceHolder"
           required
           v-model="signInData.password"
-          key="inputPassword"
+          key="input-password"
         />
       </div>
       <div class="checkbox mb-3">
@@ -48,7 +48,7 @@
       </button>
       <div class="position-relative">
         <div
-          id="signInFailedWarning"
+          id="signIn-failed-warning"
           class="position-absolute"
           v-if="signInFailedFeedback.signInFailedWarning"
         >
@@ -168,7 +168,7 @@ img {
   width: 150px;
 }
 
-#signInFailedWarning {
+#signIn-failed-warning {
   transform: translate(-50%, 15%);
   left: 50%;
   color: red;
