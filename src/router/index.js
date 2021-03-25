@@ -9,8 +9,9 @@ import Project from '@/components/pages/Project';
 import Cart from '@/components/pages/Cart';
 import Checkout from '@/components/pages/Checkout';
 import MemberCentre from '@/components/pages/MemberCentre';
+import ForestageLogin from '@/components/pages/ForestageLogin';
 import Backstage from '@/components/Backstage';
-import BackstageSingIn from '@/components/pages/admin/BackstageSingIn';
+import BackstageLogin from '@/components/pages/admin/BackstageLogin';
 import Dashboard from '@/components/pages/admin/Dashboard';
 import ChooseModeEntry from '@/components/pages/admin/ChooseModeEntry';
 import OrdersSearching from '@/components/pages/admin/OrdersSearching';
@@ -71,15 +72,20 @@ const router = new Router({
           component: MemberCentre,
           meta: { requiresAuth: true }
         },
+        {
+          path: '/Login',
+          name: '登入註冊',
+          component: ForestageLogin,
+        },
       ]
     }, {
       path: '/Admin',
       component: Backstage,
       children: [
         {
-          path: '/Admin/SignIn',
+          path: '/Admin/Login',
           name: '管理系統：登入頁',
-          component: BackstageSingIn
+          component: BackstageLogin
         },
         {
           path: '/Admin',
@@ -186,54 +192,65 @@ const router = new Router({
 
 // 使用全局前置守衛，建立登入驗證機制
 router.beforeEach((to, from, next) => {
-  const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
-  const session = getKapitanSession();
+  const membersSignInAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignInAuthentication.php`;
+  const adminSignInAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
+  const adminSession = getKapitanSession();
+  const membersSession = getKapitanSession();
 
   if (to.meta.requiresAuth) {
 
     // 判斷所前往頁面是前台還後台，會有不同的應對
     if (to.path.indexOf('Admin') != -1) {
-      axios.post(api, session).then((response) => {
+      axios.post(adminSignInAuthAPI, adminSession).then((response) => {
         if (response.data.sessionCheck) next();
-        else next({ name: '管理系統：登入頁', });
+        else next({ name: '管理系統：登入頁' });
       }).catch((response) => {
         console.log(response);
       })
     } else {
-      let aa = true;
 
-      if (aa) {
-        // 判斷所前往是不是結帳頁，會有不同的應對
-        if (to.path.indexOf('Checkout') != -1) {
-          if (localStorage.getItem("savingProjects") != null) next();
-          else setTimeout(() => {
-            router.push({ name: '首頁', });
-          }, 500);
-        } else {
-          next();
-        }
-      } else {
-        setTimeout(() => {
-          router.push({ name: '首頁', });
-        }, 500);
-      }
-
-    }
-  } else {
-
-    // 在有登入狀況下進入登入頁，將自動被導回首頁
-    if (to.path == '/Admin/SignIn') {
-      axios.post(api, session).then((response) => {
+      axios.post(membersSignInAuthAPI, membersSession).then((response) => {
         if (response.data.sessionCheck) {
-          alert('你已登入。系統將引導您回首頁。');
-          setTimeout(() => {
-            router.push({ name: '管理系統：首頁', });
-          }, 500);
+          if (response.data.sessionCheck) next();
+          else next({ name: '登入註冊' });
+        } else {
+          next({ name: '登入註冊' });
         }
       }).catch((response) => {
         console.log(response);
-      });
+      })
+
+      // 判斷所前往是不是結帳頁，會有不同的應對
+      if (to.path.indexOf('Checkout') != -1) {
+        if (localStorage.getItem("savingProjects") != null) next();
+        else setTimeout(() => {
+          router.push({ name: '首頁', });
+        }, 500);
+      } else {
+        next();
+      }
+
     }
+
+  } else {
+
+    // 無論前後台，在有登入狀況下進入登入頁，都將被導回各自的首頁
+    if (to.path.indexOf('Admin') != -1) {
+      if (to.path == '/Admin/SignIn') {
+        axios.post(adminSignInAuthAPI, adminSession).then((response) => {
+          if (response.data.sessionCheck) {
+            alert('你已登入。系統將引導您回首頁。');
+            setTimeout(() => {
+              router.push({ name: '管理系統：首頁', });
+            }, 500);
+          }
+        }).catch((response) => {
+          console.log(response);
+        });
+      }
+    }
+
+    // 無須驗證亦無特殊情境則放行
     next();
   }
 });
