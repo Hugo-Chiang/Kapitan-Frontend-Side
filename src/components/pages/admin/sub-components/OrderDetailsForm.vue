@@ -543,15 +543,19 @@ export default {
       } 訂單細項嗎？`;
       this.modalData.situation.buttonType = "yesNo";
     },
-    // 方法：抓取存在 cookie 中的 session
+    // 方法：抓取存在 cookie 中的 session（後台）
     getKapitanSession() {
       let cookie = document.cookie;
-      let strArr = cookie.split("");
-      let equalSymbolIndex = strArr.indexOf("=");
-      let cookieLen = cookie.length;
-      let namePulsSymbolLen = equalSymbolIndex + 2;
-      let sessionLen = cookieLen - namePulsSymbolLen - 1;
-      let session = cookie.substr(namePulsSymbolLen, sessionLen);
+      let startIndex = 0;
+      let keyLength = 0;
+      let backstageKey = 'kapitanAdminSession="';
+
+      startIndex = cookie.indexOf(backstageKey);
+      keyLength = backstageKey.length;
+
+      let rawSession = cookie.substring(startIndex + keyLength);
+      let endIndex = rawSession.indexOf('"');
+      let session = rawSession.substring(0, endIndex);
 
       return session;
     },

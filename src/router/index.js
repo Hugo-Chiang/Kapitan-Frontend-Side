@@ -194,14 +194,17 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const membersSignInAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignInAuthentication.php`;
   const adminSignInAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
-  const adminSession = getKapitanSession();
-  const membersSession = getKapitanSession();
+  const toBackstage = to.path.indexOf('Admin') != -1;
 
   if (to.meta.requiresAuth) {
 
     // 判斷所前往頁面是前台還後台，會有不同的應對
-    if (to.path.indexOf('Admin') != -1) {
+    if (toBackstage) {
+
+      let adminSession = getKapitanSession('backstage');
+
       axios.post(adminSignInAuthAPI, adminSession).then((response) => {
+        console.log(response);
         if (response.data.sessionCheck) {
           next();
         }
@@ -213,6 +216,8 @@ router.beforeEach((to, from, next) => {
         console.log(response);
       })
     } else {
+
+      let membersSession = getKapitanSession('forestage');
 
       axios.post(membersSignInAuthAPI, membersSession).then((response) => {
         if (response.data.sessionCheck) {
@@ -234,9 +239,7 @@ router.beforeEach((to, from, next) => {
       } else {
         next();
       }
-
     }
-
   } else {
 
     // 無論前後台，在有登入狀況下進入登入頁，都將被導回各自的首頁
@@ -260,15 +263,29 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// 函式：抓取存在 cookie 中的 session
-function getKapitanSession() {
+// 函式：抓取存在 cookie 中的 session（通用）
+function getKapitanSession(sessionUseAtStr) {
+
   let cookie = document.cookie;
-  let strArr = cookie.split('');
-  let equalSymbolIndex = strArr.indexOf('=');
-  let cookieLen = cookie.length;
-  let namePulsSymbolLen = equalSymbolIndex + 2;
-  let sessionLen = cookieLen - namePulsSymbolLen - 1;
-  let session = cookie.substr(namePulsSymbolLen, sessionLen);
+  let startIndex = 0;
+  let keyLength = 0;
+  let forestageKey = 'kapitanMembersSession="';
+  let backstageKey = 'kapitanAdminSession="';
+
+  switch (sessionUseAtStr) {
+    case 'forestage':
+      startIndex = cookie.indexOf(forestageKey);
+      keyLength = forestageKey.length;
+      break;
+    case 'backstage':
+      startIndex = cookie.indexOf(backstageKey);
+      keyLength = backstageKey.length;
+      break;
+  }
+
+  let rawSession = cookie.substring(startIndex + keyLength);
+  let endIndex = rawSession.indexOf('"');
+  let session = rawSession.substring(0, endIndex)
 
   return session;
 }

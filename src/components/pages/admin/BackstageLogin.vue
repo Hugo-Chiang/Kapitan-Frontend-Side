@@ -82,17 +82,15 @@ export default {
     // 方法：（搭配導航守衛）將帳密傳予後端 API 進行登入，並透過後端回傳的 token 保持登入驗證狀態
     signIn() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignIn.php`;
-      // const api = `${process.env.LOCAL_HOST_PATH}/API/Backstage/AdminSignIn.php`;
       const vm = this;
 
       this.$http
         .post(api, JSON.stringify(this.signInData))
         .then((response) => {
-          console.log(response);
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
-            document.cookie = `kapitanSession="${session}"; expires="${expDate}"`;
+            document.cookie = `kapitanAdminSession="${session}"; expires="${expDate}"`;
             vm.$router.push({ name: "管理系統：首頁" });
           } else {
             vm.signInData.account = "";

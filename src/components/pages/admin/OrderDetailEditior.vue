@@ -211,6 +211,22 @@ export default {
       this.currentPageContentArr = arr;
       this.currentPageContentSerial = num;
     },
+    // 方法：抓取存在 cookie 中的 session（後台）
+    getKapitanSession() {
+      let cookie = document.cookie;
+      let startIndex = 0;
+      let keyLength = 0;
+      let backstageKey = 'kapitanAdminSession="';
+
+      startIndex = cookie.indexOf(backstageKey);
+      keyLength = backstageKey.length;
+
+      let rawSession = cookie.substring(startIndex + keyLength);
+      let endIndex = rawSession.indexOf('"');
+      let session = rawSession.substring(0, endIndex);
+
+      return session;
+    },
   },
   computed: {
     returnBreadCrumbData() {
