@@ -2,6 +2,25 @@
 @import "/variables";
 @import "~bootstrap/scss/bootstrap";
 
+// 自定義顏色
+$kapitan-logo: #152A69;
+$kapitan-header: #189EBB;
+$kapitan-footer: #446da3;
+$kapitan-white: #f9f7f0;
+$sail: #f7f7f9;
+$tiffany-blue: #19b3b1;
+$deep-teal: #034b61;
+$berry: #bc5f6a;
+$tangerine: #feb75d;
+$scuba-blue: #55c9ea;
+$prussian: #013b63;
+$midnight: #000e2b;
+$caspper:#adbed2;
+$regal-blue:#12406a;
+$blush-pink: #eb8f90;
+$action-now: #f16c5d;
+
+// 個性化全局設定
 *{
     box-sizing: border-box !important;
     text-decoration: none  !important;
@@ -19,6 +38,8 @@ input[type=number] {
 }
 // 去除input樣式預設的增減按鈕結束
 
+
+// 自定義 class 開始
 .btn{
     &:active{
         transform: translate3d(0,2px,0);
@@ -28,3 +49,5 @@ input[type=number] {
 .invalid-btn {
     cursor: not-allowed;
   }
+
+// 自定義 class 結束
