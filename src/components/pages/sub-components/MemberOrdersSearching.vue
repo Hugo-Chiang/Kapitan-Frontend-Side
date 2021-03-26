@@ -1,20 +1,38 @@
 <template>
   <div class="card-body">
     <h4>查詢訂單</h4>
-    <!-- 會員編輯區開始 -->
+    <!-- 會員訂單區開始 -->
     <div class="row">
-      <div class="col-12"></div>
+      <div class="col-12">
+        <ul>
+          <li v-for="order in ordersArr" :key="order['ORDER_DETAIL_ID']">
+            {{ order["ORDER_ID"] }}
+          </li>
+        </ul>
+      </div>
     </div>
-    <!-- 會員編輯區結束 -->
+    <!-- 會員訂單區結束 -->
   </div>
 </template>
 
 <script>
+// 導入結帳項目元件
+
+import Pagination from "@/components/pages/sub-components/Pagination";
+
 export default {
   data() {
-    return {};
+    return {
+      ordersArr: [],
+    };
   },
   props: ["memberID"],
+  components: {
+    Pagination,
+  },
+  created() {
+    this.queryMemberOrders();
+  },
   methods: {
     // 方法：向後端查詢該會員近三個月訂單紀錄，以進行頁面渲染
     queryMemberOrders() {
@@ -24,7 +42,8 @@ export default {
       this.$http
         .post(api, vm.memberID)
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
+          vm.ordersArr = response.data;
           //   vm.allOrdersArr = [];
           //   let responseArr = response.data;
 

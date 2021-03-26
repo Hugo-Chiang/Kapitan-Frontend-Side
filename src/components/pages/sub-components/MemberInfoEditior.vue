@@ -170,8 +170,6 @@ export default {
         ECemail: "緊急聯絡人電郵",
       },
       editDetails: {
-        memberRegDate: "",
-        memberStatus: "",
         memberAccount: "",
         memberPassword: "",
         reSetPassword: "",
@@ -192,7 +190,22 @@ export default {
       },
     };
   },
+  props: ["memberInfo"],
+  created() {
+    this.initializeEditor();
+  },
   methods: {
+    // 方法：
+    initializeEditor() {
+      this.editDetails.memberAccount = this.memberInfo["MEMBER_ACCOUNT"];
+      this.editDetails.nickName = this.memberInfo["MEMBER_NICKNAME"];
+      this.editDetails.MCname = this.memberInfo["MEMBER_NAME"];
+      this.editDetails.MCphone = this.memberInfo["MEMBER_PHONE"];
+      this.editDetails.memberAvatarURL = this.memberInfo["MEMBER_AVATAR_URL"];
+      this.editDetails.ECname = this.memberInfo["MEMBER_EC_NAME"];
+      this.editDetails.ECphone = this.memberInfo["MEMBER_EC_PHONE"];
+      this.editDetails.ECemail = this.memberInfo["MEMBER_EC_EMAIL"];
+    },
     // 方法：紀錄觀察上傳檔案的內容
     handleFileChange: function (e) {
       this.vueCloudinaryData.filesData.avatar = e.target.files[0];

@@ -23,8 +23,9 @@
               </div>
             </div>
             <div class="text-center">
-              <h6>要啟程了嗎？</h6>
-              <h6>甲必丹<span>阿撒部嚕嚕嚕嚕</span></h6>
+              <h6>
+                {{ memberInfo.nickname || "尊敬的甲必丹會員" }}
+              </h6>
             </div>
             <hr />
             <ul class="p-0">
@@ -44,7 +45,7 @@
         <div class="card">
           <MemberInfoEditior
             v-if="currentSubPage == '基本資料'"
-            :memberID="memberInfo.ID"
+            :memberInfo="memberInfo.propsObj"
           ></MemberInfoEditior>
           <MemberOrdersSearching
             v-else-if="currentSubPage == '查詢訂單'"
@@ -78,8 +79,9 @@ export default {
       },
       memberInfo: {
         ID: "",
-        name: "",
+        nickname: "",
         avatarUrl: "",
+        propsObj: {},
       },
       asideList: ["基本資料", "查詢訂單", "我的評價"],
       currentSubPage: "",
@@ -95,21 +97,29 @@ export default {
     this.queryMemberInfo();
   },
   methods: {
-    // 方法：
+    // 方法：驗證登入 session 後，回傳會員資料
     queryMemberInfo() {
-      const memberID = this.GlobalFunctions.verifySignInedMember.call(this);
-      console.log(memberID);
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Universal/QueryMemberInfo.php`;
+      const signInAuthenticationAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignInAuthentication.php`;
+      const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Universal/QueryMemberInfo.php`;
+      const session = this.GlobalFunctions.getKapitanSession("forestage");
       const vm = this;
 
       this.$http
-        .post(api, memberID)
+        .post(signInAuthenticationAPI, session)
         .then((response) => {
-          // console.log(response.data);
-          vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
+          if (response.data.sessionCheck) {
+            vm.memberInfo.ID = response.data.signInedID;
+            return vm.$http.post(queryMemberInfoAPI, vm.memberInfo.ID);
+          }
         })
         .catch((error) => {
           console.log(error);
+        })
+        .then((response) => {
+          console.log(response);
+          vm.memberInfo.propsObj = response.data;
+          vm.memberInfo.nickname = response.data["MEMBER_NICKNAME"];
+          vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
         });
     },
   },
