@@ -226,7 +226,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-@import "../../assets/all.scss";
+@import "../../assets/scss/all.scss";
 
 .nav-item {
   cursor: pointer;

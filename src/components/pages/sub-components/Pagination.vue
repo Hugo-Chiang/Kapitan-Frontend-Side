@@ -120,7 +120,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/all.scss";
+@import "../../../assets/scss/all.scss";
 
 li {
   cursor: pointer;

@@ -142,7 +142,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/all.scss";
+@import "../../../assets/scss/all.scss";
 
 .project-row-in-cart {
   height: 150px;

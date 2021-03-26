@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/all.scss";
+@import "../assets/scss/all.scss";
 
 ForestageNavbar {
   margin-bottom: 105px;

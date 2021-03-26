@@ -576,7 +576,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../assets/all.scss";
+@import "../../../../assets/scss/all.scss";
 
 h6 {
   font-weight: 600;

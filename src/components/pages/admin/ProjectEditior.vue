@@ -691,7 +691,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/all.scss";
+@import "../../../assets/scss/all.scss";
 
 #project-details-page {
   height: 600px;

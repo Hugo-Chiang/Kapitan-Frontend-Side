@@ -169,7 +169,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-@import "../../assets/all.scss";
+@import "../../assets/scss/all.scss";
 
 // 方案篩選器開始
 aside {

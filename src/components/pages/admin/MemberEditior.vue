@@ -640,7 +640,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/all.scss";
+@import "../../../assets/scss/all.scss";
 
 #member-info-page {
   height: 600px;
