@@ -64,7 +64,7 @@
                 }}</span></ValidationProvider
               >
             </div>
-            <!-- 會員日期結束 -->
+            <!-- 註冊日期結束 -->
           </div>
           <div class="form-row">
             <!-- 會員帳號開始 -->
@@ -350,7 +350,9 @@ export default {
           // 刪除會員詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除會員") != -1) {
             const deleteMemberAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteMember.php`;
-            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
+            const session = this.callBy.GlobalFunctions.getKapitanSession(
+              "backstage"
+            );
 
             let sendingObj = {
               session: session,
@@ -441,7 +443,7 @@ export default {
       else this.inCreatingMode = true;
 
       const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
-      const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMemberInfo.php`;
+      const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Universal/QueryMemberInfo.php`;
       const vm = this;
 
       vm.editDetails.memberStatus = 1;

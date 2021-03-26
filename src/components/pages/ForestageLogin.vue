@@ -323,7 +323,7 @@ export default {
       line-height: 40px;
       padding: 0;
       text-align: center;
-      border: 0.5px solid rgba(0, 0, 0, 0.125);
+      border: 0.5px solid $bootstrap-border-color;
       border-radius: 0;
       &:hover {
         cursor: pointer;

@@ -58,10 +58,10 @@ function verifySignInedMember() {
   this.$http
     .post(api, session)
     .then((response) => {
-      console.log(response.data);
       if (response.data.sessionCheck) {
-        console.log(this);
-        localStorage.setItem("kapitanSignedInID", response.data.signInedID);
+        console.log(response.data);
+        console.log(response.data.signInedID);
+        return response.data.signInedID;
       }
     })
     .catch((error) => {

@@ -1,32 +1,26 @@
 <template>
   <!-- 挑選行程頁開始 -->
-  <main class="container">
+  <main id="store-page" class="container">
     <!-- 麵包屑開始 -->
-    <div class="row">
-      <div class="col-12 pt-2">
-        <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
-      </div>
-    </div>
+    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
     <!-- 方案篩選器與方案列表開始 -->
     <div class="row">
-      <div class="col-lg-2 d-lg-block d-none">
-        <aside id="aside-bar">
-          <ul id="category-list" class="py-3 pl-3">
-            <li v-for="category in categoryList" :key="category['CATEGORY_ID']">
-              <input
-                type="checkbox"
-                :name="category['CATEGORY_NAME']"
-                :value="category['CATEGORY_ID']"
-                v-model="selectedCategories"
-              />
-              {{ category["CATEGORY_NAME"] }}
-            </li>
-          </ul>
-        </aside>
-      </div>
+      <aside id="aside-bar" class="col-lg-2 d-lg-block d-none">
+        <ul id="category-list" class="py-3 pl-3">
+          <li v-for="category in categoryList" :key="category['CATEGORY_ID']">
+            <input
+              type="checkbox"
+              :name="category['CATEGORY_NAME']"
+              :value="category['CATEGORY_ID']"
+              v-model="selectedCategories"
+            />
+            {{ category["CATEGORY_NAME"] }}
+          </li>
+        </ul>
+      </aside>
       <!-- 方案列表開始 -->
-      <div id="cards-list" class="container col-lg-10 col-12 mb-5">
+      <section id="cards-list" class="container col-lg-10 col-12 mb-5">
         <ul class="row p-0 d-flex justify-content-center">
           <!-- 方案卡片開始 -->
           <router-link
@@ -82,7 +76,7 @@
           </router-link>
           <!-- 方案卡片結束 -->
         </ul>
-      </div>
+      </section>
       <!-- 方案列表結束 -->
     </div>
     <!-- 方案篩選器與方案列表結束 -->
@@ -171,54 +165,57 @@ export default {
 <style lang="scss" scope>
 @import "../../assets/scss/all.scss";
 
-// 方案篩選器開始
-aside {
-  border: 1px solid grey;
-  height: 30rem;
-  #category-list {
-    li {
-      list-style: none;
-    }
-  }
-}
-// 方案篩選器結束
-// 方案列表開始
-#cards-list {
-  .router-link {
-    &:last-child {
-      @include media-breakpoint-down(md) {
-        position: relative;
-        right: calc((297.5px + 8px) / 2);
-      }
-      @include media-breakpoint-down(xs) {
-        position: static;
-        right: 0;
-      }
-    }
-    .card {
-      height: 22rem;
-      color: black;
-      box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
-      img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        @include border-top-radius($card-inner-border-radius);
-      }
-      .card-body {
-        height: 75%;
-        .card-title {
-          font-weight: 600;
-        }
-        .card-text {
-          height: 40%;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
+#store-page {
+  padding-top: $main-container-pt;
+  // 方案篩選器開始
+  aside {
+    border: 1px solid grey;
+    height: 30rem;
+    #category-list {
+      li {
+        list-style: none;
       }
     }
   }
+  // 方案篩選器結束
+  // 方案列表開始
+  #cards-list {
+    .router-link {
+      &:last-child {
+        @include media-breakpoint-down(md) {
+          position: relative;
+          right: calc((297.5px + 8px) / 2);
+        }
+        @include media-breakpoint-down(xs) {
+          position: static;
+          right: 0;
+        }
+      }
+      .card {
+        height: 22rem;
+        color: black;
+        box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
+        img {
+          width: 100%;
+          height: 160px;
+          object-fit: cover;
+          @include border-top-radius($card-inner-border-radius);
+        }
+        .card-body {
+          height: 75%;
+          .card-title {
+            font-weight: 600;
+          }
+          .card-text {
+            height: 40%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+  // 方案列表結束
 }
-// 方案列表結束
 </style>
