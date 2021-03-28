@@ -120,8 +120,14 @@
               }}</span>
             </h6>
           </li>
-          <li v-if="viewingOrderDetail.viewMore">
-            <h1>show</h1>
+          <li class="more-details-block" v-if="viewingOrderDetail.viewMore">
+            <h6>{{ allContentArr[0]["LOCATION_NAME"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_MC_NAME"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_MC_PHONE"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_MC_EMAIL"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_EC_NAME"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_EC_PHONE"] }}</h6>
+            <h6>{{ allContentArr[0]["ORDER_DETAIL_EC_EMAIL"] }}</h6>
           </li>
         </ul>
         <div v-else>
