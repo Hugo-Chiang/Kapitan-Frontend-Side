@@ -1,10 +1,10 @@
 <template>
   <div class="card-body position-relative">
-    <h4>查詢訂單</h4>
+    <h4>檢視訂單</h4>
     <!-- 會員訂單區開始 -->
     <div class="row">
       <div class="col-12 mt-3 mb-4">
-        <div v-if="!inOrderDetailsView">
+        <div v-if="!viewingOrder.viewDetails">
           <div class="d-inline-block mr-3">
             <label for="member-orders-status">訂單狀態</label>
             <select
@@ -20,9 +20,11 @@
           <h6 class="d-inline-block">*系統將提供90天內的訂單</h6>
         </div>
         <div v-else>
-          <a href="" class="d-block" @click.prevent="bb">回到訂單查詢</a>
+          <a href="" class="d-block" @click.prevent="returnToOrdersList"
+            >回到訂單檢視</a
+          >
           <h6 class="d-inline-block">
-            正在查詢：<span>{{ viewingOrder.ID }}</span> 號訂單
+            正在檢視：<span>{{ viewingOrder.ID }}</span> 號訂單
           </h6>
           <h6 class="d-inline-block mx-3">
             訂單狀態：<span>{{ viewingOrder.status | orderStatus }}</span>
@@ -42,44 +44,51 @@
             v-for="(order, index) in currentPageContentArr"
             :key="order['ORDER_DETAIL_ID']"
             class="py-md-0 py-3 d-flex justify-content-around align-items-center"
-            @click.prevent="aa(index)"
+            @click.prevent="returnMethod(index)"
           >
             <h6 class="order-info m-0 text-center">
-              <h6 class="mini-title mb-1">查詢序列</h6>
-              {{ currentPageContentSerial[index] }}
+              <h6 class="mini-title mb-1">序列</h6>
+              {{
+                currentPageContentSerial[viewingOrderDetail.viewingMoreIndex] ||
+                currentPageContentSerial[index]
+              }}
             </h6>
             <h6 class="order-info m-0">
               <h6 class="mini-title mb-1">
-                <span v-if="!inOrderDetailsView">訂單編號</span>
+                <span v-if="!viewingOrder.viewDetails">訂單編號</span>
                 <span v-else>選擇方案</span>
               </h6>
-              <span v-if="!inOrderDetailsView">{{ order["ORDER_ID"] }}</span>
+              <span v-if="!viewingOrder.viewDetails">{{
+                order["ORDER_ID"]
+              }}</span>
               <span v-else>{{ order["PROJECT_NAME"] }}</span>
             </h6>
             <h6 class="order-info m-0">
               <h6 class="mini-title mb-1">
-                <span v-if="!inOrderDetailsView">訂單日期</span>
+                <span v-if="!viewingOrder.viewDetails">訂單日期</span>
                 <span v-else>預約日期</span>
               </h6>
-              <span v-if="!inOrderDetailsView">{{ order["ORDER_DATE"] }}</span>
+              <span v-if="!viewingOrder.viewDetails">{{
+                order["ORDER_DATE"]
+              }}</span>
               <span v-else>{{ order["BOOKING_DATE"] }}</span>
             </h6>
             <h6 class="order-info m-0 text-center">
               <h6 class="mini-title mb-1">
-                <span v-if="!inOrderDetailsView">訂購人姓名</span>
+                <span v-if="!viewingOrder.viewDetails">訂購人姓名</span>
                 <span v-else>主要聯絡人姓名</span>
               </h6>
-              <span v-if="!inOrderDetailsView">{{
+              <span v-if="!viewingOrder.viewDetails">{{
                 order["ORDER_MC_NAME"]
               }}</span>
               <span v-else>{{ order["ORDER_DETAIL_MC_NAME"] }}</span>
             </h6>
             <h6 class="order-info m-0 text-center">
               <h6 class="mini-title mb-1">
-                <span v-if="!inOrderDetailsView">訂單總額</span>
+                <span v-if="!viewingOrder.viewDetails">訂單總額</span>
                 <span v-else>細項總額</span>
               </h6>
-              <span v-if="!inOrderDetailsView">
+              <span v-if="!viewingOrder.viewDetails">
                 {{
                   (order["ORDER_TOTAL_CONSUMPTION"] -
                     order["ORDER_TOTAL_DISCOUNT"])
@@ -91,22 +100,28 @@
                 order["ORDER_DETAIL_AMOUNT"] | currency | dollarSign
               }}</span>
             </h6>
-            <h6 class="order-info m-0 text-center" v-if="!inOrderDetailsView">
+            <h6
+              class="order-info m-0 text-center"
+              v-if="!viewingOrder.viewDetails"
+            >
               <h6 class="mini-title mb-1">細項數量</h6>
-              3個
+              {{ order["ORDER_DETAILS_NUM"] }}個
             </h6>
             <h6 class="order-info m-0 text-center">
               <h6 class="mini-title mb-1">
-                <span v-if="!inOrderDetailsView">訂單狀態</span>
+                <span v-if="!viewingOrder.viewDetails">訂單狀態</span>
                 <span v-else>細項狀態</span>
               </h6>
-              <span v-if="!inOrderDetailsView">{{
+              <span v-if="!viewingOrder.viewDetails">{{
                 order["ORDER_STATUS"] | orderStatus
               }}</span>
               <span v-else>{{
                 order["ORDER_DETAIL_STATUS"] | orderDetailStatus
               }}</span>
             </h6>
+          </li>
+          <li v-if="viewingOrderDetail.viewMore">
+            <h1>show</h1>
           </li>
         </ul>
         <div v-else>
@@ -131,11 +146,17 @@ import Pagination from "@/components/pages/sub-components/Pagination";
 export default {
   data() {
     return {
-      inOrderDetailsView: false,
       viewingOrder: {
         ID: "",
         date: "",
         status: "",
+        viewingIndex: null,
+        viewDetails: false,
+      },
+      viewingOrderDetail: {
+        ID: "",
+        viewingMoreIndex: null,
+        viewMore: false,
       },
       ordersArr: [],
       orderDetailsArr: [],
@@ -183,7 +204,18 @@ export default {
             }
 
             if (!orderDuplicate) {
+              vm.orderDetailsArr[i]["ORDER_DETAILS_NUM"] = 0;
               vm.ordersArr.push(vm.orderDetailsArr[i]);
+            }
+          }
+
+          for (let i = 0; i < vm.orderDetailsArr.length; i++) {
+            for (let j = 0; j < vm.ordersArr.length; j++) {
+              if (
+                vm.orderDetailsArr[i]["ORDER_ID"] == vm.ordersArr[j]["ORDER_ID"]
+              ) {
+                vm.ordersArr[j]["ORDER_DETAILS_NUM"]++;
+              }
             }
           }
 
@@ -198,43 +230,74 @@ export default {
         });
     },
     // 方法：
-    aa(selectedIndex) {
-      if (!this.inOrderDetailsView) {
-        this.inOrderDetailsView = true;
-        this.viewingOrder.ID = this.ordersArr[selectedIndex]["ORDER_ID"];
-        this.viewingOrder.date = this.ordersArr[selectedIndex]["ORDER_DATE"];
-        this.viewingOrder.status = this.ordersArr[selectedIndex][
-          "ORDER_STATUS"
-        ];
-        // console.log(selectedID);
+    viewOrderDetails(selectedIndex) {
+      this.viewingOrder.viewingIndex = selectedIndex;
+      this.viewingOrder.viewDetails = true;
+      this.viewingOrder.ID = this.ordersArr[selectedIndex]["ORDER_ID"];
+      this.viewingOrder.date = this.ordersArr[selectedIndex]["ORDER_DATE"];
+      this.viewingOrder.status = this.ordersArr[selectedIndex]["ORDER_STATUS"];
 
-        // let arrLen = this.allContentArr.length;
-        // let loopLen = arrLen + Math.ceil(arrLen / this.itemsNumPerPage);
-        // this.allContentArr = [];
-
-        // for (let i = 0; i < loopLen; i++) {
-        //   if (i % (this.itemsNumPerPage + 1) == 0) {
-        //     this.allContentArr.push(this.ordersArr[selectedIndex]);
-        //   } else {
-        //     console.log(this.orderDetailsArr[i - 1]["ORDER_ID"]);
-        //     if (this.orderDetailsArr[i - 1]["ORDER_ID"] == selectedID) {
-        //       this.allContentArr.push(this.orderDetailsArr[i - 1]);
-        //     }
-        //   }
-        // }
-
-        // this.ordersArr = newArr;
+      let filterArr = [];
+      for (const object of this.orderDetailsArr) {
+        if (object["ORDER_ID"] == this.viewingOrder.ID) {
+          filterArr.push(object);
+        }
       }
+
+      this.allContentArr = filterArr;
     },
     // 方法：
-    bb() {
-      this.inOrderDetailsView = false;
+    returnToOrdersList() {
+      this.viewingOrderDetail.viewingMoreIndex = null;
+      this.viewingOrder.viewingIndex = null;
+      this.viewingOrderDetail.viewMore = false;
+      this.viewingOrder.viewDetails = false;
       this.queryMemberOrders();
+    },
+    // 方法：
+    viewMoreDetails(selectedIndex) {
+      this.viewingOrderDetail.viewingMoreIndex = selectedIndex;
+      this.viewingOrderDetail.viewMore = true;
+      this.viewingOrderDetail.ID = this.allContentArr[selectedIndex][
+        "ORDER_DETAIL_ID"
+      ];
+
+      let orderDetailsArr = [];
+      for (const object of this.orderDetailsArr) {
+        if (object["ORDER_ID"] == this.viewingOrder.ID) {
+          orderDetailsArr.push(object);
+        }
+      }
+
+      let filterArr = [];
+      filterArr.push(orderDetailsArr[selectedIndex]);
+
+      this.allContentArr = filterArr;
+    },
+    // 方法：
+    returnToOrderDetailsList() {
+      this.viewOrderDetails(this.viewingOrder.viewingIndex);
+      this.viewingOrderDetail.viewMore = false;
+      this.viewingOrderDetail.viewingMoreIndex = null;
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAndSerial(arr, num) {
       this.currentPageContentArr = arr;
       this.currentPageContentSerial = num;
+    },
+  },
+  computed: {
+    returnMethod() {
+      if (!this.viewingOrder.viewDetails && !this.viewingOrderDetail.viewMore) {
+        return this.viewOrderDetails;
+      } else if (
+        this.viewingOrder.viewDetails &&
+        !this.viewingOrderDetail.viewMore
+      ) {
+        return this.viewMoreDetails;
+      } else {
+        return this.returnToOrderDetailsList;
+      }
     },
   },
 };
