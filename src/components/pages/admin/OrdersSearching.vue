@@ -103,7 +103,7 @@
               <th class="text-center" scope="col">訂購人姓名</th>
               <th class="text-center" scope="col">訂購人手機</th>
               <th class="text-center" scope="col">訂購人電郵</th>
-              <th class="text-center" scope="col">訂購單日期</th>
+              <th class="text-center" scope="col">訂單日期</th>
               <th class="text-center" scope="col">會員編號</th>
               <th class="text-center" scope="col">訂單總額</th>
             </tr>

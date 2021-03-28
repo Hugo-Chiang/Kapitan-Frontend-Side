@@ -79,12 +79,51 @@ configure({
 
 // 全域註冊：用以修飾全站金額樣式的過濾器，套上錢字符前綴與千分號
 Vue.filter("currency", function (n) {
-  return n.toFixed(0).replace(/./g, function (c, i, a) {
+  return Number(n).toFixed(0).replace(/./g, function (c, i, a) {
     return i && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
   });
 });
 Vue.filter("dollarSign", function (n) {
   return `$ ${n}`;
+});
+// 全域註冊：翻譯資料庫中各種數字所代表的狀態意涵
+Vue.filter("memberStatus", function (n) {
+  switch (n) {
+    case '0' || 0:
+      return '停權';
+    case '1' || 1:
+      return '警告';
+    case '2' || 2:
+      return '正常';
+  }
+});
+Vue.filter("orderStatus", function (n) {
+  switch (n) {
+    case '0' || 0:
+      return '已取消';
+    case '1' || 1:
+      return '進行中';
+    case '2' || 2:
+      return '已完成';
+  }
+});
+Vue.filter("orderDetailStatus", function (n) {
+  switch (n) {
+    case '0' || 0:
+      return '已取消';
+    case '1' || 1:
+      return '進行中';
+    case '2' || 2:
+      return '已完成';
+  }
+});
+Vue.filter("projectStatus", function (n) {
+  switch (n) {
+    case '0' || 0:
+      return '已下線';
+    case '1' || 1:
+      return '上線中';
+  }
 });
 
 // 我們熟悉的 Vue 實體

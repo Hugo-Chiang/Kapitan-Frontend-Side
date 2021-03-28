@@ -1,6 +1,9 @@
 <template>
   <main id="cart" class="container pb-5">
-    <div class="row mt-5">
+    <!-- 麵包屑開始 -->
+    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+    <!-- 麵包屑結束 -->
+    <div class="row">
       <div class="col-12">
         <h2 v-if="currentPage == '購物車'">您的購物車</h2>
         <h2 v-else>進行結帳</h2>
@@ -175,16 +178,22 @@
 </template>
 
 <script>
+// 導入麵包屑元件
+import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入結帳項目元件
 import CartListItem from "@/components/pages/sub-components/CartListItem";
 
 export default {
   data() {
     return {
+      breadCrumbData: {
+        pagesArr: ["首頁", "購物車"],
+        currentPage: 2,
+      },
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
   },
-  components: { CartListItem },
+  components: { Breadcrumb, CartListItem },
   created() {
     this.confirmProjectsArr = this.confirmProjectsArr || [];
   },
@@ -226,120 +235,123 @@ export default {
 
 $desktop-nav-bar-height: 105px;
 
-.btn-action-now {
-  background-color: $action-now !important;
-  color: $sail;
-  cursor: pointer;
-  &:hover {
+main {
+  padding-top: $main-container-pt;
+  .btn-action-now {
+    background-color: $action-now !important;
     color: $sail;
+    cursor: pointer;
+    &:hover {
+      color: $sail;
+    }
   }
-}
-.invalid-btn {
-  background-color: grey !important;
-  cursor: not-allowed;
-}
-.card-title {
-  font-weight: 600;
-}
-#clear-cart-btn {
-  background-color: darkcyan;
-}
-.project-row {
-  height: 150px;
-  @include media-breakpoint-down(md) {
-    height: 250px;
+  .invalid-btn {
+    background-color: grey !important;
+    cursor: not-allowed;
   }
-  .router-link {
-    color: black;
-    .project-avatar-block {
-      width: 120px;
-      height: 80px;
-      overflow: hidden;
-      .project-avatar {
-        height: 100%;
+  .card-title {
+    font-weight: 600;
+  }
+  #clear-cart-btn {
+    background-color: darkcyan;
+  }
+  .project-row {
+    height: 150px;
+    @include media-breakpoint-down(md) {
+      height: 250px;
+    }
+    .router-link {
+      color: black;
+      .project-avatar-block {
+        width: 120px;
+        height: 80px;
+        overflow: hidden;
+        .project-avatar {
+          height: 100%;
+        }
+      }
+      .project-name {
+        font-weight: 600;
+        color: $deep-teal;
+        @include media-breakpoint-down(md) {
+          font-size: 15px;
+        }
+      }
+      .project-name-booking-date {
+        font-size: 14px;
+        @include media-breakpoint-down(md) {
+          font-size: 13px;
+        }
       }
     }
-    .project-name {
-      font-weight: 600;
-      color: $deep-teal;
-      @include media-breakpoint-down(md) {
-        font-size: 15px;
-      }
-    }
-    .project-name-booking-date {
+    .adjust-num-title {
       font-size: 14px;
+    }
+    .project-final-price {
+      color: darkred;
       @include media-breakpoint-down(md) {
-        font-size: 13px;
+        font-size: 16px;
+      }
+    }
+    .delete-single-project-icon {
+      color: black;
+    }
+    .project-divider {
+      height: 30px;
+    }
+  }
+  #empty-cart-message {
+    height: 200px;
+  }
+  .has-project-divier {
+    border-top: 1px solid lightcyan;
+  }
+  #order-amount-card-container {
+    position: relative;
+    .card {
+      @include media-breakpoint-up(lg) {
+        width: 100% !important;
+        position: sticky;
+        top: $desktop-nav-bar-height + 30px;
+      }
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+      .order-amount-list {
+        width: 150px;
+        padding: 0;
+        @include media-breakpoint-down(md) {
+          width: 100%;
+          justify-content: center;
+        }
+        li {
+          list-style: none;
+        }
       }
     }
   }
-  .adjust-num-title {
-    font-size: 14px;
-  }
-  .project-final-price {
-    color: darkred;
-    @include media-breakpoint-down(md) {
-      font-size: 16px;
-    }
-  }
-  .delete-single-project-icon {
-    color: black;
-  }
-  .project-divider {
-    height: 30px;
-  }
-}
-#empty-cart-message {
-  height: 200px;
-}
-.has-project-divier {
-  border-top: 1px solid lightcyan;
-}
-#order-amount-card-container {
-  position: relative;
-  .card {
+  #mobile-collapse-window {
+    width: 350px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: $sail;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    position: sticky;
+    bottom: 5%;
+    z-index: 10;
     @include media-breakpoint-up(lg) {
-      width: 100% !important;
-      position: sticky;
-      top: $desktop-nav-bar-height + 30px;
-    }
-    @include media-breakpoint-down(md) {
-      display: none;
+      display: none !important;
     }
     .order-amount-list {
-      width: 150px;
-      padding: 0;
-      @include media-breakpoint-down(md) {
-        width: 100%;
-        justify-content: center;
-      }
       li {
         list-style: none;
       }
     }
-  }
-}
-#mobile-collapse-window {
-  width: 350px;
-  height: 100px;
-  border-radius: 10px;
-  background-color: $sail;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-  font-size: 18px;
-  position: sticky;
-  bottom: 5%;
-  z-index: 10;
-  @include media-breakpoint-up(lg) {
-    display: none !important;
-  }
-  .order-amount-list {
-    li {
-      list-style: none;
+    button {
+      background-color: $deep-teal;
+      color: $sail;
     }
-  }
-  button {
-    background-color: $deep-teal;
-    color: $sail;
   }
 }
 </style>
