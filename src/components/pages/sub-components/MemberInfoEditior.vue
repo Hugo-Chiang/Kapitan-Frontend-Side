@@ -1,10 +1,132 @@
 <template>
   <div class="card-body">
-    <h4>基本資料</h4>
+    <h4 class="mb-4">基本資料</h4>
     <ValidationObserver v-slot="{ invalid }">
       <!-- 會員編輯區開始 -->
+      <!-- 修改密碼開始 -->
       <div class="row">
         <div class="col-12">
+          <h5 class="mb-4">
+            ▐ 重設密碼
+            <span
+              id="password-remark-trigger"
+              @mouseenter="reSetPassword.showRemark = true"
+              @mouseleave="reSetPassword.showRemark = false"
+              >［?］</span
+            >
+            <span
+              id="password-remark"
+              class="position-absolute"
+              v-show="reSetPassword.showRemark"
+              >8到16位字符，至少1個大寫字母、1個小寫字母、1個數字。</span
+            >
+          </h5>
+          <div class="form-row">
+            <!-- 輸入原密碼開始 -->
+            <div class="form-group col-3">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label for="輸入原密碼">輸入原密碼</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  :class="[classes]"
+                  id="輸入原密碼"
+                  placeholder="輸入原密碼"
+                  v-model="reSetPassword.originalPassword"
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 輸入原密碼結束 -->
+          </div>
+          <div class="form-row">
+            <!-- 輸入新密碼開始 -->
+            <div class="form-group col-3">
+              <ValidationProvider
+                :rules="{
+                  required: true,
+                  regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
+                }"
+                v-slot="{ errors, classes }"
+              >
+                <label for="輸入新密碼">輸入新密碼</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  :class="[classes]"
+                  id="輸入新密碼"
+                  placeholder="輸入新密碼"
+                  v-model="reSetPassword.newPassword"
+                />
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <!-- 輸入新密碼結束 -->
+            <!-- 確認新密碼開始 -->
+            <div class="form-froup col-3">
+              <ValidationProvider
+                :rules="{
+                  required: true,
+                  regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
+                }"
+                v-slot="{ errors, classes }"
+              >
+                <label for="確認新密碼">確認新密碼</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  :class="[
+                    classes,
+                    { 'is-invalid': reSetPassword.passwordsUnequal },
+                  ]"
+                  id="確認新密碼"
+                  placeholder="請再輸入一次密碼"
+                  v-model="reSetPassword.passwordChecked"
+                  @blur="comparisePassword"
+                />
+                <span
+                  class="invalid-feedback"
+                  :class="
+                    reSetPassword.passwordsUnequal ? 'd-inline-block' : 'd-none'
+                  "
+                  >確認新密碼不相等輸入新密碼</span
+                >
+                <span
+                  class="invalid-feedback"
+                  v-show="!reSetPassword.passwordsUnequal"
+                  >{{ errors[0] }}</span
+                >
+              </ValidationProvider>
+            </div>
+            <!-- 確認新密碼結束 -->
+            <!-- 修改密碼操作按鈕開始 -->
+            <div class="form-froup col-3">
+              <label for="修改密碼">&nbsp;</label>
+              <input
+                type="button"
+                id="修改密碼"
+                class="btn btn-primary d-block"
+                :class="{ 'invalid-btn': invalid }"
+                value="修改密碼"
+                :disabled="invalid"
+                @click.prevent="uploadImgAndUpdateData"
+                data-toggle="modal"
+                data-target="#modal"
+                data-backdrop="static"
+              />
+            </div>
+            <!-- 修改密碼操作按鈕結束 -->
+          </div>
+        </div>
+      </div>
+      <!-- 修改密碼結束 -->
+      <hr />
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
           <div class="form-row">
             <!-- 會員暱稱開始 -->
             <div class="form-group col-2">
@@ -123,8 +245,8 @@
         </div>
       </div>
       <div class="row">
-        <!-- 操作按鈕開始 -->
-        <div class="col-4 ml-auto">
+        <!-- 修改個資操作按鈕開始 -->
+        <div class="form-froup col-4 ml-auto">
           <div
             class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
           >
@@ -132,7 +254,7 @@
               type="button"
               class="btn btn-primary"
               :class="{ 'invalid-btn': invalid }"
-              value="修改完成"
+              value="修改個資"
               :disabled="invalid"
               @click.prevent="uploadImgAndUpdateData"
               data-toggle="modal"
@@ -142,12 +264,12 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="$router.push({ name: '管理系統：查詢會員' })"
+              @click.prevent="currentSubPage = ''"
               >不儲存關閉</a
             >
           </div>
         </div>
-        <!-- 操作按鈕結束 -->
+        <!-- 修改個資操作按鈕結束 -->
       </div>
       <!-- 會員編輯區結束 -->
     </ValidationObserver>
@@ -169,10 +291,15 @@ export default {
         ECphone: "緊急聯絡人手機",
         ECemail: "緊急聯絡人電郵",
       },
+      reSetPassword: {
+        originalPassword: "",
+        newPassword: "",
+        passwordChecked: "",
+        showRemark: false,
+        passwordsUnequal: false,
+      },
       editDetails: {
         memberAccount: "",
-        memberPassword: "",
-        reSetPassword: "",
         nickName: "",
         MCname: "",
         MCphone: "",

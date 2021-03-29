@@ -5,18 +5,22 @@
     <div class="row">
       <div class="col-12 mt-3 mb-4">
         <div v-if="!viewingOrder.viewDetails">
+          <!-- 訂單狀態篩選開始 -->
           <div class="d-inline-block mr-3">
             <label for="member-orders-status">訂單狀態</label>
             <select
               id="member-orders-status"
               class="form-control form-select-lg"
+              v-model="orderStatus"
+              @change="queryMemberOrders"
             >
-              <option value="3">全部</option>
+              <option value="%%">全部</option>
               <option value="2">已完成</option>
               <option value="1">進行中</option>
               <option value="0">已取消</option>
             </select>
           </div>
+          <!-- 訂單狀態篩選結束 -->
           <h6 class="d-inline-block">*系統將提供90天內的訂單</h6>
         </div>
         <div v-else>
@@ -35,6 +39,7 @@
         </div>
       </div>
       <div class="col-12">
+        <!-- 訂單或細項列表開始 -->
         <ul
           id="member-orders-list"
           class="p-0"
@@ -130,6 +135,7 @@
             <h6>{{ allContentArr[0]["ORDER_DETAIL_EC_EMAIL"] }}</h6>
           </li>
         </ul>
+        <!-- 訂單或細項列表結束 -->
         <div v-else>
           <h1>空空如也～</h1>
         </div>
@@ -152,6 +158,7 @@ import Pagination from "@/components/pages/sub-components/Pagination";
 export default {
   data() {
     return {
+      orderStatus: "%%",
       viewingOrder: {
         ID: "",
         date: "",
@@ -185,8 +192,13 @@ export default {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryMemberOrders.php`;
       const vm = this;
 
+      let sendingObj = {
+        memberID: vm.memberID,
+        orderStatus: vm.orderStatus,
+      };
+
       this.$http
-        .post(api, vm.memberID)
+        .post(api, JSON.stringify(sendingObj))
         .then((response) => {
           vm.ordersArr = [];
           vm.orderDetailsArr = [];

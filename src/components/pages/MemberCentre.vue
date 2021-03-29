@@ -30,12 +30,18 @@
             <hr />
             <ul class="p-0">
               <li
-                class="text-center mb-3"
+                class="text-center mt-4 d-flex justify-content-center align-items-center"
                 v-for="list in asideList"
                 :key="list"
-                @click="currentSubPage = list"
+                :class="currentSubPage == list.name ? 'current-sub-page' : ''"
+                @click="currentSubPage = list.name"
               >
-                {{ list }}
+                <div
+                  class="icon-block d-flex justify-content-center align-items-center mr-1"
+                >
+                  <i :class="list.iconClass"></i>
+                </div>
+                {{ list.name }}
               </li>
             </ul>
           </div>
@@ -51,10 +57,10 @@
             v-else-if="currentSubPage == '查詢訂單'"
             :memberID="memberInfo.ID"
           ></MemberOrdersSearching>
-          <MemberCommentsSearching
+          <!-- <MemberCommentsSearching
             v-else-if="currentSubPage == '我的評價'"
             :memberID="memberInfo.ID"
-          ></MemberCommentsSearching>
+          ></MemberCommentsSearching> -->
           <div class="card-body" v-else></div>
         </div>
       </section>
@@ -83,7 +89,10 @@ export default {
         avatarUrl: "",
         propsObj: {},
       },
-      asideList: ["基本資料", "查詢訂單", "我的評價"],
+      asideList: [
+        { name: "基本資料", iconClass: ["far", "fa-user-circle"] },
+        { name: "查詢訂單", iconClass: ["fas", "fa-tasks"] },
+      ],
       currentSubPage: "",
     };
   },
@@ -129,10 +138,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/all.scss";
 
-div {
-  border: 1px solid $bootstrap-border-color;
-}
-
 #member-centre {
   height: 1200px;
   padding-top: $main-container-pt;
@@ -172,7 +177,16 @@ div {
   }
   ul {
     li {
+      font-size: 18px;
       list-style: none;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    .current-sub-page {
+      font-weight: 500;
+      color: $tiffany-blue;
     }
   }
 }
