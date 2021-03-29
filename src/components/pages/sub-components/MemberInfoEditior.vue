@@ -289,6 +289,9 @@
 </template>
 
 <script>
+// 導入 axios 元件
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -303,13 +306,13 @@ export default {
         emitValue: null,
         // 反應（方法）：根據不同情境做出應對
         correspond() {
-          // 遭遇失敗情境將導回管理頁
-          // if (this.situation.event.indexOf("失敗") != -1) {
-          //   setTimeout(
-          //     () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
-          //     1000
-          //   );
-          // }
+          // 遭遇失敗情境將
+          if (this.situation.event.indexOf("失敗") != -1) {
+            setTimeout(
+              // () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
+              1000
+            );
+          }
 
           // 執行資料庫寫入後，成敗與否都將初始化編輯器和提示訊息
           if (this.situation.event.indexOf("資料庫寫入") != -1) {
@@ -380,7 +383,7 @@ export default {
       this.editDetails.ECphone = this.memberInfo["MEMBER_EC_PHONE"];
       this.editDetails.ECemail = this.memberInfo["MEMBER_EC_EMAIL"];
     },
-    // 方法：
+    // 方法：比對輸入密碼與確認密碼，若不一致將於 data 紀錄
     comparisePassword() {
       this.reSetPasswordData.sensitive = true;
 
@@ -392,11 +395,11 @@ export default {
         this.reSetPasswordData.passwordsUnequal = true;
       }
     },
-    // 方法：修改密碼
+    // 方法：在沒有任何錯誤的前提下修改密碼
     reSetPassword() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/MemberChangingPassword.php`;
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/UpdateMemberPassword.php`;
       const session = this.GlobalFunctions.getKapitanSession("forestage");
       const vm = this;
 
@@ -431,7 +434,7 @@ export default {
       this.$eventBus.$emit("emitModalData", this.modalData);
       this.modalData.situation.buttonType = "checked";
 
-      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${this.GlobalVariables.cloudName}/upload`;
       const vm = this;
 
       // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）
@@ -482,14 +485,49 @@ export default {
           false
         );
 
-        console.log(avatarFile);
-
         fileReader.readAsDataURL(avatarFile);
       }
+    },
+    // 方法：
+    updateMemberInfo() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/UpdateMemberInfo.php`;
+      const vm = this;
+      const session = vm.GlobalFunctions.getKapitanSession("forestage");
+
+      let sendingObj = {
+        session: session,
+        memberID: vm.memberInfo["MEMBER_ID"],
+        editedDetails: vm.editDetails,
+      };
+
+      this.$http
+        .post(api, JSON.stringify(sendingObj))
+        .then((response) => {
+          vm.modalData.situation.event = "資料庫寫入成功。";
+          vm.modalData.situation.message += response.data;
+          this.vueCloudinaryData.filesData.avatar = "";
+        })
+        .catch((error) => {
+          vm.modalData.situation.event = "資料庫寫入失敗。";
+          vm.modalData.situation.message += error.data;
+          this.vueCloudinaryData.filesData.avatar = "";
+        });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+#password-remark-trigger,
+#password-remark {
+  font-size: 12px;
+}
+#password-remark {
+  color: darkred;
+  display: inline-block;
+  width: 360px;
+  top: 10px;
+}
 </style>

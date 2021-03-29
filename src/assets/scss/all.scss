@@ -56,3 +56,17 @@ input[type=number] {
   }
 
 // 自定義 class 結束
+
+// 自定義密碼格式提示開始
+#password-remark-trigger,
+#password-remark {
+  font-size: 12px;
+}
+
+#password-remark {
+  color: darkred;
+  display: inline-block;
+  width: 360px;
+  top: 10px;
+}
+// 自定義密碼格式提示結束
