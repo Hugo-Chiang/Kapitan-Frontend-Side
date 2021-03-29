@@ -32,7 +32,7 @@
               <li
                 class="text-center mt-4 d-flex justify-content-center align-items-center"
                 v-for="list in asideList"
-                :key="list"
+                :key="list.name"
                 :class="currentSubPage == list.name ? 'current-sub-page' : ''"
                 @click="currentSubPage = list.name"
               >

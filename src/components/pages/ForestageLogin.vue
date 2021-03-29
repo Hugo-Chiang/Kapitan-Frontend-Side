@@ -146,7 +146,7 @@
                       :class="
                         loginData.passwordsUnequal ? 'd-inline-block' : 'd-none'
                       "
-                      >確認密碼不相等輸入密碼</span
+                      >確認密碼與輸入密碼不相等</span
                     >
                     <span
                       class="invalid-feedback"

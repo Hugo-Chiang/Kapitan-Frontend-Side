@@ -1,23 +1,23 @@
 <template>
   <div class="card-body">
     <h4 class="mb-4">基本資料</h4>
+    <!-- 會員編輯區開始 -->
+    <!-- 修改密碼開始 -->
     <ValidationObserver v-slot="{ invalid }">
-      <!-- 會員編輯區開始 -->
-      <!-- 修改密碼開始 -->
       <div class="row">
         <div class="col-12">
           <h5 class="mb-4">
             ▐ 重設密碼
             <span
               id="password-remark-trigger"
-              @mouseenter="reSetPassword.showRemark = true"
-              @mouseleave="reSetPassword.showRemark = false"
+              @mouseenter="reSetPasswordData.showRemark = true"
+              @mouseleave="reSetPasswordData.showRemark = false"
               >［?］</span
             >
             <span
               id="password-remark"
               class="position-absolute"
-              v-show="reSetPassword.showRemark"
+              v-show="reSetPasswordData.showRemark"
               >8到16位字符，至少1個大寫字母、1個小寫字母、1個數字。</span
             >
           </h5>
@@ -32,10 +32,13 @@
                 <input
                   type="password"
                   class="form-control"
-                  :class="[classes]"
+                  :class="reSetPasswordData.sensitive ? classes : ''"
                   id="輸入原密碼"
                   placeholder="輸入原密碼"
-                  v-model="reSetPassword.originalPassword"
+                  v-model="reSetPasswordData.originalPassword"
+                  @input="reSetPasswordData.sensitive = true"
+                  @focus="reSetPasswordData.sensitive = true"
+                  @blur="reSetPasswordData.sensitive = true"
                 />
                 <span class="invalid-feedback">{{ errors[0] }}</span>
               </ValidationProvider>
@@ -56,10 +59,13 @@
                 <input
                   type="password"
                   class="form-control"
-                  :class="[classes]"
+                  :class="reSetPasswordData.sensitive ? classes : ''"
                   id="輸入新密碼"
                   placeholder="輸入新密碼"
-                  v-model="reSetPassword.newPassword"
+                  v-model="reSetPasswordData.newPassword"
+                  @input="reSetPasswordData.sensitive = true"
+                  @focus="reSetPasswordData.sensitive = true"
+                  @blur="reSetPasswordData.sensitive = true"
                 />
                 <span class="invalid-feedback">{{ errors[0] }}</span>
               </ValidationProvider>
@@ -79,24 +85,28 @@
                   type="password"
                   class="form-control"
                   :class="[
-                    classes,
-                    { 'is-invalid': reSetPassword.passwordsUnequal },
+                    reSetPasswordData.sensitive ? classes : '',
+                    { 'is-invalid': reSetPasswordData.passwordsUnequal },
                   ]"
                   id="確認新密碼"
                   placeholder="請再輸入一次密碼"
-                  v-model="reSetPassword.passwordChecked"
-                  @blur="comparisePassword"
+                  v-model="reSetPasswordData.passwordChecked"
+                  @input="comparisePassword"
+                  @focus="reSetPasswordData.sensitive = true"
+                  @blur="reSetPasswordData.sensitive = true"
                 />
                 <span
                   class="invalid-feedback"
                   :class="
-                    reSetPassword.passwordsUnequal ? 'd-inline-block' : 'd-none'
+                    reSetPasswordData.passwordsUnequal
+                      ? 'd-inline-block'
+                      : 'd-none'
                   "
-                  >確認新密碼不相等輸入新密碼</span
+                  >確認密碼與輸入密碼不相等</span
                 >
                 <span
                   class="invalid-feedback"
-                  v-show="!reSetPassword.passwordsUnequal"
+                  v-show="!reSetPasswordData.passwordsUnequal"
                   >{{ errors[0] }}</span
                 >
               </ValidationProvider>
@@ -111,8 +121,8 @@
                 class="btn btn-primary d-block"
                 :class="{ 'invalid-btn': invalid }"
                 value="修改密碼"
-                :disabled="invalid"
-                @click.prevent="uploadImgAndUpdateData"
+                :disabled="invalid || reSetPasswordData.passwordsUnequal"
+                @click.prevent="reSetPassword"
                 data-toggle="modal"
                 data-target="#modal"
                 data-backdrop="static"
@@ -122,8 +132,10 @@
           </div>
         </div>
       </div>
-      <!-- 修改密碼結束 -->
-      <hr />
+    </ValidationObserver>
+    <!-- 修改密碼結束 -->
+    <hr />
+    <ValidationObserver v-slot="{ invalid }">
       <div class="row">
         <div class="col-12">
           <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
@@ -280,6 +292,33 @@
 export default {
   data() {
     return {
+      modalData: {
+        callBy: null,
+        situation: {
+          event: "",
+          message: "",
+          buttonType: "checked",
+          data: {},
+        },
+        emitValue: null,
+        // 反應（方法）：根據不同情境做出應對
+        correspond() {
+          // 遭遇失敗情境將導回管理頁
+          // if (this.situation.event.indexOf("失敗") != -1) {
+          //   setTimeout(
+          //     () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
+          //     1000
+          //   );
+          // }
+
+          // 執行資料庫寫入後，成敗與否都將初始化編輯器和提示訊息
+          if (this.situation.event.indexOf("資料庫寫入") != -1) {
+            this.callBy.initializeEditor();
+            this.situation.event = "";
+            this.situation.message = "";
+          }
+        },
+      },
       requiredInputTitle: {
         memberAccount: "帳號",
         memberPassword: "密碼",
@@ -291,12 +330,13 @@ export default {
         ECphone: "緊急聯絡人手機",
         ECemail: "緊急聯絡人電郵",
       },
-      reSetPassword: {
+      reSetPasswordData: {
         originalPassword: "",
         newPassword: "",
         passwordChecked: "",
         showRemark: false,
         passwordsUnequal: false,
+        sensitive: true,
       },
       editDetails: {
         memberAccount: "",
@@ -319,11 +359,18 @@ export default {
   },
   props: ["memberInfo"],
   created() {
+    this.modalData.callBy = this;
+    this.$eventBus.$on("emitModalValue", (value) => {
+      this.modalData.emitValue = value;
+    });
     this.initializeEditor();
   },
   methods: {
-    // 方法：
+    // 方法：初始化基本資料編輯器
     initializeEditor() {
+      this.reSetPasswordData.originalPassword = "";
+      this.reSetPasswordData.newPassword = "";
+      this.reSetPasswordData.passwordChecked = "";
       this.editDetails.memberAccount = this.memberInfo["MEMBER_ACCOUNT"];
       this.editDetails.nickName = this.memberInfo["MEMBER_NICKNAME"];
       this.editDetails.MCname = this.memberInfo["MEMBER_NAME"];
@@ -332,6 +379,47 @@ export default {
       this.editDetails.ECname = this.memberInfo["MEMBER_EC_NAME"];
       this.editDetails.ECphone = this.memberInfo["MEMBER_EC_PHONE"];
       this.editDetails.ECemail = this.memberInfo["MEMBER_EC_EMAIL"];
+    },
+    // 方法：
+    comparisePassword() {
+      this.reSetPasswordData.sensitive = true;
+
+      let password = this.reSetPasswordData.newPassword;
+      let passwordChecked = this.reSetPasswordData.passwordChecked;
+      this.reSetPasswordData.passwordsUnequal = false;
+
+      if (password != passwordChecked) {
+        this.reSetPasswordData.passwordsUnequal = true;
+      }
+    },
+    // 方法：修改密碼
+    reSetPassword() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+
+      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/MemberChangingPassword.php`;
+      const session = this.GlobalFunctions.getKapitanSession("forestage");
+      const vm = this;
+
+      if (
+        vm.reSetPasswordData.passwordChecked == vm.reSetPasswordData.newPassword
+      ) {
+        let sendingObj = {
+          memberID: vm.memberInfo["MEMBER_ID"],
+          session: session,
+          reSetPasswordData: vm.reSetPasswordData,
+        };
+
+        this.$http
+          .post(api, JSON.stringify(sendingObj))
+          .then((response) => {
+            vm.modalData.situation.message = response.data;
+            this.reSetPasswordData.sensitive = false;
+            vm.initializeEditor();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     // 方法：紀錄觀察上傳檔案的內容
     handleFileChange: function (e) {
