@@ -23,7 +23,7 @@
           </h5>
           <div class="form-row">
             <!-- 輸入原密碼開始 -->
-            <div class="form-group col-3">
+            <div class="form-group col-lg-3 col-sm-4 col-8">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -47,7 +47,7 @@
           </div>
           <div class="form-row">
             <!-- 輸入新密碼開始 -->
-            <div class="form-group col-3">
+            <div class="form-group col-lg-3 col-sm-4 col-8">
               <ValidationProvider
                 :rules="{
                   required: true,
@@ -72,7 +72,7 @@
             </div>
             <!-- 輸入新密碼結束 -->
             <!-- 確認新密碼開始 -->
-            <div class="form-froup col-3">
+            <div class="form-froup col-lg-3 col-sm-4 col-8">
               <ValidationProvider
                 :rules="{
                   required: true,
@@ -113,7 +113,7 @@
             </div>
             <!-- 確認新密碼結束 -->
             <!-- 修改密碼操作按鈕開始 -->
-            <div class="form-froup col-3">
+            <div class="form-froup col-lg-3 col-sm-4">
               <label for="修改密碼">&nbsp;</label>
               <input
                 type="button"
@@ -137,11 +137,11 @@
     <hr />
     <ValidationObserver v-slot="{ invalid }">
       <div class="row">
-        <div class="col-12">
+        <div class="col-lg-12">
           <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
           <div class="form-row">
             <!-- 會員暱稱開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-lg-2 col-sm-4 col-8">
               <label :for="requiredInputTitle.nickName">{{
                 requiredInputTitle.nickName
               }}</label>
@@ -155,7 +155,7 @@
             </div>
             <!-- 會員暱稱結束 -->
             <!-- 會員大頭貼開始 -->
-            <div class="form-group col-3">
+            <div class="form-group col-lg-3 col-sm-4 col-8">
               <label
                 :for="requiredInputTitle.memberAvatarURL"
                 class="form-label"
@@ -182,7 +182,7 @@
           </div>
           <div class="form-row">
             <!-- 會員姓名開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-lg-2 col-sm-4 col-8">
               <label :for="requiredInputTitle.MCname">{{
                 requiredInputTitle.MCname
               }}</label>
@@ -196,7 +196,7 @@
             </div>
             <!-- 會員姓名結束 -->
             <!-- 會員電話開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-lg-2 col-sm-4 col-8">
               <label :for="requiredInputTitle.MCphone">{{
                 requiredInputTitle.MCphone
               }}</label>
@@ -212,7 +212,7 @@
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-lg-2 col-sm-4 col-8">
               <label :for="requiredInputTitle.ECname">{{
                 requiredInputTitle.ECname
               }}</label>
@@ -226,7 +226,7 @@
             </div>
             <!-- 緊急聯絡人姓名結束 -->
             <!-- 緊急聯絡人電話開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-lg-2 col-sm-4 col-8">
               <label :for="requiredInputTitle.ECphone">{{
                 requiredInputTitle.ECphone
               }}</label>
@@ -240,7 +240,7 @@
             </div>
             <!-- 緊急聯絡人電話結束 -->
             <!-- 緊急聯絡人電郵開始 -->
-            <div class="form-group col-4">
+            <div class="form-group col-lg-4 col-sm-4 col-8">
               <label :for="requiredInputTitle.ECemail">{{
                 requiredInputTitle.ECemail
               }}</label>
@@ -258,7 +258,7 @@
       </div>
       <div class="row">
         <!-- 修改個資操作按鈕開始 -->
-        <div class="form-froup col-4 ml-auto">
+        <div class="form-froup col-lg-4 ml-auto col-sm-5 col-8">
           <div
             class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
           >

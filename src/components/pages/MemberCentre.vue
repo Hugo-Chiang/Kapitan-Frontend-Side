@@ -1,10 +1,11 @@
 <template>
-  <main id="member-centre" class="container">
+  <main id="member-centre" class="container mb-5">
     <!-- 麵包屑開始 -->
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
     <div class="row">
-      <aside class="col-3">
+      <!-- 側邊欄位開始 -->
+      <aside class="col-lg-3 mb-lg-0 col-12">
         <div class="card">
           <div class="card-body">
             <div
@@ -47,23 +48,32 @@
           </div>
         </div>
       </aside>
-      <section class="col-9">
+      <!-- 側邊欄位結束 -->
+      <!-- 主要內容（切換）開始 -->
+      <section class="col-lg-9 col-12">
         <div class="card">
+          <!-- （切換）基本資料開始 -->
           <MemberInfoEditior
             v-if="currentSubPage == '基本資料'"
             :memberInfo="memberInfo.propsObj"
           ></MemberInfoEditior>
+          <!-- （切換）基本資料結束 -->
+          <!-- （切換）查詢訂單開始 -->
           <MemberOrdersSearching
             v-else-if="currentSubPage == '查詢訂單'"
             :memberID="memberInfo.ID"
           ></MemberOrdersSearching>
+          <!-- （切換）查詢訂單開始 -->
           <!-- <MemberCommentsSearching
             v-else-if="currentSubPage == '我的評價'"
             :memberID="memberInfo.ID"
           ></MemberCommentsSearching> -->
-          <div class="card-body" v-else></div>
+          <div class="card-body welcome-sub-page" v-else>
+            <h1>這是您的主頁面</h1>
+          </div>
         </div>
       </section>
+      <!-- 主要內容（切換）結束 -->
     </div>
   </main>
 </template>
@@ -139,8 +149,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #member-centre {
-  height: 1200px;
-  padding-top: $main-container-pt;
+  padding: $main-container-pt 0;
   h1 {
     margin-top: 200px;
   }
