@@ -69,7 +69,14 @@
             :memberID="memberInfo.ID"
           ></MemberCommentsSearching> -->
           <div class="card-body welcome-sub-page" v-else>
-            <h1>這是您的主頁面</h1>
+            <div id="welcome-message-block" class="mx-auto py-5">
+              <img
+                src="../../assets/img/forestage/member-centre/girl-on-yacht.jpg"
+                alt=""
+              />
+              <h3 class="text-center mb-3">準備啟航了嗎？</h3>
+              <h6 class="text-center">點選大頭貼下方的功能以進行操作</h6>
+            </div>
           </div>
         </div>
       </section>
@@ -196,6 +203,14 @@ export default {
     .current-sub-page {
       font-weight: 500;
       color: $tiffany-blue;
+    }
+  }
+  .welcome-sub-page {
+    #welcome-message-block {
+      width: 600px;
+      img {
+        width: 100%;
+      }
     }
   }
 }
