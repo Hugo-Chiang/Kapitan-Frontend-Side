@@ -180,6 +180,8 @@ export default {
     TabTerms,
   },
   created() {
+    window.scrollTo(0, 0);
+
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;
 

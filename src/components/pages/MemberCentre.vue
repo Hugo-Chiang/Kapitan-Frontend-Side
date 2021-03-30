@@ -120,6 +120,8 @@ export default {
     MemberCommentsSearching,
   },
   created() {
+    window.scrollTo(0, 0);
+
     this.queryMemberInfo();
   },
   methods: {

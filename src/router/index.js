@@ -238,12 +238,29 @@ router.beforeEach((to, from, next) => {
 
     // 無論前後台，在有登入狀況下進入登入頁，都將被導回各自的首頁
     if (to.path.indexOf('Admin') != -1) {
+      let adminSession = getKapitanSession('backstage');
+
       if (to.path == '/Admin/SignIn') {
         axios.post(adminSignInAuthAPI, adminSession).then((response) => {
           if (response.data.sessionCheck) {
             alert('你已登入。系統將引導您回首頁。');
             setTimeout(() => {
               router.push({ name: '管理系統：首頁', });
+            }, 500);
+          }
+        }).catch((response) => {
+          console.log(response);
+        });
+      }
+    } else {
+      if (to.path == '/Login') {
+        let membersSession = getKapitanSession('forestage');
+
+        axios.post(membersSignInAuthAPI, membersSession).then((response) => {
+          if (response.data.sessionCheck) {
+            alert('你已登入。系統將引導您回首頁。');
+            setTimeout(() => {
+              router.push({ name: '首頁', });
             }, 500);
           }
         }).catch((response) => {

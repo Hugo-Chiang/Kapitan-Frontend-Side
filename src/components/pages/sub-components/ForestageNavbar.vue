@@ -75,7 +75,7 @@
     </div>
     <!-- （桌面版）導覽列結束 -->
     <!-- （行動版）漢堡選單項目開始 -->
-    <!-- <ul
+    <ul
       id="hamburger-menu-list"
       class="position-fixed"
       :class="{ 'show-hamburger-menu-list': hamburgerButtonToggle }"
@@ -84,7 +84,22 @@
         v-for="(burgerMenuLink, burgerMenuLinkKey) in returnBurgerMenuLinks"
         :key="burgerMenuLinkKey"
       >
+        <!-- 登出連結開始 -->
+        <a
+          v-if="burgerMenuLink.ItemID == 'sign-out-link' && loginData.login"
+          :id="burgerMenuLink.ItemID"
+          class="hamburger-menu-link nav-link"
+          :class="{
+            'current-hamburger-menu-link':
+              burgerMenuLink.path == currentPath ? true : false,
+          }"
+          @click.prevent="signOut"
+          >立即登出
+        </a>
+        <!-- 登出連結結束 -->
+        <!-- 路由連結開始 -->
         <router-link
+          v-if="burgerMenuLink.ItemID != 'sign-out-link'"
           :to="burgerMenuLink.routerTo"
           class="hamburger-menu-link nav-link"
           :class="{
@@ -94,8 +109,9 @@
           @click.native="collapseHamburgerList"
           >{{ burgerMenuLink.selfText }}</router-link
         >
+        <!-- 路由連結結束 -->
       </li>
-    </ul> -->
+    </ul>
     <!-- （行動版）漢堡選單項目結束 -->
   </nav>
   <!-- 導覽列結束 -->
@@ -222,22 +238,19 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-        })
-        .then((response) => {
-          console.log(response);
-          // vm.memberInfo.propsObj = response.data;
-          // vm.memberInfo.nickname = response.data["MEMBER_NICKNAME"];
-          // vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
         });
     },
     // 方法：登出並刪除 session
     signOut() {
-      document.cookie = `kapitanMembersSession	= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
-      this.loginData.login = false;
+      setTimeout(() => {
+        document.cookie = `kapitanMembersSession	= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+        this.loginData.login = false;
+        this.$router.push({ name: "首頁" });
+      }, 1000);
     },
   },
-  // 計算（方法）：回傳僅屬於文字連結的導覽列連結
   computed: {
+    // 計算（方法）：根據登入與否回傳不同的導覽列連結
     returnNavbarLinks() {
       if (this.loginData.login) {
         let newArr = [];
@@ -261,13 +274,35 @@ export default {
         return newArr;
       }
     },
+    // 計算（方法）：回傳僅屬於文字連結的導覽列連結
     returnBurgerMenuLinks() {
-      let newObj = {};
-      for (let prop in this.navbarLinks) {
-        if (!!this.navbarLinks[prop].selfText)
-          newObj[prop] = this.navbarLinks[prop];
+      if (this.loginData.login) {
+        let newArr = [];
+
+        for (const prop in this.navbarLinks) {
+          if (
+            prop != "signIn" &&
+            this.navbarLinks[prop].selfClass.includes("text-link")
+          ) {
+            newArr.push(this.navbarLinks[prop]);
+          }
+        }
+
+        return newArr;
+      } else {
+        let newArr = [];
+
+        for (const prop in this.navbarLinks) {
+          if (
+            prop != "signOut" &&
+            this.navbarLinks[prop].selfClass.includes("text-link")
+          ) {
+            newArr.push(this.navbarLinks[prop]);
+          }
+        }
+
+        return newArr;
       }
-      return newObj;
     },
   },
   watch: {

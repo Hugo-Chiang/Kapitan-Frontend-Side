@@ -195,6 +195,8 @@ export default {
   },
   components: { Breadcrumb, CartListItem },
   created() {
+    window.scrollTo(0, 0);
+
     this.confirmProjectsArr = this.confirmProjectsArr || [];
   },
   methods: {

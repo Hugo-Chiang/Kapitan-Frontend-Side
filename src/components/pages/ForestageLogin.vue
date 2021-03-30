@@ -1,9 +1,9 @@
 <template>
-  <main class="container">
+  <main class="backgroud container-fluid">
     <div class="row">
       <div class="col-12">
         <!-- 登入註冊卡片開始 -->
-        <div class="backgroud d-flex justify-content-center">
+        <div class="container d-flex justify-content-center">
           <div id="login-card" class="card">
             <ValidationObserver v-slot="{ invalid }">
               <div class="card-body">
@@ -180,6 +180,9 @@
                       loginData.passwordsUnequal
                     "
                     @click.prevent="signInOrRegister"
+                    :data-toggle="signInMode ? '' : 'modal'"
+                    data-target="#modal"
+                    data-backdrop="static"
                   >
                     <span v-if="signInMode">登入</span>
                     <span v-else>註冊</span>
@@ -227,10 +230,35 @@ export default {
           signInFailedAnime: false,
         },
       },
+      // 提示視窗資料
+      modalData: {
+        callBy: null,
+        situation: {
+          event: "",
+          message: "",
+          buttonType: "checked",
+          data: {},
+        },
+        emitValue: null,
+        // 反應（方法）：根據不同情境做出應對
+        correspond() {
+          // 遭遇失敗情境將導回首頁
+          if (this.situation.event.indexOf("失敗") != -1) {
+            setTimeout(() => this.callBy.$router.push({ name: "首頁" }), 1000);
+          }
+
+          // 執行資料庫成功將導回首頁
+          if (this.situation.event.indexOf("資料庫寫入成功") != -1) {
+            setTimeout(() => this.callBy.$router.push({ name: "首頁" }), 1000);
+            this.situation.event = "";
+            this.situation.message = "";
+          }
+        },
+      },
     };
   },
   methods: {
-    // 方法：
+    // 方法：根據輸入電郵向後端詢問是否重複註冊
     queryMemberAccount() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMemberAccount.php`;
       const vm = this;
@@ -241,7 +269,6 @@ export default {
         this.$http
           .post(api, memberAccount)
           .then((response) => {
-            // console.log(response.data);
             if (response.data["MEMBER_ACCOUNT"]) {
               vm.loginData.repeatRegister = true;
             }
@@ -251,7 +278,7 @@ export default {
           });
       }
     },
-    // 方法：
+    // 方法：檢查確認密碼與輸入密碼是否一致
     comparisePassword() {
       let password = this.loginData.input.password;
       let passwordChecked = this.loginData.input.passwordChecked;
@@ -261,21 +288,25 @@ export default {
         this.loginData.passwordsUnequal = true;
       }
     },
-    // 方法：
+    // 方法：登入與註冊的複合函式
     signInOrRegister() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+
       const signInAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignIn.php`;
-      const bb = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignIn.php`;
+      const registerAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/Register.php`;
       const vm = this;
       let api = "";
 
       if (this.signInMode) {
         api = signInAPI;
       } else {
+        api = registerAPI;
       }
 
       this.$http
         .post(api, JSON.stringify(this.loginData.input))
         .then((response) => {
+          console.log(response.data);
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
@@ -285,15 +316,24 @@ export default {
 
             vm.$eventBus.$emit("emitSignInStatus", vm.signIned);
 
-            vm.$router.push(localStorage.getItem("ForestageBlockBefore"));
+            if (this.signInMode) {
+              vm.$router.push(localStorage.getItem("ForestageBlockBefore"));
+            } else {
+              vm.modalData.situation.event = "資料庫寫入成功";
+              vm.modalData.situation.message = response.data.message;
+            }
           } else {
             vm.loginData.input.account = "";
             vm.loginData.input.password = "";
+            vm.loginData.input.passwordChecked = "";
             vm.loginData.signInFailedFeedback.signInFailedWarning = true;
-            vm.loginData.signInFailedFeedback.signInFailedAnime = true;
-            setTimeout(() => {
-              vm.loginData.signInFailedFeedback.signInFailedAnime = false;
-            }, 1200);
+
+            if (this.signInMode) {
+              vm.loginData.signInFailedFeedback.signInFailedAnime = true;
+              setTimeout(() => {
+                vm.loginData.signInFailedFeedback.signInFailedAnime = false;
+              }, 1200);
+            }
           }
         })
         .catch((error) => {
@@ -301,7 +341,16 @@ export default {
         });
     },
   },
+  created() {
+    window.scrollTo(0, 0);
+
+    this.modalData.callBy = this;
+    this.$eventBus.$on("emitModalValue", (value) => {
+      this.modalData.emitValue = value;
+    });
+  },
   watch: {
+    //
     signInMode() {
       this.loginData.repeatRegister = false;
       this.loginData.passwordsUnequal = false;
@@ -315,75 +364,81 @@ export default {
 @import "../../assets/scss/all.scss";
 
 .backgroud {
-  height: 800px;
-  padding-top: 80px;
-  #login-card {
-    width: 320px;
-    height: 640px;
-    #login-logo {
-      width: 100px;
-    }
-    .list-group-item {
-      width: 50%;
-      height: 40px;
-      line-height: 40px;
-      padding: 0;
-      text-align: center;
-      border: 0.5px solid $bootstrap-border-color;
-      border-radius: 0;
-      &:hover {
-        cursor: pointer;
+  background-image: url("../../assets/img/forestage/login/background.jpg");
+  opacity: 0.95;
+  background-size: cover;
+  background-position: center;
+  .container {
+    height: 800px;
+    padding-top: 80px;
+    #login-card {
+      width: 320px;
+      height: 640px;
+      #login-logo {
+        width: 100px;
       }
-      &:first-child {
-        border-right: none;
+      .list-group-item {
+        width: 50%;
+        height: 40px;
+        line-height: 40px;
+        padding: 0;
+        text-align: center;
+        border: 0.5px solid $bootstrap-border-color;
+        border-radius: 0;
+        &:hover {
+          cursor: pointer;
+        }
+        &:first-child {
+          border-right: none;
+        }
       }
-    }
-    .selected-item {
-      background-color: $deep-teal;
-      color: $sail;
-    }
-    #password-remark-trigger,
-    #password-remark {
-      font-size: 12px;
-    }
-    #password-remark {
-      color: darkred;
-      display: inline-block;
-      width: 180px;
-      top: -10px;
-    }
-    #action-button {
-      width: 105px;
-      height: 35px;
-      padding: 0;
-    }
-    #sign-in-failed-warning {
-      color: red;
-    }
+      .selected-item {
+        background-color: $deep-teal;
+        color: $sail;
+      }
+      #password-remark-trigger,
+      #password-remark {
+        font-size: 12px;
+      }
+      #password-remark {
+        color: darkred;
+        display: inline-block;
+        width: 180px;
+        top: -10px;
+      }
+      #action-button {
+        width: 105px;
+        height: 35px;
+        padding: 0;
+      }
+      #sign-in-failed-warning {
+        color: red;
+      }
 
-    @keyframes shaking {
-      10%,
-      90% {
-        transform: translate3d(-1px, 0, 0);
+      @keyframes shaking {
+        10%,
+        90% {
+          transform: translate3d(-1px, 0, 0);
+        }
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
+        }
       }
-      20%,
-      80% {
-        transform: translate3d(2px, 0, 0);
-      }
-      30%,
-      50%,
-      70% {
-        transform: translate3d(-4px, 0, 0);
-      }
-      40%,
-      60% {
-        transform: translate3d(4px, 0, 0);
-      }
-    }
 
-    .shaking {
-      animation: shaking 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-      transform: translate3d(0, 0, 0);
+      .shaking {
+        animation: shaking 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        transform: translate3d(0, 0, 0);
+      }
     }
   }
 }

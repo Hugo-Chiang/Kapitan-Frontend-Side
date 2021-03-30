@@ -10,6 +10,8 @@ export default {
     return {};
   },
   created() {
+    window.scrollTo(0, 0);
+    
     // 因應Heroku休眠機制，所做的後端喚醒行為，並不具備太多意義
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
 

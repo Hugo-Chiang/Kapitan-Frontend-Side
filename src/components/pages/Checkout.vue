@@ -85,6 +85,8 @@ export default {
     FormContactInfo,
   },
   created() {
+    window.scrollTo(0, 0);
+
     this.$eventBus.$on("emitModalValue", (value) => {
       this.modalData.emitValue = value;
     });

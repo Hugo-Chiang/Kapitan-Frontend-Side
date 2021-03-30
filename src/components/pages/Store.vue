@@ -126,6 +126,8 @@ export default {
     Pagination,
   },
   created() {
+    window.scrollTo(0, 0);
+
     const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
     const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
     const vm = this;
