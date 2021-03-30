@@ -56,13 +56,13 @@
           >
             <div class="row w-100">
               <div
-                class="col-md-6 col-sm-8 col-12 d-flex flex-sm-row justify-content-sm-between align-items-sm-center flex-column justify-content-between align-items-start"
+                class="col-md-6 col-12 d-flex flex-md-row justify-content-md-between align-items-md-center flex-column justify-content-between align-items-start"
               >
-                <h6 class="list-item-info text-center m-sm-0 d-sm-block mb-1">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                <h6 class="list-item-info text-center m-md-0 d-md-block mb-1">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     序列
                   </h6>
-                  <span class="colon d-sm-none">：</span>
+                  <span class="colon d-md-none">：</span>
                   {{
                     currentPageContentSerial[
                       viewingOrderDetail.viewingMoreIndex
@@ -70,23 +70,23 @@
                   }}
                 </h6>
                 <h6
-                  class="list-item-info identify-id-or-name m-sm-0 d-sm-block mb-1"
+                  class="list-item-info identify-id-or-name m-md-0 d-md-block mb-1"
                 >
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     <span v-if="!viewingOrder.viewDetails">訂單編號</span>
                     <span v-else>選擇方案</span
-                    ><span class="colon d-sm-none">：</span>
+                    ><span class="colon d-md-none">：</span>
                   </h6>
                   <span v-if="!viewingOrder.viewDetails">{{
                     order["ORDER_ID"]
                   }}</span>
                   <span v-else>{{ order["PROJECT_NAME"] }}</span>
                 </h6>
-                <h6 class="list-item-info m-sm-0 mb-1">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                <h6 class="list-item-info m-md-0 mb-1">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     <span v-if="!viewingOrder.viewDetails">訂單日期</span>
                     <span v-else>預約日期</span
-                    ><span class="colon d-sm-none">：</span>
+                    ><span class="colon d-md-none">：</span>
                   </h6>
                   <span v-if="!viewingOrder.viewDetails">{{
                     order["ORDER_DATE"]
@@ -95,26 +95,26 @@
                 </h6>
               </div>
               <div
-                class="col-md-6 col-sm-4 col-12 d-flex flex-sm-row justify-content-sm-between align-items-sm-center flex-column justify-content-between align-items-start"
+                class="col-md-6 col-12 d-flex flex-md-row justify-content-md-between align-items-md-center flex-column justify-content-between align-items-start"
               >
                 <h6
-                  class="list-item-info contact-name m-0 text-sm-center d-md-block"
+                  class="list-item-info contact-name m-0 text-md-center d-md-block"
                 >
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     <span v-if="!viewingOrder.viewDetails">訂購人姓名</span>
                     <span v-else>主要聯絡人姓名</span
-                    ><span class="colon d-sm-none">：</span>
+                    ><span class="colon d-md-none">：</span>
                   </h6>
                   <span v-if="!viewingOrder.viewDetails">{{
                     order["ORDER_MC_NAME"]
                   }}</span>
                   <span v-else>{{ order["ORDER_DETAIL_MC_NAME"] }}</span>
                 </h6>
-                <h6 class="list-item-info price m-sm-0 text-sm-center mb-1">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                <h6 class="list-item-info price m-md-0 text-md-center mb-1">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     <span v-if="!viewingOrder.viewDetails">訂單總額</span>
                     <span v-else>細項總額</span
-                    ><span class="colon d-sm-none">：</span>
+                    ><span class="colon d-md-none">：</span>
                   </h6>
                   <span v-if="!viewingOrder.viewDetails">
                     {{
@@ -129,19 +129,19 @@
                   }}</span>
                 </h6>
                 <h6
-                  class="list-item-info m-sm-0 text-center d-xl-block d-none"
+                  class="list-item-info m-md-0 text-center d-xl-block d-none"
                   v-if="!viewingOrder.viewDetails"
                 >
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     細項數量
                   </h6>
                   {{ order["ORDER_DETAILS_NUM"] }}個
                 </h6>
-                <h6 class="list-item-info m-sm-0 text-sm-center mb-1">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                <h6 class="list-item-info m-md-0 text-md-center mb-1">
+                  <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     <span v-if="!viewingOrder.viewDetails">訂單狀態</span>
                     <span v-else>細項狀態</span
-                    ><span class="colon d-sm-none">：</span>
+                    ><span class="colon d-md-none">：</span>
                   </h6>
                   <span v-if="!viewingOrder.viewDetails">{{
                     order["ORDER_STATUS"] | orderStatus
@@ -156,11 +156,11 @@
           <li class="more-details-block p-3" v-if="viewingOrderDetail.viewMore">
             <div class="row">
               <div
-                class="col-lg-5 pr-4 h-lg-100 d-flex justify-content-between align-items-center"
+                class="col-md-5 pr-lg-4 h-lg-100 m-md-0 col-12 mb-3 d-flex justify-content-md-between flex-md-row flex-column align-items-center"
               >
-                <h6 class="list-item-info">
+                <h6 class="list-item-info d-md-block d-flex align-items-center">
                   <div
-                    class="project-avatar-block d-flex justify-content-between align-items-center"
+                    class="project-avatar-block d-lg-flex d-sm-inline-flex d-flexs m-lg-0 mr-2 justify-content-between align-items-center"
                   >
                     <img
                       :src="
@@ -171,60 +171,60 @@
                       alt=""
                     />
                   </div>
-                  <h6 class="mini-title w-75">
+                  <h6 class="mini-title w-lg-75 d-sm-block mb-sm-1 mb-0">
                     {{ allContentArr[0]["PROJECT_NAME"] }}
                   </h6>
                 </h6>
-                <h6 class="list-item-info">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                    會合地點
+                <h6 class="list-item-info m-md-0 my-3">
+                  <h6 class="mini-title d-md-block mb-sm-1 d-inline">
+                    會合地點<span class="colon d-md-none">：</span>
                   </h6>
                   {{ allContentArr[0]["LOCATION_NAME"] }}
                 </h6>
               </div>
               <div
-                class="col-lg-7 d-flex flex-wrap justify-content-between align-items-center"
+                class="col-md-7 d-flex flex-wrap justify-content-between align-items-center"
               >
                 <div
-                  class="col-lg-12 h-lg-50 mb-3 d-flex justify-content-between align-items-center"
+                  class="h-lg-50 col-md-12 mb-md-3 col-sm-6 col-12 p-md-0 pl-sm-5 p-0 m-0 d-flex flex-md-row justify-content-md-between align-items-md-center flex-column justify-content-between align-items-start"
                 >
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-md-0 mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      主要聯絡人姓名
+                      主要聯絡人姓名<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_MC_NAME"] }}
                   </h6>
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-md-0 mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      主要聯絡人手機
+                      主要聯絡人手機<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_MC_PHONE"] }}
                   </h6>
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-md-0 mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      主要聯絡人電郵
+                      主要聯絡人電郵<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_MC_EMAIL"] }}
                   </h6>
                 </div>
                 <div
-                  class="col-lg-12 h-lg-50 d-flex justify-content-between align-items-center"
+                  class="col-md-12 col-sm-6 col-12 h-lg-50 p-0 d-flex flex-md-row justify-content-md-between align-items-md-center flex-column justify-content-between align-items-start"
                 >
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-md-0 mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      緊急聯絡人姓名
+                      緊急聯絡人姓名<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_EC_NAME"] }}
                   </h6>
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      緊急聯絡人手機
+                      緊急聯絡人手機<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_EC_PHONE"] }}
                   </h6>
-                  <h6 class="list-item-info text-center">
+                  <h6 class="list-item-info text-lg-center mb-md-0 mb-2">
                     <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                      緊急聯絡人電郵
+                      緊急聯絡人電郵<span class="colon d-md-none">：</span>
                     </h6>
                     {{ allContentArr[0]["ORDER_DETAIL_EC_EMAIL"] }}
                   </h6>
@@ -438,6 +438,9 @@ export default {
       &:last-child {
         border-bottom: 0.5px solid $bootstrap-border-color;
       }
+      @include media-breakpoint-down(lg) {
+        height: 120px;
+      }
       @include media-breakpoint-down(sm) {
         height: 160px;
       }
@@ -456,7 +459,7 @@ export default {
       @include media-breakpoint-down(lg) {
         width: 150px;
       }
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(sm) {
         width: 200px;
       }
     }
@@ -474,6 +477,9 @@ export default {
     }
     .more-details-block {
       height: 150px;
+      @include media-breakpoint-down(sm) {
+        height: 350px;
+      }
       .project-avatar-block {
         width: 135px;
         height: 80px;
