@@ -5,7 +5,7 @@
     <!-- 麵包屑結束 -->
     <div class="row">
       <!-- 側邊欄位開始 -->
-      <aside class="col-lg-3 mb-lg-0 col-12">
+      <aside class="col-lg-3 mb-lg-0 col-12 mb-4">
         <div class="card">
           <div class="card-body">
             <div
@@ -159,9 +159,9 @@ export default {
     border-radius: 150px;
     background-color: $deep-teal;
     div {
-      width: 90%;
-      height: 90%;
-      border-radius: 90%;
+      width: 95%;
+      height: 95%;
+      border-radius: 95%;
       overflow: hidden;
       background-color: $sail;
       img {
