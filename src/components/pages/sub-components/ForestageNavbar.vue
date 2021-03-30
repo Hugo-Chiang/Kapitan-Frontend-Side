@@ -25,11 +25,22 @@
         <ul id="navbar-list" :class="navbarListClass">
           <li
             :id="navbarLink.ItemID"
-            v-for="(navbarLink, navbarLinkKey) in navbarLinks"
+            v-for="(navbarLink, navbarLinkKey) in returnNavbarLinks"
             :key="navbarLinkKey"
           >
+            <!-- 登出連結開始 -->
+            <a
+              v-if="navbarLink.ItemID == 'sign-out-link' && loginData.login"
+              :id="navbarLink.ItemID"
+              :class="navbarLinks.signOut.selfClass"
+              @click.prevent="signOut"
+              >立即登出
+            </a>
+            <!-- 登出連結結束 -->
             <!-- 路由連結開始 -->
             <router-link
+              v-if="navbarLink.ItemID != 'sign-out-link'"
+              :id="navbarLink.ItemID"
               :class="[
                 navbarLink.selfClass,
                 {
@@ -41,7 +52,7 @@
             >
               <!-- 假設項目為商標（首頁）連結，則會出現商標圖示 -->
               <img
-                v-if="navbarLinkKey == 'logo'"
+                v-if="navbarLink.ItemID == 'logo-link'"
                 id="logo-img"
                 src="../../../assets/img/Kapitan-Logo-Horizontal-Version-01.png"
                 alt=""
@@ -64,13 +75,13 @@
     </div>
     <!-- （桌面版）導覽列結束 -->
     <!-- （行動版）漢堡選單項目開始 -->
-    <ul
+    <!-- <ul
       id="hamburger-menu-list"
       class="position-fixed"
       :class="{ 'show-hamburger-menu-list': hamburgerButtonToggle }"
     >
       <li
-        v-for="(burgerMenuLink, burgerMenuLinkKey) in burgerMenuLinks"
+        v-for="(burgerMenuLink, burgerMenuLinkKey) in returnBurgerMenuLinks"
         :key="burgerMenuLinkKey"
       >
         <router-link
@@ -84,7 +95,7 @@
           >{{ burgerMenuLink.selfText }}</router-link
         >
       </li>
-    </ul>
+    </ul> -->
     <!-- （行動版）漢堡選單項目結束 -->
   </nav>
   <!-- 導覽列結束 -->
@@ -113,10 +124,10 @@ export default {
           routerTo: "/",
           imgSrc: "../../../assets/img/logo.png",
         },
-        // 導覽列連結：關於頁連結
-        about: {
-          path: "/About",
-          ItemID: "about-link",
+        // 導覽列連結：登錄頁連結
+        signIn: {
+          path: "/Login",
+          ItemID: "sign-in-link",
           selfClass: [
             "nav-link",
             "text-link",
@@ -125,8 +136,22 @@ export default {
             "ml-3",
             "mr-4",
           ],
-          routerTo: "/About",
-          selfText: "關於甲必丹",
+          routerTo: "/Login",
+          selfText: "登入註冊",
+        },
+        // 導覽列連結：登出連結
+        signOut: {
+          ItemID: "sign-out-link",
+          selfClass: [
+            "nav-link",
+            "text-link",
+            "nav-link",
+            "ml-md-auto",
+            "ml-3",
+            "mr-4",
+          ],
+          selfText: "立即登出",
+          routerTo: "",
         },
         // 導覽列連結：商品（方案）頁
         store: {
@@ -154,10 +179,18 @@ export default {
       },
       hamburgerButtonToggle: false,
       currentPath: "/",
+      loginData: {
+        login: false,
+        memberID: null,
+      },
     };
   },
   created() {
+    this.$eventBus.$on("emitSignInStatus", (boolean) => {
+      this.loginData.login = boolean;
+    });
     this.currentPath = this.$router.currentRoute.path;
+    this.queryMemberInfo();
   },
   methods: {
     // 方法：收起漢堡選單導覽列
@@ -167,10 +200,68 @@ export default {
         vm.hamburgerButtonToggle = false;
       }, 400);
     },
+    // 方法：驗證登入 session 後，回傳會員資料
+    queryMemberInfo() {
+      const signInAuthenticationAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignInAuthentication.php`;
+      const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Universal/QueryMemberInfo.php`;
+      const session = this.GlobalFunctions.getKapitanSession("forestage");
+      const vm = this;
+
+      vm.loginData.login = false;
+
+      this.$http
+        .post(signInAuthenticationAPI, session)
+        .then((response) => {
+          if (response.data.sessionCheck) {
+            vm.loginData.login = true;
+            vm.loginData.memberID = response.data.signInedID;
+            return vm.$http.post(queryMemberInfoAPI, vm.loginData.memberID);
+          } else {
+            vm.loginData.login = false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .then((response) => {
+          console.log(response);
+          // vm.memberInfo.propsObj = response.data;
+          // vm.memberInfo.nickname = response.data["MEMBER_NICKNAME"];
+          // vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
+        });
+    },
+    // 方法：登出並刪除 session
+    signOut() {
+      document.cookie = `kapitanMembersSession	= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+      this.loginData.login = false;
+    },
   },
   // 計算（方法）：回傳僅屬於文字連結的導覽列連結
   computed: {
-    burgerMenuLinks() {
+    returnNavbarLinks() {
+      if (this.loginData.login) {
+        let newArr = [];
+
+        for (const prop in this.navbarLinks) {
+          if (prop != "signIn") {
+            newArr.push(this.navbarLinks[prop]);
+          }
+        }
+
+        return newArr;
+      } else {
+        let newArr = [];
+
+        for (const prop in this.navbarLinks) {
+          if (prop != "signOut") {
+            newArr.push(this.navbarLinks[prop]);
+          }
+        }
+
+        return newArr;
+      }
+    },
+    returnBurgerMenuLinks() {
       let newObj = {};
       for (let prop in this.navbarLinks) {
         if (!!this.navbarLinks[prop].selfText)
@@ -285,14 +376,12 @@ nav {
           font-size: 20px;
           font-weight: 600;
         }
-        .icon-link {
-          cursor: pointer;
-        }
         .text-link,
         .icon-link {
           &:hover {
             color: $prussian;
             text-shadow: none;
+            cursor: pointer;
             svg {
               filter: none;
             }
@@ -319,10 +408,12 @@ nav {
             width: 160px;
           }
         }
-        #about-link {
+        #sign-in-link,
+        #sign-out-link {
           margin-left: auto;
         }
-        #about-link,
+        #sign-in-link,
+        #sign-out-link,
         #store-link {
           @include media-breakpoint-down(md) {
             display: none;

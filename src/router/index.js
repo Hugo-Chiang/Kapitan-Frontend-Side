@@ -3,7 +3,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Forestage from '@/components/Forestage'
 import Home from '@/components/pages/Home';
-import About from '@/components/pages/About';
 import Store from '@/components/pages/Store';
 import Project from '@/components/pages/Project';
 import Cart from '@/components/pages/Cart';
@@ -39,11 +38,6 @@ const router = new Router({
           path: '',
           name: '首頁',
           component: Home
-        },
-        {
-          path: '/About',
-          name: '關於甲必丹',
-          component: About
         },
         {
           path: '/Store',

@@ -212,6 +212,7 @@ export default {
   data() {
     return {
       signInMode: true,
+      signIned: false,
       loginData: {
         showRemark: false,
         repeatRegister: false,
@@ -278,7 +279,12 @@ export default {
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
+
             document.cookie = `kapitanMembersSession="${session}"; expires="${expDate}"`;
+            vm.signIned = true;
+
+            vm.$eventBus.$emit("emitSignInStatus", vm.signIned);
+
             vm.$router.push(localStorage.getItem("ForestageBlockBefore"));
           } else {
             vm.loginData.input.account = "";
