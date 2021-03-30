@@ -158,7 +158,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #member-centre {
-  padding: $main-container-pt 0;
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   h1 {
     margin-top: 200px;
   }

@@ -177,7 +177,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #store-page {
-  padding-top: $main-container-pt;
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   // 方案篩選器開始
   aside {
     height: 30rem;

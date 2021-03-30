@@ -1,5 +1,5 @@
 <template>
-  <main class="container">
+  <main id="project-page" class="container">
     <!-- 方案輪播章節開始 -->
     <Carousel :carouselData="carouselData"></Carousel>
     <!-- 方案輪播章節結束 -->
@@ -230,17 +230,20 @@ export default {
 <style lang="scss" scope>
 @import "../../assets/scss/all.scss";
 
-.nav-item {
-  cursor: pointer;
-}
+#project-page {
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  .nav-item {
+    cursor: pointer;
+  }
 
-#project-summary-area,
-#project-details-area {
-  p {
-    img {
-      width: 75%;
-      @include media-breakpoint-down(md) {
-        width: 90%;
+  #project-summary-area,
+  #project-details-area {
+    p {
+      img {
+        width: 75%;
+        @include media-breakpoint-down(md) {
+          width: 90%;
+        }
       }
     }
   }

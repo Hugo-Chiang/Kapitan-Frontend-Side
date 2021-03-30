@@ -11,7 +11,7 @@ export default {
   },
   created() {
     window.scrollTo(0, 0);
-    
+
     // 因應Heroku休眠機制，所做的後端喚醒行為，並不具備太多意義
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
 
@@ -23,10 +23,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/all.scss";
+
 .container {
   border: 1px solid red;
-  padding: 50px;
   height: 1000px;
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   img {
     display: block;
     margin: auto;

@@ -1,5 +1,5 @@
 <template>
-  <main id="cart" class="container pb-5">
+  <main id="cart-page" class="container pb-5">
     <!-- 麵包屑開始 -->
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
@@ -237,8 +237,8 @@ export default {
 
 $desktop-nav-bar-height: 105px;
 
-main {
-  padding-top: $main-container-pt;
+#cart-page {
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   .btn-action-now {
     background-color: $action-now !important;
     color: $sail;

@@ -1,6 +1,6 @@
 <template>
   <!-- 導覽列開始 -->
-  <nav id="nav-bar-container">
+  <nav id="nav-bar-container" class="position-fixed">
     <!-- （桌面版）導覽列開始 -->
     <div class="backgroud d-flex w-100 position-fixed">
       <div
@@ -317,18 +317,17 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
-$desktop-nav-bar-height: 105px;
-
 * {
   text-decoration: none;
 }
 
 nav {
+  z-index: 9999;
   height: $desktop-nav-bar-height;
   .backgroud {
     background-color: $tiffany-blue;
     height: $desktop-nav-bar-height;
-    z-index: 3;
+    z-index: 99999;
     #nav-bar {
       // （行動版）漢堡選單開始
       #hamburger-menu {
