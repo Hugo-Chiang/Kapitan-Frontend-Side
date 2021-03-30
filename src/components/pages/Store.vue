@@ -6,7 +6,7 @@
     <!-- 麵包屑結束 -->
     <!-- 方案篩選器與方案列表開始 -->
     <div class="row">
-      <aside id="aside-bar" class="col-lg-2 d-lg-block d-none">
+      <aside id="aside-bar" class="col-xl-2 d-xl-block d-none">
         <ul id="category-list" class="py-3 pl-3">
           <li v-for="category in categoryList" :key="category['CATEGORY_ID']">
             <input
@@ -20,8 +20,11 @@
         </ul>
       </aside>
       <!-- 方案列表開始 -->
-      <section id="cards-list" class="container col-lg-10 col-12 mb-5">
-        <ul class="row p-0 d-flex justify-content-center">
+      <section class="container col-xl-10 col-12 mb-5">
+        <ul
+          id="cards-list"
+          class="d-flex flex-wrap justify-content-md-between justify-content-center"
+        >
           <!-- 方案卡片開始 -->
           <router-link
             v-for="(project, index) in currentPageContentArr"
@@ -33,7 +36,7 @@
                 selectedProjectID: currentPageContentArr[index]['PROJECT_ID'],
               },
             }"
-            class="router-link d-block col-lg-4 col-md-5 col-9 mx-lg-0 mx-md-1 mb-4"
+            class="router-link d-block mx-lg-0 mx-md-1 mb-5"
           >
             <li class="card" :key="project['PROJECT_ID']">
               <img
@@ -128,6 +131,7 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
+    // 初始化航程分類與清單
     const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
     const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
     const vm = this;
@@ -150,6 +154,7 @@ export default {
     },
   },
   watch: {
+    // 監看（方法）：篩選分類即向後端調回所屬產品
     selectedCategories() {
       const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
       const vm = this;
@@ -159,6 +164,10 @@ export default {
         .then((response) => {
           vm.allProjectsArr = response.data;
         });
+    },
+    // 監看（方法）：換頁即將捲軸置頂
+    currentPageContentArr() {
+      window.scrollTo(0, 0);
     },
   },
 };
@@ -171,8 +180,9 @@ export default {
   padding-top: $main-container-pt;
   // 方案篩選器開始
   aside {
-    border: 1px solid grey;
     height: 30rem;
+    border: 1px solid $bootstrap-border-color;
+    box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
     #category-list {
       li {
         list-style: none;
@@ -182,17 +192,19 @@ export default {
   // 方案篩選器結束
   // 方案列表開始
   #cards-list {
+    padding: 0px 30px;
+    &::after {
+      content: "";
+      width: 255.5px;
+    }
+    @include media-breakpoint-down(md) {
+      padding: 0px 60px;
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+    }
     .router-link {
-      &:last-child {
-        @include media-breakpoint-down(md) {
-          position: relative;
-          right: calc((297.5px + 8px) / 2);
-        }
-        @include media-breakpoint-down(xs) {
-          position: static;
-          right: 0;
-        }
-      }
+      width: 255.5px;
       .card {
         height: 22rem;
         color: black;

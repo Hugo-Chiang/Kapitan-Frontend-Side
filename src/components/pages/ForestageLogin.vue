@@ -1,5 +1,5 @@
 <template>
-  <main class="backgroud container-fluid">
+  <main id="forestage-login-page" class="backgroud container-fluid">
     <div class="row">
       <div class="col-12">
         <!-- 登入註冊卡片開始 -->
@@ -165,6 +165,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="remember-me-checkbox"
+                      v-model="loginData.remeberMe"
                     />
                     <label class="form-check-label" for="remember-me-checkbox"
                       >記住我</label
@@ -197,7 +198,7 @@
                   >
                     帳號或密碼錯誤
                   </div>
-                  <a href="#" v-if="signInMode" class="card-link">忘記密碼？</a>
+                  <!-- <a href="#" v-if="signInMode" class="card-link">忘記密碼？</a> -->
                 </div>
                 <!-- 動作區域結束 -->
               </div>
@@ -220,6 +221,7 @@ export default {
         showRemark: false,
         repeatRegister: false,
         passwordsUnequal: false,
+        remeberMe: false,
         input: {
           account: "",
           password: "",
@@ -310,8 +312,11 @@ export default {
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
+            const remeberMe = vm.loginData.remeberMe;
 
-            document.cookie = `kapitanMembersSession="${session}"; expires="${expDate}"`;
+            document.cookie = `kapitanMembersSession="${session}"; expires="${
+              remeberMe ? expDate : ""
+            }"`;
             vm.signIned = true;
 
             vm.$eventBus.$emit("emitSignInStatus", vm.signIned);
@@ -350,10 +355,11 @@ export default {
     });
   },
   watch: {
-    //
+    // 監看（方法）：切換登入註冊模式將重置各類回饋的初始值
     signInMode() {
       this.loginData.repeatRegister = false;
       this.loginData.passwordsUnequal = false;
+      this.loginData.remeberMe = false;
       this.loginData.signInFailedFeedback.signInFailedWarning = false;
     },
   },
