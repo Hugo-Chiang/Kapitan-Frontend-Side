@@ -46,10 +46,24 @@
           id="project-purchase-buttons"
           class="mb-4 d-flex justify-content-between"
         >
-          <button id="save-in-cart-btn" class="btn" @click.prevent="saveInCart">
+          <button
+            id="save-in-cart-btn"
+            class="btn"
+            @click.prevent="saveInCart"
+            :data-toggle="this.bookingData.bookingDate == null ? 'modal' : ''"
+            data-target="#modal"
+            data-backdrop="static"
+          >
             放入購物車
           </button>
-          <button id="booking-now-btn" class="btn" @click.prevent="bookingNow">
+          <button
+            id="booking-now-btn"
+            class="btn"
+            @click.prevent="bookingNow"
+            :data-toggle="this.bookingData.bookingDate == null ? 'modal' : ''"
+            data-target="#modal"
+            data-backdrop="static"
+          >
             立即預約
           </button>
         </div>
@@ -75,6 +89,17 @@ export default {
       minAndMaxNum: {
         min: 1,
         max: 1,
+      },
+      // 提示視窗資料
+      modalData: {
+        callBy: null,
+        situation: {
+          event: "",
+          message: "",
+          buttonType: "checked",
+          data: {},
+        },
+        emitValue: null,
       },
       // 將 vue2-datepicker 月曆套件中文化
       lang: {
@@ -159,10 +184,13 @@ export default {
     },
     // 方法：將已知的訂購資訊存入購物車，並寫入 localStorage
     saveInCart() {
+      this.$eventBus.$emit("emitModalData", this.modalData);
+
       let confirmDate = this.bookingData.bookingDate;
 
       if (confirmDate == null) {
-        alert("請輸入預約日期！");
+        this.modalData.situation.event = "未輸入預約日期";
+        this.modalData.situation.message = "請輸入預約日期！";
       } else {
         let confirmNumOfPeople = this.bookingData.bookingNumOfPeople;
 

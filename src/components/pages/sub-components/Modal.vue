@@ -91,3 +91,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../../../assets/scss/all.scss";
+
+#modal {
+  margin-top: $desktop-nav-bar-height + $main-container-pt;
+}
+</style>

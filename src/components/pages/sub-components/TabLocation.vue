@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="row">
       <!-- Leaflet 地圖套件開始 -->
-      <div class="col-lg-8 col-md-12 mb-md-0 mb-5">
+      <div class="col-lg-8 col-md-12 mb-lg-0 mb-5">
         <!-- Leaflet 初始佈局 -->
         <l-map
           :zoom="mapData.mapZoomlevel"
@@ -30,10 +30,26 @@
         </l-map>
       </div>
       <!-- Leaflet 地圖套件結束 -->
-      <div class="col-lg-4 col-md-12">
+      <!-- 會合地點介紹與導航開始 -->
+      <div class="col-lg-4 mt-lg-5 col-md-12 mt-0">
         <h5>{{ departureLocationInfo.locationName }}</h5>
-        <div v-html="departureLocationInfo.locationDescription"></div>
+        <div
+          v-html="departureLocationInfo.locationDescription"
+          class="mt-3 mb-4"
+        ></div>
+        <a
+          :href="`https://www.google.com/maps/dir/${
+            userLocation.length == 0
+              ? ''
+              : `${userLocation[0]},${userLocation[1]}`
+          }/${departureLocationInfo.locationName}`"
+          target="_blank"
+          class="d-flex justify-content-center"
+        >
+          <input type="button" value="Google路線導航" class="btn btn-success" />
+        </a>
       </div>
+      <!-- 會合地點介紹與導航結束 -->
     </div>
   </div>
 </template>
@@ -63,15 +79,25 @@ export default {
           popupAnchor: [0, -30],
         },
       },
+      userLocation: [0, 0],
     };
   },
   props: ["departureLocationInfo"],
   components: { LMap, LTileLayer, LMarker, LPopup, LIcon },
   created() {
+    // 詢問使用者位置，以利使用者使用 google 地圖導覽功能
+    navigator.geolocation.getCurrentPosition(this.getUserLocationSucess);
+
     this.mapData.mapMarkerLocation = [
       this.departureLocationInfo.locationLat,
       this.departureLocationInfo.locationLng,
     ];
+  },
+  methods: {
+    // 回呼函式：獲知使用者位置成功
+    getUserLocationSucess(location) {
+      this.userLocation = [location.coords.latitude, location.coords.longitude];
+    },
   },
   watch: {
     // 監看（方法）：若傳入的地點資訊物件內容有變，則更新地圖套件的經緯度
