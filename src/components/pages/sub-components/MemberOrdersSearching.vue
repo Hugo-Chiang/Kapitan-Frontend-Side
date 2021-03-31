@@ -61,7 +61,7 @@
             v-for="(order, index) in currentPageContentArr"
             :key="order['ORDER_DETAIL_ID']"
             class="container py-md-0 px-3 py-3 d-flex justify-content-between align-items-center"
-            @click.prevent="returnMethod(index)"
+            @click.prevent="viewOrderDetails(index)"
           >
             <div class="row w-100">
               <div
@@ -80,7 +80,6 @@
                     訂單編號<span class="colon d-md-none">：</span>
                   </h6>
                   {{ order["ORDER_ID"] }}
-                  <!-- <span v-else>{{ order["PROJECT_NAME"] }}</span> -->
                 </h6>
                 <h6 class="list-item-info m-md-0 mb-1">
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
@@ -88,7 +87,6 @@
                     <!-- <span v-else>預約日期</span> -->
                   </h6>
                   {{ order["ORDER_DATE"] }}
-                  <!-- <span v-else>{{ order["BOOKING_DATE"] }}</span> -->
                 </h6>
                 <h6
                   class="list-item-info contact-name m-0 text-md-center d-md-block"
@@ -98,7 +96,6 @@
                     <!-- <span v-else>主要聯絡人姓名</span> -->
                   </h6>
                   {{ order["ORDER_MC_NAME"] }}
-                  <!-- <span v-else>{{ order["ORDER_DETAIL_MC_NAME"] }}</span> -->
                 </h6>
                 <h6 class="list-item-info price m-md-0 text-md-center mb-1">
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
@@ -131,55 +128,20 @@
               </div>
             </div>
           </li>
-          <!-- <li class="more-details-block p-3" v-if="viewingOrderDetail.viewMore">
-            <div class="row">
-              <div
-                class="col-md-5 pr-lg-4 h-lg-100 m-md-0 col-12 mb-3 d-flex justify-content-md-between flex-md-row flex-column align-items-center"
-              >
-                <h6 class="list-item-info d-md-block d-flex align-items-center">
-                  <div
-                    class="project-avatar-block d-lg-flex d-sm-inline-flex d-flexs m-lg-0 mr-2 justify-content-between align-items-center"
-                  >
-                    <img
-                      :src="
-                        GlobalVariables.cloudUrlprefix +
-                        (allContentArr[0]['PROJECT_AVATAR_URL'] ||
-                          GlobalVariables.cloudNoImgUrl)
-                      "
-                      alt=""
-                    />
-                  </div>
-                  <h6 class="mini-title w-lg-75 d-sm-block mb-sm-1 mb-0">
-                    {{ allContentArr[0]["PROJECT_NAME"] }}
-                  </h6>
-                </h6>
-                <h6 class="list-item-info m-md-0 my-3">
-                  <h6 class="mini-title d-md-block mb-sm-1 d-inline">
-                    會合地點<span class="colon d-md-none">：</span>
-                  </h6>
-                  {{ allContentArr[0]["LOCATION_NAME"] }}
-                </h6>
-              </div>
-              <div
-                class="col-md-7 d-flex flex-wrap justify-content-between align-items-center"
-              >
-              </div>
-            </div>
-          </li> -->
         </ul>
         <!-- 訂單列表結束 -->
         <!-- 訂單細項開始 -->
         <div
           v-else-if="viewingOrder.viewDetails"
-          v-for="(orderDetail, index) in currentPageContentArr"
-          :key="orderDetail"
+          v-for="orderDetail in currentPageContentArr"
+          :key="orderDetail['ORDER_DETAIL_ID']"
           class="order-detail card mb-4"
         >
           <div
-            class="card-header d-flex justify-content-between align-items-center"
+            class="card-header d-flex flex-md-row justify-content-md-between align-items-center flex-column"
           >
             <div class="d-flex align-items-center">
-              <div class="project-avatar-block mr-2">
+              <div class="project-avatar-block mr-2 my-md-0 mt-2 mb-4">
                 <img
                   :src="
                     GlobalVariables.cloudUrlprefix +
@@ -196,46 +158,48 @@
                 </span>
               </h6>
             </div>
-            <h6>
+            <h6 class="order-detail-amount">
               {{ orderDetail["ORDER_DETAIL_AMOUNT"] | currency | dollarSign }}
             </h6>
           </div>
           <div class="card-body container py-4">
             <div class="row">
-              <div class="col-3">
-                <h6 class="text-lg-center mb-3">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+              <div
+                class="col-md-4 col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center mb-sm-0 flex-column mb-3"
+              >
+                <h6 class="text-sm-center mb-md-0 mb-sm-4 mb-1">
+                  <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
                     方案狀態<span class="colon d-md-none">：</span>
                   </h6>
                   {{ orderDetail["ORDER_DETAIL_STATUS"] | orderDetailStatus }}
                 </h6>
-                <h6 class="text-lg-center">
-                  <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
+                <h6 class="text-sm-center mb-md-0 mb-sm-3 mb-1">
+                  <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
                     會合地點<span class="colon d-md-none">：</span>
                   </h6>
                   {{ allContentArr[0]["LOCATION_NAME"] }}
                 </h6>
               </div>
-              <div class="col-9">
+              <div class="col-md-8 col-12">
                 <div class="row mb-3">
                   <div
-                    class="col-12 d-flex justify-content-around align-items-center"
+                    class="col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center flex-column"
                   >
-                    <h6 class="list-item-info text-lg-center">
+                    <h6 class="list-item-info text-sm-center">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人姓名<span class="colon d-md-none">：</span>
+                        主要聯絡人姓名<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_MC_NAME"] }}
                     </h6>
-                    <h6 class="list-item-info text-lg-center">
+                    <h6 class="list-item-info text-sm-center">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人手機<span class="colon d-md-none">：</span>
+                        主要聯絡人手機<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_MC_PHONE"] }}
                     </h6>
-                    <h6 class="list-item-info text-lg-center">
+                    <h6 class="list-item-info text-sm-center">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人電郵<span class="colon d-md-none">：</span>
+                        主要聯絡人電郵<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_MC_EMAIL"] }}
                     </h6>
@@ -243,23 +207,23 @@
                 </div>
                 <div class="row">
                   <div
-                    class="col-12 d-flex justify-content-around align-items-center"
+                    class="col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center flex-column"
                   >
-                    <h6 class="list-item-info text-lg-center">
+                    <h6 class="list-item-info text-sm-center">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人姓名<span class="colon d-md-none">：</span>
+                        緊急聯絡人姓名<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_EC_NAME"] }}
                     </h6>
-                    <h6 class="list-item-info text-lg-center mb-2">
+                    <h6 class="list-item-info text-sm-center mb-2">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人手機<span class="colon d-md-none">：</span>
+                        緊急聯絡人手機<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_EC_PHONE"] }}
                     </h6>
-                    <h6 class="list-item-info text-lg-center">
+                    <h6 class="list-item-info text-sm-center">
                       <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人電郵<span class="colon d-md-none">：</span>
+                        緊急聯絡人電郵<span class="colon d-sm-none">：</span>
                       </h6>
                       {{ orderDetail["ORDER_DETAIL_EC_EMAIL"] }}
                     </h6>
@@ -288,6 +252,7 @@
         <!-- 查無資料結束 -->
       </div>
     </div>
+    <!-- 頁碼開始 -->
     <div id="pagination-container" class="position-absolute">
       <Pagination
         v-show="currentPageContentArr.length > 0"
@@ -296,6 +261,7 @@
         @emitCurrentContentAndSerial="getCurrentContentAndSerial"
       ></Pagination>
     </div>
+    <!-- 頁碼結束 -->
     <!-- 會員訂單區結束 -->
   </div>
 </template>
@@ -313,11 +279,6 @@ export default {
         status: "",
         viewingIndex: null,
         viewDetails: false,
-      },
-      viewingOrderDetail: {
-        ID: "",
-        viewingMoreIndex: null,
-        viewMore: false,
       },
       ordersArr: [],
       orderDetailsArr: [],
@@ -395,7 +356,7 @@ export default {
           console.log(respponse);
         });
     },
-    // 方法：
+    // 方法：根據選擇索引，打開訂單，以觀看更多訂單細項
     viewOrderDetails(selectedIndex) {
       this.viewingOrder.viewingIndex = selectedIndex;
       this.viewingOrder.viewDetails = true;
@@ -412,58 +373,16 @@ export default {
 
       this.allContentArr = filterArr;
     },
-    // 方法：
+    // 方法：回到查詢訂單處
     returnToOrdersList() {
-      this.viewingOrderDetail.viewingMoreIndex = null;
       this.viewingOrder.viewingIndex = null;
-      this.viewingOrderDetail.viewMore = false;
       this.viewingOrder.viewDetails = false;
       this.queryMemberOrders();
-    },
-    // 方法：
-    viewMoreDetails(selectedIndex) {
-      this.viewingOrderDetail.viewingMoreIndex = selectedIndex;
-      this.viewingOrderDetail.viewMore = true;
-      this.viewingOrderDetail.ID = this.allContentArr[selectedIndex][
-        "ORDER_DETAIL_ID"
-      ];
-
-      let orderDetailsArr = [];
-      for (const object of this.orderDetailsArr) {
-        if (object["ORDER_ID"] == this.viewingOrder.ID) {
-          orderDetailsArr.push(object);
-        }
-      }
-
-      let filterArr = [];
-      filterArr.push(orderDetailsArr[selectedIndex]);
-
-      this.allContentArr = filterArr;
-    },
-    // 方法：
-    returnToOrderDetailsList() {
-      this.viewOrderDetails(this.viewingOrder.viewingIndex);
-      this.viewingOrderDetail.viewMore = false;
-      this.viewingOrderDetail.viewingMoreIndex = null;
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAndSerial(arr, num) {
       this.currentPageContentArr = arr;
       this.currentPageContentSerial = num;
-    },
-  },
-  computed: {
-    returnMethod() {
-      if (!this.viewingOrder.viewDetails && !this.viewingOrderDetail.viewMore) {
-        return this.viewOrderDetails;
-      } else if (
-        this.viewingOrder.viewDetails &&
-        !this.viewingOrderDetail.viewMore
-      ) {
-        return this.viewMoreDetails;
-      } else {
-        return this.returnToOrderDetailsList;
-      }
     },
   },
 };
@@ -535,11 +454,10 @@ a {
       }
     }
   }
-
   .order-detail {
-    h5 {
+    h6 {
       span {
-        font-size: 14px;
+        font-size: 13px;
       }
     }
     .project-avatar-block {
@@ -548,6 +466,10 @@ a {
       img {
         width: 100%;
       }
+    }
+    .order-detail-amount {
+      color: darkred;
+      font-size: 18px;
     }
   }
   #pagination-container {
