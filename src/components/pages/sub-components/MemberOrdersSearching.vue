@@ -1,5 +1,8 @@
 <template>
-  <div class="card-body position-relative">
+  <div
+    id="member-orders-searching-sub-page"
+    class="card-body position-relative"
+  >
     <h4 class="mb-4">檢視訂單</h4>
     <!-- 會員訂單區開始 -->
     <div class="row mb-4">

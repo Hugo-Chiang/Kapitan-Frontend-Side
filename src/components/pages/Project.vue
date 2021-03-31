@@ -150,7 +150,7 @@
 import Carousel from "@/components/pages/sub-components/Carousel";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-// 導入方案摘要章節的3個頁籤元件
+// 導入方案摘要章節的 3 個頁籤元件
 import TabDefault from "@/components/pages/sub-components/TabDefault";
 import TabLocation from "@/components/pages/sub-components/TabLocation";
 import TabTerms from "@/components/pages/sub-components/TabTerms";

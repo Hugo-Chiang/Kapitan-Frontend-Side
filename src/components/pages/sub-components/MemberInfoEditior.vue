@@ -1,5 +1,5 @@
 <template>
-  <div class="card-body">
+  <div id="member-info-editior" class="card-body">
     <h4 class="mb-4">基本資料</h4>
     <!-- 會員編輯區開始 -->
     <!-- 修改密碼開始 -->
@@ -12,6 +12,9 @@
               id="password-remark-trigger"
               @mouseenter="reSetPasswordData.showRemark = true"
               @mouseleave="reSetPasswordData.showRemark = false"
+              @click="
+                reSetPasswordData.showRemark = !reSetPasswordData.showRemark
+              "
               >［?］</span
             >
             <span
@@ -141,7 +144,7 @@
           <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
           <div class="form-row">
             <!-- 會員暱稱開始 -->
-            <div class="form-group col-lg-2 col-sm-4 col-8">
+            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
               <label :for="requiredInputTitle.nickName">{{
                 requiredInputTitle.nickName
               }}</label>
@@ -155,7 +158,7 @@
             </div>
             <!-- 會員暱稱結束 -->
             <!-- 會員大頭貼開始 -->
-            <div class="form-group col-lg-3 col-sm-4 col-8">
+            <div class="form-group col-xl-3 col-md-4 col-sm-5 col-8">
               <label
                 :for="requiredInputTitle.memberAvatarURL"
                 class="form-label"
@@ -182,7 +185,7 @@
           </div>
           <div class="form-row">
             <!-- 會員姓名開始 -->
-            <div class="form-group col-lg-2 col-sm-4 col-8">
+            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
               <label :for="requiredInputTitle.MCname">{{
                 requiredInputTitle.MCname
               }}</label>
@@ -196,7 +199,7 @@
             </div>
             <!-- 會員姓名結束 -->
             <!-- 會員電話開始 -->
-            <div class="form-group col-lg-2 col-sm-4 col-8">
+            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
               <label :for="requiredInputTitle.MCphone">{{
                 requiredInputTitle.MCphone
               }}</label>
@@ -212,7 +215,7 @@
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
-            <div class="form-group col-lg-2 col-sm-4 col-8">
+            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
               <label :for="requiredInputTitle.ECname">{{
                 requiredInputTitle.ECname
               }}</label>
@@ -226,7 +229,7 @@
             </div>
             <!-- 緊急聯絡人姓名結束 -->
             <!-- 緊急聯絡人電話開始 -->
-            <div class="form-group col-lg-2 col-sm-4 col-8">
+            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
               <label :for="requiredInputTitle.ECphone">{{
                 requiredInputTitle.ECphone
               }}</label>
@@ -258,13 +261,13 @@
       </div>
       <div class="row">
         <!-- 修改個資操作按鈕開始 -->
-        <div class="form-froup col-lg-4 ml-auto col-sm-5 col-8">
+        <div class="form-froup col-xl-4 col-md-5 ml-sm-auto col-sm-6 col-8">
           <div
-            class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
+            class="action-buttons-block mr-xl-4 mr-0 mt-4 px-xl-4 pl-md-5 pr-md-4 pl-sm-5 pr-0 d-flex justify-content-sm-around align-items-center"
           >
             <input
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary mr-sm-0 mr-2"
               :class="{ 'invalid-btn': invalid }"
               value="修改個資"
               :disabled="invalid"
@@ -276,7 +279,7 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="currentSubPage = ''"
+              @click.prevent="$emit('emitCloseEditior')"
               >不儲存關閉</a
             >
           </div>
@@ -520,6 +523,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../assets/scss/all.scss";
+
 #password-remark-trigger,
 #password-remark {
   font-size: 12px;
@@ -529,5 +534,18 @@ export default {
   display: inline-block;
   width: 360px;
   top: 10px;
+  @include media-breakpoint-down(sm) {
+    width: 180px;
+    top: -5px;
+  }
+}
+.action-buttons-block {
+  a {
+    font-size: 14px;
+    color: black;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 </style>

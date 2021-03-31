@@ -93,6 +93,7 @@
                         id="password-remark-trigger"
                         @mouseenter="loginData.showRemark = true"
                         @mouseleave="loginData.showRemark = false"
+                        @click="loginData.showRemark = !loginData.showRemark"
                         >［?］</span
                       >
                       <span
@@ -248,16 +249,19 @@ export default {
         emitValue: null,
         // 反應（方法）：根據不同情境做出應對
         correspond() {
-          // 遭遇失敗情境將導回首頁
-          if (this.situation.event.indexOf("失敗") != -1) {
-            setTimeout(() => this.callBy.$router.push({ name: "首頁" }), 1000);
-          }
-
-          // 執行資料庫成功將導回首頁
-          if (this.situation.event.indexOf("資料庫寫入成功") != -1) {
-            setTimeout(() => this.callBy.$router.push({ name: "首頁" }), 1000);
-            this.situation.event = "";
-            this.situation.message = "";
+          switch (this.situation.event) {
+            case "伺服器異常":
+              setTimeout(
+                () => this.callBy.$router.push({ name: "首頁" }),
+                1000
+              );
+              break;
+            case "資料庫寫入成功":
+              setTimeout(
+                () => this.callBy.$router.push({ name: "首頁" }),
+                1000
+              );
+              break;
           }
         },
       },
@@ -346,6 +350,10 @@ export default {
           }
         })
         .catch((error) => {
+          vm.modalData.situation.event = "伺服器異常";
+          vm.modalData.situation.message =
+            "伺服器異常，請稍後再試。造成您的不便，敬請見諒！";
+          vm.modalData.situation.data = error;
           console.log(error);
         });
     },
@@ -385,6 +393,7 @@ export default {
     #login-card {
       width: 320px;
       height: 640px;
+      box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
       #login-logo {
         width: 100px;
       }

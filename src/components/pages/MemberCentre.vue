@@ -1,5 +1,5 @@
 <template>
-  <main id="member-centre" class="container mb-5">
+  <main id="member-centre-page" class="container mb-5">
     <!-- 麵包屑開始 -->
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
@@ -56,6 +56,7 @@
           <MemberInfoEditior
             v-if="currentSubPage == '基本資料'"
             :memberInfo="memberInfo.propsObj"
+            @emitCloseEditior="backToWelcomePage"
           ></MemberInfoEditior>
           <!-- （切換）基本資料結束 -->
           <!-- （切換）查詢訂單開始 -->
@@ -88,7 +89,7 @@
 <script>
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-//
+// 導入會員中心的 3 個次級內容元件
 import MemberInfoEditior from "@/components/pages/sub-components/MemberInfoEditior";
 import MemberOrdersSearching from "@/components/pages/sub-components/MemberOrdersSearching";
 import MemberCommentsSearching from "@/components/pages/sub-components/MemberCommentsSearching";
@@ -150,6 +151,11 @@ export default {
           vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
         });
     },
+    // 方法：回到歡迎頁
+    backToWelcomePage() {
+      this.currentSubPage = "";
+      window.scrollTo(0, 0);
+    },
   },
 };
 </script>
@@ -157,7 +163,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/all.scss";
 
-#member-centre {
+#member-centre-page {
   padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   h1 {
     margin-top: 200px;
@@ -209,7 +215,7 @@ export default {
   }
   .welcome-sub-page {
     #welcome-message-block {
-      width: 600px;
+      width: 80%;
       img {
         width: 100%;
       }

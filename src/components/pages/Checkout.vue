@@ -1,10 +1,7 @@
 <template>
   <!-- 結帳區域開始 -->
-  <div class="row">
+  <div id="checkout-sub-page" class="row">
     <div class="col-12">
-      <!-- 提示視窗元件開始 -->
-      <!-- <Modal ref="modal" :modalData="modalData"></Modal> -->
-      <!-- 提示視窗元件結束 -->
       <form>
         <!-- 進行結帳「第二步：填寫訂購資訊」章節開始 -->
         <FormOrderInfo
