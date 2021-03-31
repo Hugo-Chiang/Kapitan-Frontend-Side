@@ -50,7 +50,7 @@
             id="save-in-cart-btn"
             class="btn"
             @click.prevent="saveInCart"
-            :data-toggle="this.bookingData.bookingDate == null ? 'modal' : ''"
+            data-toggle="modal"
             data-target="#modal"
             data-backdrop="static"
           >
@@ -100,6 +100,7 @@ export default {
           data: {},
         },
         emitValue: null,
+        correspond() {},
       },
       // 將 vue2-datepicker 月曆套件中文化
       lang: {
@@ -226,6 +227,13 @@ export default {
         if (!storageChecking) storageArr.push(this.confirmProject);
 
         localStorage.setItem("savingProjects", JSON.stringify(storageArr));
+
+        let cartItemsNum = JSON.parse(localStorage.getItem("savingProjects"))
+          .length;
+        this.$eventBus.$emit("emitCartUpdate", cartItemsNum);
+
+        this.modalData.situation.event = "方案放入購物車";
+        this.modalData.situation.message = "方案已放入購物車囉！";
       }
     },
     // 方法：將已知的訂購資訊存入購物車，寫入 localStorage 並立即跳轉至購物車頁面

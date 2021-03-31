@@ -136,6 +136,13 @@ export default {
         localStorage.setItem("savingProjects", JSON.stringify(storageArr));
         this.list.splice(deleteStorageIndex, 1);
       }
+
+      let storageArrLen = 0;
+      storageArr == null
+        ? (storageArrLen = 0)
+        : (storageArrLen = storageArr.length);
+
+      this.$eventBus.$emit("emitCartUpdate", storageArrLen);
     },
   },
 };

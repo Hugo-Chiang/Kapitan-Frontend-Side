@@ -72,7 +72,6 @@ export default {
         mapIcon: {
           iconUrl:
             "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
-          // iconUrl: "/static/img/marker-icon-blue.png",
           shadowUrl:
             "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
           iconAnchor: [12.5, 40],
@@ -116,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ ol {
-  padding: 0px 30px;
+h5 {
+  font-weight: 600;
 }
 </style>

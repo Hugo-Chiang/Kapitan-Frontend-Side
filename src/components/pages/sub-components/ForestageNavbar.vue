@@ -66,6 +66,12 @@
                 v-if="navbarLink.selfClass.includes('icon-link')"
                 :class="navbarLink.iconClass"
               ></i>
+              <!-- 假設項目是購物車，且內容物非空，則生成項目提示 -->
+              <div
+                id="cart-items-remark"
+                v-if="navbarLink.ItemID == 'cart-link' && cartItemsNum > 0"
+                class="position-absolute"
+              ></div>
             </router-link>
             <!-- 路由連結結束 -->
           </li>
@@ -180,7 +186,14 @@ export default {
         cart: {
           path: "/Cart",
           ItemID: "cart-link",
-          selfClass: ["nav-link", "icon-link", "ml-2", "mr-sm-4", "mr-3"],
+          selfClass: [
+            "nav-link",
+            "icon-link",
+            "ml-2",
+            "mr-sm-4",
+            "mr-3",
+            "position-relative",
+          ],
           routerTo: "/Cart",
           iconClass: ["fas", "fa-shopping-cart", "fa-lg"],
         },
@@ -193,6 +206,7 @@ export default {
           iconClass: ["fas", "fa-user", "fa-lg"],
         },
       },
+      cartItemsNum: 0,
       hamburgerButtonToggle: false,
       currentPath: "/",
       loginData: {
@@ -205,7 +219,17 @@ export default {
     this.$eventBus.$on("emitSignInStatus", (boolean) => {
       this.loginData.login = boolean;
     });
+    this.$eventBus.$on("emitCartUpdate", (number) => {
+      this.cartItemsNum = number;
+    });
+
     this.currentPath = this.$router.currentRoute.path;
+
+    let cartItems = JSON.parse(localStorage.getItem("savingProjects"));
+    if (cartItems != null) {
+      this.cartItemsNum = cartItems.length;
+    }
+
     this.queryMemberInfo();
   },
   methods: {
@@ -309,6 +333,10 @@ export default {
     // 監看：路由改變時將於 data 紀錄當前路徑，以便渲染導覽列
     $route(to, from) {
       this.currentPath = this.$router.currentRoute.path;
+    },
+    // 監看（方法）：購物車內數量一改變即更新 data 數字，以利購物車 icon 樣式即時渲染
+    cartItemsNum() {
+      this.cartItemsNum = this.cartItemsNum;
     },
   },
 };
@@ -456,6 +484,28 @@ nav {
         #cart-link {
           @include media-breakpoint-down(md) {
             margin-left: auto;
+          }
+          #cart-items-remark {
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            background-color: red;
+            color: $sail;
+            transform: translate3d(-50%, -50%, 0);
+            top: 11px;
+            left: calc(100% + 1px);
+            animation: jumping 0.8s;
+          }
+
+          @keyframes jumping {
+            25%,
+            75% {
+              top: 6px;
+            }
+            50%,
+            100% {
+              top: 11px;
+            }
           }
         }
       }

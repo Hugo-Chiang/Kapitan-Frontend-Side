@@ -1,11 +1,11 @@
 <template>
-  <main id="cart-page" class="container pb-5">
+  <main id="cart-page" class="container">
     <!-- 麵包屑開始 -->
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
     <div class="row">
       <div class="col-12">
-        <h2 v-if="currentPage == '購物車'">您的購物車</h2>
+        <h2 v-if="returnCurrentPage == '購物車'">您的購物車</h2>
         <h2 v-else>進行結帳</h2>
         <hr />
       </div>
@@ -22,13 +22,16 @@
           <div class="card">
             <div class="card-header px-3 d-flex align-items-center">
               <!-- 判定是否切換為結帳頁面 -->
-              <h5 v-if="currentPage == '購物車'">已選方案</h5>
+              <h5 v-if="returnCurrentPage == '購物車'">已選方案</h5>
               <h5 v-else>第一步：確認方案內容</h5>
               <button
                 id="clear-cart-btn"
                 class="btn btn-danger ml-auto"
                 @click.prevent="clearCart"
-                v-if="currentPage == '購物車' && confirmProjectsArr.length != 0"
+                v-if="
+                  returnCurrentPage == '購物車' &&
+                  confirmProjectsArr.length != 0
+                "
               >
                 清空購物車
               </button>
@@ -43,7 +46,7 @@
                 :list="confirmProjectsArr"
                 :index="index"
                 :listItem="project"
-                :currentPage="currentPage"
+                :currentPage="returnCurrentPage"
                 :key="index"
               ></CartListItem>
               <!-- 方案項目結束 -->
@@ -65,7 +68,7 @@
           <router-view
             ref="cart"
             :confirmProjectsArr="confirmProjectsArr"
-            :currentPage="currentPage"
+            :returnCurrentPage="returnCurrentPage"
           ></router-view>
           <!-- 結帳區域結束 -->
           <!-- </ValidationObserver> -->
@@ -94,7 +97,7 @@
                   <span class="order-amount-title d-inline-block mr-1"
                     >總計：</span
                   ><span class="order-amount-block d-inline-block">{{
-                    calculateAmout | currency
+                    returnAmout | currency
                   }}</span
                   >元
                 </li>
@@ -103,13 +106,15 @@
               <button
                 class="btn btn-action-now"
                 @click.prevent="$router.push('/Cart/Checkout')"
-                v-if="currentPage == '購物車' && confirmProjectsArr.length > 0"
+                v-if="
+                  returnCurrentPage == '購物車' && confirmProjectsArr.length > 0
+                "
               >
                 進行結帳
               </button>
               <input
                 v-else-if="
-                  currentPage != '購物車' && confirmProjectsArr.length > 0
+                  returnCurrentPage != '購物車' && confirmProjectsArr.length > 0
                 "
                 type="submit"
                 :value="invalid ? '請填資料' : '立即結帳'"
@@ -147,19 +152,21 @@
           <li>
             <span class="order-amount-title d-inline-block mr-1">總計：</span
             ><span class="order-amount-block d-inline-block">{{
-              calculateAmout | currency
+              returnAmout | currency
             }}</span
             >元
           </li>
         </ul>
         <button
-          v-if="currentPage == '購物車' && confirmProjectsArr.length > 0"
+          v-if="returnCurrentPage == '購物車' && confirmProjectsArr.length > 0"
           class="btn btn-action-now d-flex align-items-center"
         >
           <h5 class="mb-0 d-inline-block">進行結帳</h5>
         </button>
         <input
-          v-else-if="currentPage != '購物車' && confirmProjectsArr.length > 0"
+          v-else-if="
+            returnCurrentPage != '購物車' && confirmProjectsArr.length > 0
+          "
           type="submit"
           :value="invalid ? '請填資料' : '立即結帳'"
           class="btn btn-action-now"
@@ -204,15 +211,16 @@ export default {
     clearCart() {
       localStorage.removeItem("savingProjects");
       this.confirmProjectsArr = [];
+      this.$eventBus.$emit("emitCartUpdate", 0);
     },
   },
   computed: {
-    // 方法：藉由動態路由自動回傳所在頁面名稱
-    currentPage() {
+    // 計算（方法）：藉由動態路由自動回傳所在頁面名稱
+    returnCurrentPage() {
       return this.$route.name;
     },
-    // 方法：
-    calculateAmout() {
+    // 計算（方法）：計算並回傳方案的總售價
+    returnAmout() {
       let amount = 0;
       this.confirmProjectsArr.forEach((project) => {
         let price =
@@ -225,9 +233,10 @@ export default {
     },
   },
   watch: {
-    invalid() {
-      console.log(this.provide.invalid);
-    },
+    // 監看（方法）：
+    // invalid() {
+    //   console.log(this.provide.invalid);
+    // },
   },
 };
 </script>
