@@ -6,7 +6,7 @@
         class="btn btn-outline-secondary"
         type="button"
         @click.prevent="
-          number == 1
+          number == min
             ? $emit('update:incomingValue', number)
             : $emit('update:incomingValue', --number)
         "
@@ -31,7 +31,11 @@
       <button
         class="btn btn-outline-secondary"
         type="button"
-        @click.prevent="$emit('update:incomingValue', ++number)"
+        @click.prevent="
+          number == max
+            ? $emit('update:incomingValue', max)
+            : $emit('update:incomingValue', ++number)
+        "
       >
         ＋
       </button>
@@ -44,13 +48,18 @@
 export default {
   data() {
     return {
-      number: Number(this.incomingValue) || 1,
+      number: 0,
+      min: 0,
+      max: 0,
     };
   },
-  props: ["uniqueKey", "incomingValue"],
+  props: ["uniqueKey", "incomingValue", "minAndMaxNum"],
+  created() {},
   watch: {
-    number() {
-      if (this.number == "") this.number = 1;
+    incomingValue() {
+      this.number = this.incomingValue;
+      this.min = this.minAndMaxNum.min;
+      this.max = this.minAndMaxNum.max;
     },
   },
 };

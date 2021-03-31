@@ -26,6 +26,7 @@
           <NumberInput
             ref="numberInput"
             :incomingValue.sync="bookingData.bookingNumOfPeople"
+            :minAndMaxNum="minAndMaxNum"
           ></NumberInput>
         </div>
         <!-- 選擇人數欄位結束 -->
@@ -71,6 +72,11 @@ export default {
         bookingNumOfPeople: 1,
         bookingDate: null,
       },
+      minAndMaxNum: {
+        min: 1,
+        max: 1,
+      },
+      // 將 vue2-datepicker 月曆套件中文化
       lang: {
         formatLocale: {
           months: [
@@ -87,7 +93,6 @@ export default {
             "November",
             "December",
           ],
-          // MMM
           monthsShort: [
             "一月",
             "二月",
@@ -102,7 +107,6 @@ export default {
             "十一月",
             "十二月",
           ],
-          // dddd
           weekdays: [
             "Sunday",
             "Monday",
@@ -201,6 +205,21 @@ export default {
       this.saveInCart();
       let confirmDate = this.bookingData.bookingDate;
       if (confirmDate != null) this.$router.push({ name: "購物車" });
+    },
+  },
+  watch: {
+    // 監看（方法）：props 進來的方案內容有變時（即 Ajax 訪問完畢後），重新渲染選擇人數
+    selectedProject: {
+      handler(newObj) {
+        this.bookingData.bookingNumOfPeople =
+          newObj.selectedProjectContent.projectMinNumOfPeople;
+        this.minAndMaxNum.min =
+          newObj.selectedProjectContent.projectMinNumOfPeople;
+        this.minAndMaxNum.max =
+          newObj.selectedProjectContent.projectMaxNumOfPeople;
+      },
+      deep: true,
+      immediate: true,
     },
   },
 };

@@ -19,24 +19,38 @@
       </div>
       <div id="project-price" class="col-lg-4 col-12 position-sticky">
         <div class="card text-center">
-          <div class="card-header">
-            <h5 class="my-1">團資概要</h5>
-          </div>
-          <div class="card-body container">
-            <div class="row mt-2">
-              <div id="project-min-num-of-people" class="col-6">
-                <h6>最低成團人數</h6>
-                <div class="my-3">
-                  <span>
-                    {{
-                      selectedProject.selectedProjectContent
-                        .projectMinNumOfPeople
-                    }}</span
-                  >人
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <!-- 方案人數開始 -->
+              <li class="list-group-item">
+                <div class="row mt-2">
+                  <div id="project-min-num-of-people" class="col-6">
+                    <h6>最低成團人數</h6>
+                    <div class="my-3">
+                      <span>
+                        {{
+                          selectedProject.selectedProjectContent
+                            .projectMinNumOfPeople
+                        }}</span
+                      >人
+                    </div>
+                  </div>
+                  <div id="project-max-num-of-people" class="col-6">
+                    <h6>最高容納人數</h6>
+                    <div class="my-3">
+                      <span>
+                        {{
+                          selectedProject.selectedProjectContent
+                            .projectMaxNumOfPeople
+                        }}</span
+                      >人
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-6">
-                <h6>每位成員特惠價</h6>
+              </li>
+              <!-- 方案人數結束 -->
+              <!-- 人均售價開始 -->
+              <li class="list-group-item">
                 <div
                   id="project-price-per-person"
                   class="my-3"
@@ -48,14 +62,18 @@
                     selectedProject.selectedProjectContent.projectPricePerPerson
                   "
                 >
-                  {{
-                    selectedProject.selectedProjectContent.projectPricePerPerson
-                      | currency
-                      | dollarSign
-                  }}
+                  每位成員特惠價：<span>
+                    {{
+                      selectedProject.selectedProjectContent
+                        .projectPricePerPerson
+                        | currency
+                        | dollarSign
+                    }}
+                  </span>
                 </div>
-              </div>
-            </div>
+              </li>
+              <!-- 人均售價結束 -->
+            </ul>
           </div>
         </div>
       </div>
@@ -151,6 +169,7 @@ export default {
           projectAvatarUrl: "",
           projectCarouselImgs: [],
           projectMinNumOfPeople: "",
+          projectMaxNumOfPeople: "",
           projectPricePerPerson: "",
           projectSummary: "",
         },
@@ -182,13 +201,13 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
+    // 向後端請調本頁方案內容
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;
 
     this.$http
       .post(api, vm.selectedProject.selectedProjectID)
       .then((response) => {
-        // console.log(response.data);
         vm.selectedProject.selectedProjectContent.projectName =
           response.data.projectContent["PROJECT_NAME"];
         vm.selectedProject.selectedProjectContent.projectAvatarUrl =
@@ -201,6 +220,8 @@ export default {
           vm.selectedProject.selectedProjectContent.projectCarouselImgs;
         vm.selectedProject.selectedProjectContent.projectMinNumOfPeople =
           response.data.projectContent["PROJECT_MIN_NUM_OF_PEOPLE"];
+        vm.selectedProject.selectedProjectContent.projectMaxNumOfPeople =
+          response.data.projectContent["PROJECT_MAX_NUM_OF_PEOPLE"];
         vm.selectedProject.selectedProjectContent.projectPricePerPerson = Number(
           response.data.projectContent["PROJECT_ORIGINAL_PRICE_PER_PERSON"]
         );
@@ -235,7 +256,6 @@ export default {
   .nav-item {
     cursor: pointer;
   }
-
   #project-summary-area,
   #project-details-area {
     p {
