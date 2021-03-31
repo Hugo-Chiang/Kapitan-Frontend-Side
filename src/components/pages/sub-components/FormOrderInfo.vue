@@ -248,7 +248,6 @@
 export default {
   data() {
     return {
-      syncMemberInfo: {},
       syncMemberContactInfo: false,
       inputOrdererInfo: {},
       creditCardData: {
@@ -259,36 +258,8 @@ export default {
       },
     };
   },
-  props: ["confirmProjectsArr", "requiredInputTitle"],
-  created() {
-    // created 階段即詢問會員資訊，以利使用者進行同步填寫
-    this.queryMemberContactInfo();
-  },
+  props: ["confirmProjectsArr", "requiredInputTitle", "syncMemberInfo"],
   methods: {
-    // 方法：向後端詢問登入會員的連絡資訊，以利其同步稍後填寫
-    queryMemberContactInfo() {
-      const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryMemberContactInfo.php`;
-      const vm = this;
-
-      this.$http
-        .get(api)
-        .then((response) => {
-          let memberContactInfo = response.data[0];
-
-          vm.syncMemberInfo = {
-            MCname: memberContactInfo.MEMBER_NAME || "",
-            MCphone: memberContactInfo.MEMBER_PHONE || "",
-            MCemail: memberContactInfo.MEMBER_ACCOUNT,
-            ECname: memberContactInfo.MEMBER_EC_NAME || "",
-            ECphone: memberContactInfo.MEMBER_EC_PHONE || "",
-            ECemail: memberContactInfo.MEMBER_EC_EMAIL || "",
-          };
-        })
-        .catch((response) => {
-          console.log("伺服器異常，請稍後再試。造成您的不便，敬請見諒！");
-          console.log(response);
-        });
-    },
     // 方法：（演示用）自動填入信用卡資訊
     autofilledCreditCardData() {
       this.creditCardData = {

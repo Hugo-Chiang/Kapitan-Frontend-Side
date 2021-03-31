@@ -206,6 +206,10 @@ export default {
             .selectedProjectContent.projectPricePerPerson,
           bookingProjectDate: confirmDate,
           bookingProjectNumOfPeople: confirmNumOfPeople,
+          bookingProjectMinNumOfPeople: this.selectedProject
+            .selectedProjectContent.projectMinNumOfPeople,
+          bookingProjectMaxNumOfPeople: this.selectedProject
+            .selectedProjectContent.projectMaxNumOfPeople,
         };
 
         let storageArr =

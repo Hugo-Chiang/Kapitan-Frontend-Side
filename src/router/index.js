@@ -55,7 +55,7 @@ const router = new Router({
           component: Cart,
           children: [{
             path: '/Cart/Checkout',
-            name: '結帳',
+            name: '進行結帳',
             component: Checkout,
             meta: { requiresAuth: true }
           }]

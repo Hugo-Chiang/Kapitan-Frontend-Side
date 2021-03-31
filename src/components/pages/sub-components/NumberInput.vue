@@ -54,7 +54,11 @@ export default {
     };
   },
   props: ["uniqueKey", "incomingValue", "minAndMaxNum"],
-  created() {},
+  created() {
+    this.number = this.incomingValue;
+    this.min = this.minAndMaxNum.min;
+    this.max = this.minAndMaxNum.max;
+  },
   watch: {
     incomingValue() {
       this.number = this.incomingValue;

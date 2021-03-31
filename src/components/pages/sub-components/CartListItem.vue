@@ -76,6 +76,10 @@
         class="w-100"
         :uniqueKey="listItem.bookingProjectID"
         :incomingValue.sync="listItem.bookingProjectNumOfPeople"
+        :minAndMaxNum="{
+          min: Number(listItem.bookingProjectMinNumOfPeople),
+          max: Number(listItem.bookingProjectMaxNumOfPeople),
+        }"
       ></NumberInput>
     </div>
     <!-- 選擇人數欄位結束 -->

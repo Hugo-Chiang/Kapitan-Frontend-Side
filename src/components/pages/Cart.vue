@@ -1,7 +1,7 @@
 <template>
   <main id="cart-page" class="container">
     <!-- 麵包屑開始 -->
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+    <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
     <div class="row">
       <div class="col-12">
@@ -193,10 +193,6 @@ import CartListItem from "@/components/pages/sub-components/CartListItem";
 export default {
   data() {
     return {
-      breadCrumbData: {
-        pagesArr: ["首頁", "購物車"],
-        currentPage: 2,
-      },
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
   },
@@ -215,6 +211,24 @@ export default {
     },
   },
   computed: {
+    // 計算（方法）：根據所在頁面回傳不同的麵包屑
+    returnBreadCrumbData() {
+      let breadCrumbData = {};
+
+      if (this.$route.name == "購物車") {
+        breadCrumbData = {
+          pagesArr: ["首頁", "購物車"],
+          currentPage: 2,
+        };
+      } else {
+        breadCrumbData = {
+          pagesArr: ["首頁", "購物車", "進行結帳"],
+          currentPage: 3,
+        };
+      }
+
+      return breadCrumbData;
+    },
     // 計算（方法）：藉由動態路由自動回傳所在頁面名稱
     returnCurrentPage() {
       return this.$route.name;
@@ -231,12 +245,6 @@ export default {
       });
       return amount;
     },
-  },
-  watch: {
-    // 監看（方法）：
-    // invalid() {
-    //   console.log(this.provide.invalid);
-    // },
   },
 };
 </script>
