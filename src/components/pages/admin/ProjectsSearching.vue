@@ -123,7 +123,6 @@
               <th class="text-center" scope="col">方案名稱</th>
               <th class="text-center" scope="col">所屬分類</th>
               <th class="text-center" scope="col">人均價格</th>
-              <th class="text-center" scope="col">最小人數</th>
               <th class="text-center" scope="col">會合地點</th>
               <th class="text-center" scope="col">方案狀態</th>
             </tr>
@@ -150,10 +149,9 @@
                   currentPageContentArr[index][
                     "PROJECT_ORIGINAL_PRICE_PER_PERSON"
                   ]
+                    | currency
+                    | dollarSign
                 }}
-              </td>
-              <td class="text-center">
-                {{ currentPageContentArr[index]["PROJECT_MIN_NUM_OF_PEOPLE"] }}
               </td>
               <td class="text-center">
                 {{ currentPageContentArr[index]["LOCATION_NAME"] }}
@@ -194,7 +192,7 @@
 <script>
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-// 導入
+// 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
 
 export default {

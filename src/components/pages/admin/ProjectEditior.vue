@@ -39,7 +39,8 @@
       <div class="row">
         <div class="col-12">
           <div class="form-row">
-            <div class="form-group col-md-2">
+            <!-- 方案狀態開始 -->
+            <div class="form-group col-2">
               <label :for="requiredInputTitle.projectStatus">{{
                 requiredInputTitle.projectStatus
               }}</label>
@@ -52,7 +53,9 @@
                 <option value="0">已下線</option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <!-- 方案狀態結束 -->
+            <!-- 方案名稱開始 -->
+            <div class="form-group col-4">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -73,7 +76,9 @@
                 }}</span></ValidationProvider
               >
             </div>
-            <div class="form-group col-md-2">
+            <!-- 方案名稱結束 -->
+            <!-- 人均價格開始 -->
+            <div class="form-group col-2">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -94,7 +99,9 @@
                 }}</span></ValidationProvider
               >
             </div>
-            <div class="form-group col-md-2">
+            <!-- 人均價格結束 -->
+            <!-- 最低人數開始 -->
+            <div class="form-group col-2">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -115,9 +122,34 @@
                 }}</span></ValidationProvider
               >
             </div>
+            <!-- 最低人數結束 -->
+            <!-- 最高人數開始 -->
+            <div class="form-group col-2">
+              <ValidationProvider
+                :rules="{ required: true }"
+                v-slot="{ errors, classes }"
+              >
+                <label :for="requiredInputTitle.projectMaxNumOfPeople">{{
+                  requiredInputTitle.projectMaxNumOfPeople
+                }}</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  :class="classes"
+                  :id="requiredInputTitle.projectMaxNumOfPeople"
+                  placeholder="例：3"
+                  v-model="editDetails.projectMaxNumOfPeople"
+                />
+                <span class="invalid-feedback">{{
+                  errors[0]
+                }}</span></ValidationProvider
+              >
+            </div>
+            <!-- 最高人數結束 -->
           </div>
           <div class="form-row">
-            <div class="form-group col-md-2">
+            <!-- 所屬分類開始 -->
+            <div class="form-group col-2">
               <label :for="requiredInputTitle.projectCategory">{{
                 requiredInputTitle.projectCategory
               }}</label>
@@ -135,7 +167,9 @@
                 </option>
               </select>
             </div>
-            <div class="form-group col-md-2">
+            <!-- 所屬分類結束 -->
+            <!-- 會合地點開始 -->
+            <div class="form-group col-2">
               <label :for="requiredInputTitle.projectDepartureLocation">{{
                 requiredInputTitle.projectDepartureLocation
               }}</label>
@@ -153,7 +187,9 @@
                 </option>
               </select>
             </div>
-            <div class="form-group col-md-3">
+            <!-- 會合地點結束 -->
+            <!-- 方案大頭貼開始 -->
+            <div class="form-group col-3">
               <label
                 :for="requiredInputTitle.projectAvatarPublicID"
                 class="form-label"
@@ -176,7 +212,9 @@
                 >
               </div>
             </div>
-            <div class="form-group col-md-3">
+            <!-- 方案大頭貼結束 -->
+            <!-- 方案輪播圖開始 -->
+            <div class="form-group col-3">
               <label
                 :for="requiredInputTitle.projectCarouselImgs"
                 class="form-label"
@@ -200,6 +238,7 @@
                 >
               </div>
             </div>
+            <!-- 方案輪播圖結束 -->
           </div>
         </div>
       </div>
@@ -320,7 +359,9 @@ export default {
           // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除方案") != -1) {
             const deleteProjectAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteProject.php`;
-            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
+            const session = this.callBy.GlobalFunctions.getKapitanSession(
+              "backstage"
+            );
 
             let sendingObj = {
               session: session,
@@ -357,6 +398,7 @@ export default {
         projectName: "方案名稱",
         projectPricePerPerson: "人均價格",
         projectMinNumOfPeople: "最低人數",
+        projectMaxNumOfPeople: "最高人數",
         projectCategory: "所屬分類",
         projectDepartureLocation: "會合地點",
         projectAvatarPublicID: "方案大頭貼",
@@ -376,6 +418,7 @@ export default {
         projectDescription: "",
         projectPricePerPerson: 0,
         projectMinNumOfPeople: 0,
+        projectMaxNumOfPeople: 0,
         projectCategory: "",
         projectDepartureLocation: "",
         projectDepartureLocationDescription: "",
@@ -417,9 +460,6 @@ export default {
     });
     this.initializeEditor();
   },
-  beforeDestroy() {
-    // localStorage.removeItem("managingProject");
-  },
   components: {
     Breadcrumb,
     VueEditor,
@@ -434,6 +474,7 @@ export default {
       vm.editDetails.projectName = "";
       vm.editDetails.projectPricePerPerson = 0;
       vm.editDetails.projectMinNumOfPeople = 0;
+      vm.editDetails.projectMaxNumOfPeople = 0;
       vm.vueCloudinaryData.filesData.avatar = "";
       vm.vueCloudinaryData.filesData.carouselImgs = [];
       vm.editDetails.projectStatus = "0";
@@ -484,6 +525,8 @@ export default {
             response.data["PROJECT_ORIGINAL_PRICE_PER_PERSON"];
           vm.editDetails.projectMinNumOfPeople =
             response.data["PROJECT_MIN_NUM_OF_PEOPLE"];
+          vm.editDetails.projectMaxNumOfPeople =
+            response.data["PROJECT_MAX_NUM_OF_PEOPLE"];
           vm.editDetails.projectCategory = response.data["CATEGORY_ID"];
           vm.editDetails.projectDepartureLocation =
             response.data["LOCATION_ID"];
@@ -637,7 +680,7 @@ export default {
           vm.initializeEditor();
         });
     },
-    // 方法：刪除方案
+    // 方法：向提示視窗送刪除方案事件
     deleteProject() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -683,6 +726,7 @@ export default {
     },
   },
   computed: {
+    // 計算（方法）：返回提示視窗的選擇植
     returnModalEmitValue() {
       return this.modalData.emitValue;
     },
