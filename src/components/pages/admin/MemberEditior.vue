@@ -1,5 +1,5 @@
 <template>
-  <section id="member-info-page" class="position-relative">
+  <section id="member-editior-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -283,7 +283,7 @@
         <!-- 操作按鈕開始 -->
         <div class="col-4 ml-auto">
           <div
-            class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
+            class="action-buttons-block mr-4 ml-auto mt-4 px-4 d-flex justify-content-around align-items-center"
           >
             <input
               type="button"
@@ -490,7 +490,7 @@ export default {
           });
       }
     },
-    // 方法：
+    // 方法：根據會員帳號向後端詢問會員資訊
     queryMemberAccount() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryMemberAccount.php`;
       const vm = this;
@@ -519,7 +519,7 @@ export default {
           console.log(error);
         });
     },
-    // 方法：
+    // 方法：觸發大頭貼 input
     triggerFileInput() {
       let fileInput = document.querySelectorAll(".custom-file-input")[0];
       fileInput.click();
@@ -590,7 +590,7 @@ export default {
         fileReader.readAsDataURL(avatarFile);
       }
     },
-    // 方法：
+    // 方法：新增或更新會員資訊的複合函式
     updateMemberInfo() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -629,7 +629,7 @@ export default {
           this.vueCloudinaryData.filesData.avatar = "";
         });
     },
-    // 方法：
+    // 方法：向提示視窗送出刪除會員事件
     deleteMember() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -644,7 +644,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
-#member-info-page {
+#member-editior-page {
   height: 600px;
   .breadcrumb {
     padding: 0;
@@ -684,6 +684,17 @@ export default {
     &:hover {
       opacity: 0.8;
       cursor: pointer;
+      &::after {
+        content: "點擊更換大頭貼";
+        width: 120px;
+        height: 30px;
+        background-color: black;
+        color: $sail;
+        opacity: 1;
+        position: absolute;
+        text-align: center;
+        line-height: 30px;
+      }
     }
     div {
       width: 90%;
@@ -695,19 +706,6 @@ export default {
         height: 100%;
         object-fit: cover;
         object-position: center center;
-        &:hover {
-          ::after {
-            content: "點擊更換大頭貼";
-            width: 120px;
-            height: 30px;
-            background-color: black;
-            color: $sail;
-            opacity: 1;
-            position: absolute;
-            text-align: center;
-            line-height: 30px;
-          }
-        }
       }
     }
   }

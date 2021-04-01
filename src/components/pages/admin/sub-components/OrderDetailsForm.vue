@@ -1,5 +1,8 @@
 <template>
-  <div class="order-details-form" v-if="inCreatingMode || returneIndex >= 0">
+  <div
+    id="order-details-form-sub-page"
+    v-if="inCreatingMode || returneIndex >= 0"
+  >
     <h6 class="my-3" v-if="!inCreatingMode">
       正在編輯：{{ returneContentArr[returneIndex]["ORDER_DETAIL_ID"] }}
       訂單細項

@@ -1,5 +1,5 @@
 <template>
-  <section id="members-searching" class="position-relative">
+  <section id="members-searching-page" class="position-relative">
     <!-- 查詢輸入表單區域開始 -->
     <div class="row">
       <div class="col-10">
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-// 導入
+// 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
 
 export default {
