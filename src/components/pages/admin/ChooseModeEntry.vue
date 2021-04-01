@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="choose-mode-entry">
     <div
       v-if="$route.path == '/Admin/' + returnCurrentManager"
       class="query-mode-entry container d-flex flex-column align-items-center"
@@ -46,10 +46,10 @@ export default {
     };
   },
   created() {
-    console.log(this.$route);
     this.findOutCurrentManager();
   },
   methods: {
+    // 方法：透過路由字符切割得出所在管理系統
     findOutCurrentManager() {
       let adminPath = "/Admin/";
       let startIndex = this.$route.path.indexOf(adminPath);
@@ -62,6 +62,7 @@ export default {
     },
   },
   computed: {
+    // 計算（方法）：回傳所在管理系統的新增模式路由
     returnCreatePath() {
       switch (this.currentManager) {
         case "Orders-Manager":
@@ -72,6 +73,7 @@ export default {
           return (this.createPath = "/Admin/Members-Manager/Member-Creation");
       }
     },
+    // 計算（方法）：回傳所在管理系統的編輯模式路由
     returnEditPath() {
       switch (this.currentManager) {
         case "Orders-Manager":
@@ -82,15 +84,18 @@ export default {
           return (this.editPath = "/Admin/Members-Manager/Members-Searching/");
       }
     },
+    // 計算（方法）：回傳所在管理系統的路由
     returnCurrentManager() {
       this.findOutCurrentManager();
       return this.currentManager;
     },
+    // 計算（方法）：回傳所在路由
     returnCurrentPath() {
       return this.$route.path;
     },
   },
   filters: {
+    // 篩選：去除「管理系統」等前綴字樣
     filterSpecificRouterName(str) {
       return str.replace("管理系統：", "");
     },

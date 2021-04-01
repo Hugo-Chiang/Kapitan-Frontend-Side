@@ -49,6 +49,20 @@
       <div class="col-10">
         <div class="form-row">
           <div class="form-group col-md-3">
+            <label for="order-status">訂單狀態</label>
+            <select
+              id="order-status"
+              class="form-control form-select-lg"
+              v-model="queryData.orderStatus"
+            >
+              <option disabled selected value>－請選擇－</option>
+              <option value="%%">全部</option>
+              <option value="2">已完成</option>
+              <option value="1">進行中</option>
+              <option value="0">已取消</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
             <label for="orderer-name">訂購人姓名</label>
             <input
               type="text"
@@ -58,7 +72,7 @@
               v-model="queryData.ordererName"
             />
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-4">
             <label for="orderer-phone">訂購人手機</label>
             <input
               type="text"
@@ -66,16 +80,6 @@
               id="orderer-phone"
               placeholder="0900000000"
               v-model="queryData.ordererPhone"
-            />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="orderer-email">訂購人電郵</label>
-            <input
-              type="email"
-              class="form-control"
-              id="orderer-email"
-              placeholder="Hello-World@email.com"
-              v-model="queryData.ordererEmail"
             />
           </div>
           <div class="form-group col-md-1 ml-3">
@@ -102,10 +106,10 @@
               <th class="text-center" scope="col">訂單編號</th>
               <th class="text-center" scope="col">訂購人姓名</th>
               <th class="text-center" scope="col">訂購人手機</th>
-              <th class="text-center" scope="col">訂購人電郵</th>
-              <th class="text-center" scope="col">訂單日期</th>
               <th class="text-center" scope="col">會員編號</th>
+              <th class="text-center" scope="col">訂單日期</th>
               <th class="text-center" scope="col">訂單總額</th>
+              <th class="text-center" scope="col">訂單狀態</th>
             </tr>
           </thead>
           <tbody v-for="(order, index) in currentPageContentArr" :key="index">
@@ -126,19 +130,21 @@
                 {{ currentPageContentArr[index]["ORDER_MC_PHONE"] }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index]["ORDER_MC_EMAIL"] }}
+                {{ currentPageContentArr[index]["FK_MEMBER_ID_for_OD"] }}
               </td>
               <td class="text-center">
                 {{ currentPageContentArr[index]["ORDER_DATE"] }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index]["FK_MEMBER_ID_for_OD"] }}
+                {{
+                  (currentPageContentArr[index]["ORDER_TOTAL_CONSUMPTION"] -
+                    currentPageContentArr[index]["ORDER_TOTAL_DISCOUNT"])
+                    | currency
+                    | dollarSign
+                }}
               </td>
               <td class="text-center">
-                {{
-                  currentPageContentArr[index]["ORDER_TOTAL_CONSUMPTION"] -
-                  currentPageContentArr[index]["ORDER_TOTAL_DISCOUNT"]
-                }}
+                {{ currentPageContentArr[index]["ORDER_STATUS"] | orderStatus }}
               </td>
             </tr>
           </tbody>
@@ -177,10 +183,10 @@ export default {
       queryData: {
         orderID: "",
         orderDate: "",
+        orderStatus: "",
         memberAccount: "",
         ordererName: "",
         ordererPhone: "",
-        ordererEmail: "",
       },
       allOrdersArr: [],
       itemsNumPerPage: 5,

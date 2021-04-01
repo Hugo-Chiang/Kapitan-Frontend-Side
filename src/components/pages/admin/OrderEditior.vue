@@ -1,5 +1,5 @@
 <template>
-  <section id="order-details-page" class="position-relative">
+  <section id="order-editior-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -328,8 +328,11 @@
 </template>
 
 <script>
+// 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
+// 導入細項編輯元件
 import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetailsForm";
 
 export default {
@@ -430,9 +433,6 @@ export default {
     });
     this.initializeEditor();
   },
-  beforeDestroy() {
-    // localStorage.removeItem("managingOrder");
-  },
   props: ["currentManager", "currentPath"],
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   methods: {
@@ -493,7 +493,7 @@ export default {
           });
       }
     },
-    // 方法：
+    // 方法：更新訂單資料
     updateOrderData() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -524,7 +524,7 @@ export default {
           vm.modalData.situation.message = error.data;
         });
     },
-    // 方法：
+    // 方法：向提示視窗送出刪除訂單事件
     deleteOrder() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -537,7 +537,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#order-details-page {
+#order-editior-page {
   height: 600px;
   .breadcrumb {
     padding: 0;

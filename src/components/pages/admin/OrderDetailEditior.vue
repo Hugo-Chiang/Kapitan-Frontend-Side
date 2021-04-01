@@ -1,5 +1,5 @@
 <template>
-  <section id="order-details-page" class="position-relative">
+  <section id="order-detail-editior-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
     <!-- 麵包屑元件結束 -->
@@ -9,6 +9,7 @@
       >
       <span v-else> 正在新增：{{ creatingID }} 號訂單細項 </span>
     </h6>
+    <!-- 細項表格開始 -->
     <table
       class="table"
       :class="
@@ -59,6 +60,7 @@
             {{ currentPageContentArr[index].ORDER_DETAIL_EC_PHONE }}
           </td>
         </tr>
+        <!-- 摺疊細項編輯器開始 -->
         <tr>
           <td
             colspan="7"
@@ -78,8 +80,11 @@
             ></OrderDetailsForm>
           </td>
         </tr>
+        <!-- 摺疊細項編輯器結束 -->
       </tbody>
     </table>
+    <!-- 細項表格結束 -->
+    <!-- 頁碼開始 -->
     <div id="pagination-container" class="position-absolute">
       <Pagination
         v-show="currentPageContentArr.length > 0 && !inCreatingMode"
@@ -88,12 +93,16 @@
         @emitCurrentContentAndSerial="getCurrentContentAnsSerial"
       ></Pagination>
     </div>
+    <!-- 頁碼結束 -->
   </section>
 </template>
 
 <script>
+// 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
+// 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
+// 導入細項編輯元件
 import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetailsForm";
 
 export default {
@@ -124,7 +133,9 @@ export default {
           // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除訂單") != -1) {
             const deleteOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrder.php`;
-            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
+            const session = this.callBy.GlobalFunctions.getKapitanSession(
+              "backstage"
+            );
 
             let sendingObj = {
               session: session,
@@ -213,6 +224,7 @@ export default {
     },
   },
   computed: {
+    // 計算（方法）：根據不同模式回傳對應的麵包屑內容
     returnBreadCrumbData() {
       let breadCrumbData = {};
 
@@ -241,7 +253,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
-#order-details-page {
+#order-detail-editior-page {
   height: 700px;
   .breadcrumb {
     padding: 0;

@@ -20,7 +20,7 @@
           :placeholder="signInForm.emailPlaceHolder"
           required
           autofocus
-          v-model="signInData.account"
+          v-model="loginData.account"
           key="input-email"
         />
         <label for="input-password" class="sr-only" key="passwordLabel"
@@ -32,12 +32,15 @@
           class="form-control"
           :placeholder="signInForm.passwordPlaceHolder"
           required
-          v-model="signInData.password"
+          v-model="loginData.password"
           key="input-password"
         />
       </div>
       <div class="checkbox mb-3">
-        <label> <input type="checkbox" value="記住我" /> 記住我 </label>
+        <label>
+          <input type="checkbox" value="記住我" v-model="loginData.remeberMe" />
+          記住我
+        </label>
       </div>
       <button
         class="btn btn-lg btn-primary btn-block"
@@ -55,7 +58,7 @@
           帳號或密碼錯誤
         </div>
       </div>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">&copy; 2035 Kapitan</p>
     </form>
   </main>
 </template>
@@ -68,9 +71,10 @@ export default {
         emailPlaceHolder: "請輸入帳號",
         passwordPlaceHolder: "請輸入密碼",
       },
-      signInData: {
+      loginData: {
         account: "",
         password: "",
+        rememberMe: false,
       },
       signInFailedFeedback: {
         signInFailedWarning: false,
@@ -82,19 +86,23 @@ export default {
     // 方法：（搭配導航守衛）將帳密傳予後端 API 進行登入，並透過後端回傳的 token 保持登入驗證狀態
     signIn() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignIn.php`;
+      const remeberMe = this.loginData.remeberMe;
       const vm = this;
 
       this.$http
-        .post(api, JSON.stringify(this.signInData))
+        .post(api, JSON.stringify(this.loginData))
         .then((response) => {
           if (response.data.singInStatus) {
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
-            document.cookie = `kapitanAdminSession="${session}"; expires="${expDate}"`;
+
+            document.cookie = `kapitanAdminSession="${session}"; expires="${
+              remeberMe ? expDate : ""
+            }"`;
             vm.$router.push({ name: "管理系統：首頁" });
           } else {
-            vm.signInData.account = "";
-            vm.signInData.password = "";
+            vm.loginData.account = "";
+            vm.loginData.password = "";
             vm.signInFailedFeedback.signInFailedWarning = true;
             vm.signInFailedFeedback.signInFailedAnime = true;
             setTimeout(() => {

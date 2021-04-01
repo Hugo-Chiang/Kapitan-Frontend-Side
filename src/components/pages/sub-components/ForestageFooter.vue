@@ -102,7 +102,7 @@
             @mouseenter="showFakeCopyRightDescription = true"
             @mouseleave="showFakeCopyRightDescription = false"
           >
-            © 2035 Kapitan. all rights reserved.
+            &copy; 2035 Kapitan. all rights reserved.
             <span
               class="fake-copy-right-des text-warning"
               v-show="showFakeCopyRightDescription"

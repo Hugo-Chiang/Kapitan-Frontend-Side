@@ -3,7 +3,7 @@
   <div class="backgroud">
     <div class="container">
       <!-- 管理系統介面開始 -->
-      <div class="d-flex flex-row dashboard">
+      <div id="dashboard" class="d-flex flex-row dashboard">
         <!-- 介面側邊欄開始 -->
         <aside class="side-bar">
           <!-- 管理員大頭貼開始 -->
@@ -48,7 +48,7 @@
           <div class="text-center mb-1">
             甲必丹管理系統<span class="ml-2">v1.0</span>
           </div>
-          <div class="text-center">© 2035 Kapitan</div>
+          <div class="text-center">&copy; 2035 Kapitan</div>
         </aside>
         <!-- 介面側邊欄結束 -->
         <!-- 介面主要內容開始 -->
