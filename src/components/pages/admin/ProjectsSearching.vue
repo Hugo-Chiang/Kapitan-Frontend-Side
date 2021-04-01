@@ -79,7 +79,7 @@
           </div>
           <div class="form-group col-md-3">
             <label for="project-price-beyond" class="form-label"
-              >人均價格<span class="remarks">（含以下）</span></label
+              >人均價格<span class="remarks">c</span></label
             >
             <div class="h-50 px-1 d-flex flex-column align-items-start">
               <div class="project-price-str">

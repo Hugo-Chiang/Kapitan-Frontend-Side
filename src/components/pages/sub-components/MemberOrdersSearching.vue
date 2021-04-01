@@ -242,11 +242,11 @@
           >
             <h3 class="text-center">什麼都沒有呢...</h3>
             <img
-              src="../../../assets/img/forestage/member-centre/people-on-yacht.jpg"
+              src="../../../assets/img/forestage/member-centre/couple-on-the-beach.jpg"
               alt=""
-              class="my-5"
+              class="my-3"
             />
-            <h5 class="text-center mt-2">看看其他狀態的訂單吧！</h5>
+            <h5 class="text-center">看看其他狀態的訂單吧！</h5>
           </div>
         </div>
         <!-- 查無資料結束 -->
@@ -480,7 +480,7 @@ a {
   #no-order-found-block {
     width: 80%;
     img {
-      width: 330px;
+      width: 60%;
     }
   }
 }
