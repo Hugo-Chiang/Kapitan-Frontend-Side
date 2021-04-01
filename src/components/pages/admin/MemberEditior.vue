@@ -534,7 +534,7 @@ export default {
       this.$eventBus.$emit("emitModalData", this.modalData);
       this.modalData.situation.buttonType = "checked";
 
-      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${this.GlobalVariables.cloudName}/upload`;
       const vm = this;
 
       // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）

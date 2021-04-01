@@ -52,7 +52,6 @@
               <!-- 人均售價開始 -->
               <li class="list-group-item">
                 <div
-                  id="project-price-per-person"
                   class="my-3"
                   v-if="
                     selectedProject.selectedProjectContent
@@ -62,7 +61,7 @@
                     selectedProject.selectedProjectContent.projectPricePerPerson
                   "
                 >
-                  每位成員特惠價：<span>
+                  每位成員特惠價：<span id="price-per-person">
                     {{
                       selectedProject.selectedProjectContent
                         .projectPricePerPerson
@@ -252,7 +251,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #project-page {
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   .nav-item {
     cursor: pointer;
   }
@@ -266,6 +265,11 @@ export default {
         }
       }
     }
+  }
+  #price-per-person {
+    font-size: 18px;
+    font-weight: 700;
+    color: darkred;
   }
 }
 </style>

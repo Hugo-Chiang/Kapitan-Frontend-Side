@@ -31,7 +31,7 @@
       </div>
       <!-- Leaflet 地圖套件結束 -->
       <!-- 會合地點介紹與導航開始 -->
-      <div class="col-lg-4 mt-lg-5 col-md-12 mt-0">
+      <div class="col-lg-4 mt-lg-1 col-md-12 mt-0">
         <h5>{{ departureLocationInfo.locationName }}</h5>
         <div
           v-html="departureLocationInfo.locationDescription"

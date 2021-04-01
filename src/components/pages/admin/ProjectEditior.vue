@@ -477,6 +477,8 @@ export default {
       vm.editDetails.projectMaxNumOfPeople = 0;
       vm.vueCloudinaryData.filesData.avatar = "";
       vm.vueCloudinaryData.filesData.carouselImgs = [];
+      vm.editDetails.projectSummary = "";
+      vm.editDetails.projectDescription = "";
       vm.editDetails.projectStatus = "0";
       vm.editDetails.projectCategory = "CG0001";
       vm.editDetails.projectDepartureLocation = "LC0001";
@@ -560,7 +562,7 @@ export default {
       this.$eventBus.$emit("emitModalData", this.modalData);
       this.modalData.situation.buttonType = "checked";
 
-      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${this.GlobalVariables.cloudName}/upload`;
       const vm = this;
 
       // 判定是否有選擇圖檔，決定是否要執行上傳雲端的動作（抑或是跳至下一步）
@@ -574,13 +576,23 @@ export default {
 
         if (avatarFile != "") {
           let toolArr = [];
+          toolArr.push(avatarFile);
           for (let prop in totalUploadObj) {
             toolArr.push(totalUploadObj[prop]);
           }
-          toolArr.unshift(avatarFile);
           totalUploadObj = Object.assign({}, toolArr);
         }
 
+        // 透過檔案名稱定義屬性名稱以做識別
+        let newObj = {};
+
+        for (let prop in totalUploadObj) {
+          newObj[`${totalUploadObj[prop].size}-${prop}`] = totalUploadObj[prop];
+        }
+
+        totalUploadObj = newObj;
+
+        // 透過物件大小與索引作為後續對應行為的識別值
         let objSize = Object.keys(totalUploadObj).length;
         let objIndex = 1;
 
@@ -591,7 +603,10 @@ export default {
             "load",
             function () {
               let preset = "";
-              if (avatarFile != "" && prop == 0) {
+              let symbolIndex = prop.indexOf("-");
+              let index = prop.substr(symbolIndex + 1);
+
+              if (avatarFile != "" && index == 0) {
                 preset = vm.GlobalVariables.projectAvatarPreset;
               } else {
                 preset = vm.GlobalVariables.projectCarouselPreset;
@@ -617,18 +632,45 @@ export default {
               axios(requestObj)
                 .then((response) => {
                   console.log(response.data);
-                  if (avatarFile != "" && objIndex == 1) {
-                    vm.editDetails.projectAvatarPublicID =
-                      response.data.public_id;
+
+                  let public_id = response.data.public_id;
+
+                  if (
+                    avatarFile != "" &&
+                    public_id.indexOf("Projects-Avatar") != -1
+                  ) {
+                    vm.editDetails.projectAvatarPublicID = public_id;
                   } else {
-                    vm.editDetails.projectCarouselImgs.push(
-                      response.data.public_id
-                    );
+                    vm.editDetails.projectCarouselImgs.push(response.data);
                   }
 
                   if (objIndex == objSize) {
                     vm.modalData.situation.event = "圖片上傳成功。";
                     vm.modalData.situation.message = `<p>${objIndex} 張圖片全部上傳成功！</p>`;
+
+                    for (let prop in totalUploadObj) {
+                      let symbolIndex = prop.indexOf("-");
+                      let size = prop.substr(0, symbolIndex);
+                      let index = prop.substr(symbolIndex + 1);
+
+                      for (let file of vm.editDetails.projectCarouselImgs) {
+                        if (file.bytes == size) {
+                          file.sortIndex = index;
+                        }
+                      }
+                    }
+
+                    vm.editDetails.projectCarouselImgs.sort(function (a, b) {
+                      return a.sortIndex - b.sortIndex;
+                    });
+
+                    let newArr = vm.editDetails.projectCarouselImgs;
+                    vm.editDetails.projectCarouselImgs = [];
+
+                    for (let file of newArr) {
+                      vm.editDetails.projectCarouselImgs.push(file.public_id);
+                    }
+
                     vm.updateProjectDetails();
                   } else {
                     vm.modalData.situation.message = `第 ${objIndex} 張圖片上傳成功`;
@@ -690,7 +732,7 @@ export default {
     },
     // 方法：自定義 vue2-editor 文本編輯器的圖片上傳方式，改為 Cloudinary 的上傳方式
     uploadContentImg(file, editor, cursorLocation) {
-      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/upload`;
+      const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${this.GlobalVariables.cloudName}/upload`;
       const vm = this;
 
       console.log("圖檔上傳器已啟動");
