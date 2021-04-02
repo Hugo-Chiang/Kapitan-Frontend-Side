@@ -705,7 +705,7 @@ export default {
     },
     // 方法：將方案更新數據寫入資料庫
     updateProjectDetails() {
-      const updateProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdatepProjectDetails.php`;
+      const updateProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/UpdateProjectDetails.php`;
       const createProjectDetailsAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/InsertNewProject.php`;
       const vm = this;
       const session = vm.GlobalFunctions.getKapitanSession("backstage");
