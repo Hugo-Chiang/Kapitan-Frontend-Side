@@ -1,5 +1,5 @@
 <template>
-  <div id="member-info-editior" class="card-body">
+  <div id="member-info-editor" class="card-body">
     <h4 class="mb-4">基本資料</h4>
     <!-- 會員編輯區開始 -->
     <!-- 修改密碼開始 -->
@@ -279,7 +279,7 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="$emit('emitCloseEditior')"
+              @click.prevent="$emit('emitCloseeditor')"
               >不儲存關閉</a
             >
           </div>

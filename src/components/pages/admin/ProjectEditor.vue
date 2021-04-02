@@ -1,5 +1,5 @@
 <template>
-  <section id="project-details-page">
+  <section id="project-editor-page">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -169,7 +169,7 @@
             </div>
             <!-- 所屬分類結束 -->
             <!-- 會合地點開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-3">
               <label :for="requiredInputTitle.projectDepartureLocation">{{
                 requiredInputTitle.projectDepartureLocation
               }}</label>
@@ -244,8 +244,15 @@
       </div>
       <hr />
       <div class="row">
-        <div class="col-2">
-          <h6>方案文本編輯器</h6>
+        <div class="col-6">
+          <h6 class="d-inline-block">方案文本編輯器</h6>
+          <!-- 編輯器提示語開始 -->
+          <span
+            id="editor-prompt"
+            class="d-inline-block ml-2"
+            v-html="editorPrompt"
+          ></span>
+          <!-- 編輯器提示語結束 -->
         </div>
       </div>
       <div class="row mt-2">
@@ -391,6 +398,9 @@ export default {
               );
             }
           }
+
+          this.callBy.modalData.situation.event = "";
+          this.callBy.modalData.situation.message = "";
         },
       },
       requiredInputTitle: {
@@ -423,6 +433,7 @@ export default {
         projectDepartureLocation: "",
         projectDepartureLocationDescription: "",
       },
+      editorPrompt: "",
       // vue2-editor 文本編輯器的配置或應用資料
       vueEditorData: {
         ToolbarConfig: [
@@ -482,6 +493,7 @@ export default {
       vm.editDetails.projectStatus = "0";
       vm.editDetails.projectCategory = "CG0001";
       vm.editDetails.projectDepartureLocation = "LC0001";
+      vm.editorPrompt = "";
 
       this.$http.get(categoryListAPI).then((response) => {
         vm.renderData.categoryList = response.data;
@@ -735,7 +747,8 @@ export default {
       const cloudinaryUploadAPI = `https://api.cloudinary.com/v1_1/${this.GlobalVariables.cloudName}/upload`;
       const vm = this;
 
-      console.log("圖檔上傳器已啟動");
+      vm.editorPrompt = "";
+      vm.editorPrompt = "編輯器圖片上傳器已啟動";
 
       let formData = new FormData();
       formData.append("upload_preset", vm.GlobalVariables.projectContentPreset);
@@ -746,23 +759,23 @@ export default {
         method: "POST",
         data: formData,
         onUploadProgress: function (progressEvent) {
-          console.log("正在處理：", progressEvent);
+          vm.editorPrompt = `正在處理：${progressEvent}`;
           vm.progress = Math.round(
             (progressEvent.loaded * 100.0) / progressEvent.total
           );
-          console.log(`進度：${vm.progress}％`);
+          vm.editorPrompt = `編輯器圖片上傳進度：${vm.progress}％`;
         },
       };
 
       axios(requestObj)
         .then((response) => {
-          console.log("上傳成功！");
+          vm.editorPrompt = "編輯器圖片上傳成功！";
           console.log(response);
           let url = response.data.secure_url;
           editor.insertEmbed(cursorLocation, "image", url);
         })
         .catch((error) => {
-          console.log("上傳失敗！");
+          vm.editorPrompt = "編輯器圖片上傳失敗！";
           console.log(error);
         });
     },
@@ -830,6 +843,9 @@ h6 {
       color: darkred;
     }
   }
+}
+#editor-prompt {
+  font-size: 14px;
 }
 .editingHTMLlist {
   li {

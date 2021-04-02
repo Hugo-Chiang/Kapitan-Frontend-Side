@@ -53,11 +53,11 @@
       <section class="col-lg-9 col-12">
         <div class="card">
           <!-- （切換）基本資料開始 -->
-          <MemberInfoEditior
+          <MemberInfoEditor
             v-if="currentSubPage == '基本資料'"
             :memberInfo="memberInfo.propsObj"
-            @emitCloseEditior="backToWelcomePage"
-          ></MemberInfoEditior>
+            @emitCloseEditor="backToWelcomePage"
+          ></MemberInfoEditor>
           <!-- （切換）基本資料結束 -->
           <!-- （切換）查詢訂單開始 -->
           <MemberOrdersSearching
@@ -90,7 +90,7 @@
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入會員中心的 3 個次級內容元件
-import MemberInfoEditior from "@/components/pages/sub-components/MemberInfoEditior";
+import MemberInfoEditor from "@/components/pages/sub-components/MemberInfoEditor";
 import MemberOrdersSearching from "@/components/pages/sub-components/MemberOrdersSearching";
 import MemberCommentsSearching from "@/components/pages/sub-components/MemberCommentsSearching";
 
@@ -116,7 +116,7 @@ export default {
   },
   components: {
     Breadcrumb,
-    MemberInfoEditior,
+    MemberInfoEditor,
     MemberOrdersSearching,
     MemberCommentsSearching,
   },

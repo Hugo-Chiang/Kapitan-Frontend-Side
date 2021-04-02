@@ -1,5 +1,5 @@
 <template>
-  <section id="order-editior-page" class="position-relative">
+  <section id="order-editor-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -431,13 +431,13 @@ export default {
     this.$eventBus.$on("emitModalValue", (value) => {
       this.modalData.emitValue = value;
     });
-    this.initializeEditor();
+    this.initializeeditor();
   },
   props: ["currentManager", "currentPath"],
   components: { Breadcrumb, Pagination, OrderDetailsForm },
   methods: {
     // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
-    initializeEditor() {
+    initializeeditor() {
       if (this.currentPath.indexOf("Order-Creation") == -1)
         this.inCreatingMode = false;
       else this.inCreatingMode = true;
@@ -537,7 +537,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#order-editior-page {
+#order-editor-page {
   height: 600px;
   .breadcrumb {
     padding: 0;

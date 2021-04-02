@@ -1,5 +1,5 @@
 <template>
-  <section id="member-editior-page" class="position-relative">
+  <section id="member-editor-page" class="position-relative">
     <!-- 麵包屑元件開始 -->
     <Breadcrumb
       v-if="!inCreatingMode"
@@ -644,7 +644,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
-#member-editior-page {
+#member-editor-page {
   height: 600px;
   .breadcrumb {
     padding: 0;

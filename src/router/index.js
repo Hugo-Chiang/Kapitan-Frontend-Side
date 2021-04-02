@@ -14,12 +14,12 @@ import BackstageLogin from '@/components/pages/admin/BackstageLogin';
 import Dashboard from '@/components/pages/admin/Dashboard';
 import ChooseModeEntry from '@/components/pages/admin/ChooseModeEntry';
 import OrdersSearching from '@/components/pages/admin/OrdersSearching';
-import OrderEditior from '@/components/pages/admin/OrderEditior';
-import OrderDetailEditior from '@/components/pages/admin/OrderDetailEditior';
+import OrderEditor from '@/components/pages/admin/OrderEditor';
+import OrderDetailEditor from '@/components/pages/admin/OrderDetailEditor';
 import ProjectsSearching from '@/components/pages/admin/ProjectsSearching';
-import ProjectEditior from '@/components/pages/admin/ProjectEditior';
+import ProjectEditor from '@/components/pages/admin/ProjectEditor';
 import MembersSearching from '@/components/pages/admin/MembersSearching';
-import MemberEditior from '@/components/pages/admin/MemberEditior';
+import MemberEditor from '@/components/pages/admin/MemberEditor';
 
 Vue.use(Router);
 
@@ -96,13 +96,13 @@ const router = new Router({
                 {
                   path: '/Admin/Orders-Manager/Order-Creation',
                   name: '管理系統：新增訂單',
-                  component: OrderEditior,
+                  component: OrderEditor,
                   meta: { requiresAuth: true }
                 },
                 {
                   path: '/Admin/Orders-Manager/Order-Creation/Order-Details-Creation',
                   name: '管理系統：新增細項',
-                  component: OrderDetailEditior,
+                  component: OrderDetailEditor,
                   meta: { requiresAuth: true }
                 },
                 {
@@ -112,15 +112,15 @@ const router = new Router({
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Orders-Manager/Orders-Searching/Order-Editior',
+                  path: '/Admin/Orders-Manager/Orders-Searching/Order-Editor',
                   name: '管理系統：編輯訂單',
-                  component: OrderEditior,
+                  component: OrderEditor,
                   meta: { requiresAuth: true }
                 },
                 {
-                  path: '/Admin/Orders-Manager/Order-Editior/Order-Detail-Editior',
+                  path: '/Admin/Orders-Manager/Order-Editor/Order-Detail-Editor',
                   name: '管理系統：編輯細項',
-                  component: OrderDetailEditior,
+                  component: OrderDetailEditor,
                   meta: { requiresAuth: true }
                 }
               ]
@@ -134,7 +134,7 @@ const router = new Router({
                 {
                   path: '/Admin/Projects-Manager/Project-Creation',
                   name: '管理系統：新增方案',
-                  component: ProjectEditior,
+                  component: ProjectEditor,
                   meta: { requiresAuth: true }
                 },
                 {
@@ -144,9 +144,9 @@ const router = new Router({
                   meta: { requiresAuth: true },
                 },
                 {
-                  path: '/Admin/Projects-Manager/Project-Editior',
+                  path: '/Admin/Projects-Manager/Project-Editor',
                   name: '管理系統：編輯方案',
-                  component: ProjectEditior,
+                  component: ProjectEditor,
                   meta: { requiresAuth: true }
                 }
               ]
@@ -160,7 +160,7 @@ const router = new Router({
                 {
                   path: '/Admin/Members-Manager/Member-Creation',
                   name: '管理系統：新增會員',
-                  component: MemberEditior,
+                  component: MemberEditor,
                   meta: { requiresAuth: true }
                 },
                 {
@@ -170,9 +170,9 @@ const router = new Router({
                   meta: { requiresAuth: true },
                 },
                 {
-                  path: '/Admin/Members-Manager/Member-Editior',
+                  path: '/Admin/Members-Manager/Member-Editor',
                   name: '管理系統：編輯會員',
-                  component: MemberEditior,
+                  component: MemberEditor,
                   meta: { requiresAuth: true }
                 }
               ]
