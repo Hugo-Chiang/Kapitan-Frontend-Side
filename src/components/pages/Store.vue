@@ -5,21 +5,38 @@
     <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
     <!-- 麵包屑結束 -->
     <!-- 方案篩選器與方案列表開始 -->
-    <div class="row">
-      <!-- 方案篩選器開始 -->
+    <div class="row d-flex">
+      <!-- （桌面版）方案篩選器開始 -->
       <aside
         id="aside-bar"
-        class="card pb-4 col-xl-2 d-xl-block d-none position-sticky"
+        class="card pb-4 col-xl-2 d-xl-block order-xl-0 order-3"
+        :class="{ 'd-none': !filterData.showMobileFilters.showFramework }"
       >
         <div class="card-body">
           <!-- 挑選地點開始 -->
-          <h5 class="mb-0">挑選地點</h5>
-          <hr />
-          <ul id="category-list" class="pl-3">
+          <h5
+            class="mb-0 d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showCategories }"
+          >
+            挑選地點
+          </h5>
+          <hr
+            class="d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showCategories }"
+          />
+          <ul
+            id="category-list"
+            class="pl-3 d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showCategories }"
+          >
             <li>
               <input
                 type="checkbox"
                 name="全選"
+                class="d-xl-inline-block"
+                :class="{
+                  'd-none': !filterData.showMobileFilters.showCategories,
+                }"
                 v-model="filterData.selectedAll"
                 @change="checkSelectAll"
               />
@@ -30,7 +47,10 @@
                 type="checkbox"
                 :name="category['CATEGORY_NAME']"
                 :value="category['CATEGORY_ID']"
-                class="category-checkbox"
+                class="category-checkbox d-xl-inline-block"
+                :class="{
+                  'd-none': !filterData.showMobileFilters.showCategories,
+                }"
                 v-model="filterData.selectedCategories"
               />
               {{ category["CATEGORY_NAME"] }}
@@ -38,15 +58,27 @@
           </ul>
           <!-- 挑選地點結束 -->
           <!-- 人均預算開始 -->
-          <h5 class="mt-4 mb-0">人均預算</h5>
-          <hr />
-          <div class="budget mb-1">
+          <h5
+            class="mt-4 mb-0 d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
+          >
+            人均預算
+          </h5>
+          <hr
+            class="d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
+          />
+          <div
+            class="budget mb-1 d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
+          >
             {{ Number(filterData.budget) | currency | dollarSign
             }}<span class="budget-remark">（含）以下</span>
           </div>
           <input
             type="range"
-            class="form-range"
+            class="form-range d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
             min="0"
             max="10000"
             step="500"
@@ -55,9 +87,21 @@
           />
           <!-- 人均預算結束 -->
           <!-- 結果排序開始 -->
-          <h5 class="mt-4 mb-0">結果排序</h5>
-          <hr />
-          <select class="form-control form-select-lg" v-model="filterData.sort">
+          <h5
+            class="mt-4 mb-0 d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showSort }"
+          >
+            結果排序
+          </h5>
+          <hr
+            class="d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showSort }"
+          />
+          <select
+            class="form-control form-select-lg d-xl-block"
+            :class="{ 'd-none': !filterData.showMobileFilters.showSort }"
+            v-model="filterData.sort"
+          >
             <option disabled selected value>－請選擇－</option>
             <option value="'%%'">預設</option>
             <option value="PROJECT_ORIGINAL_PRICE_PER_PERSON ASC">
@@ -68,7 +112,7 @@
           <!-- 結果排序結束 -->
         </div>
       </aside>
-      <!-- 方案篩選器開始 -->
+      <!-- （桌面版）方案篩選器結束 -->
       <!-- 方案列表開始 -->
       <section class="container col-xl-10 col-12 mb-5">
         <ul
@@ -101,25 +145,35 @@
                 "
                 alt="這裡是卡片頂圖"
               />
-              <div class="card-body">
+              <div class="card-body position-relative">
                 <h6 class="card-title">
                   {{ project["PROJECT_NAME"] }}
                 </h6>
                 <p class="card-text"></p>
                 <div class="row">
-                  <div class="col-6">
-                    <i class="fas fa-users"></i>
-                    {{ project["PROJECT_MIN_NUM_OF_PEOPLE"] }} -
-                    {{ project["PROJECT_MAX_NUM_OF_PEOPLE"] }}
+                  <div
+                    class="card-people-num col-6 pl-0 position-absolute d-flex align-items-center"
+                  >
+                    <span class="d-inline-block mr-1">
+                      <i class="fas fa-users"></i>
+                    </span>
+                    <span class="d-inline-block">
+                      {{ project["PROJECT_MIN_NUM_OF_PEOPLE"] }} -
+                      {{ project["PROJECT_MAX_NUM_OF_PEOPLE"] }}
+                    </span>
                   </div>
-                  <h6 class="card-price col-6">
+                  <div
+                    class="card-price col-6 pr-0 text-right position-absolute"
+                  >
                     每人
-                    {{
-                      Number(project["PROJECT_ORIGINAL_PRICE_PER_PERSON"])
-                        | currency
-                        | dollarSign
-                    }}
-                  </h6>
+                    <span class="price">
+                      {{
+                        Number(project["PROJECT_ORIGINAL_PRICE_PER_PERSON"])
+                          | currency
+                          | dollarSign
+                      }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </li>
@@ -144,6 +198,49 @@
         <!-- 查無資料結束 -->
       </section>
       <!-- 方案列表結束 -->
+      <!-- （行動版）方案篩選器開始 -->
+      <ul
+        id="mobile-filter"
+        class="position-fixed m-0 px-0 py-2 d-xl-none d-flex aligm-items-center"
+      >
+        <li
+          @click="
+            [
+              (filterData.showMobileFilters.showCategories = !filterData
+                .showMobileFilters.showCategories),
+              (filterData.showMobileFilters.showBudget = false),
+              (filterData.showMobileFilters.showSort = false),
+            ]
+          "
+        >
+          <i class="fas fa-filter"></i> 挑選地點
+        </li>
+        <li
+          @click="
+            [
+              (filterData.showMobileFilters.showBudget = !filterData
+                .showMobileFilters.showBudget),
+              (filterData.showMobileFilters.showCategories = false),
+              (filterData.showMobileFilters.showSort = false),
+            ]
+          "
+        >
+          <i class="fas fa-comment-dollar"></i> 人均預算
+        </li>
+        <li
+          @click="
+            [
+              (filterData.showMobileFilters.showSort = !filterData
+                .showMobileFilters.showSort),
+              (filterData.showMobileFilters.showBudget = false),
+              (filterData.showMobileFilters.showCategories = false),
+            ]
+          "
+        >
+          <i class="fas fa-sort-alpha-up"></i> 結果排序
+        </li>
+      </ul>
+      <!-- （行動版）方案篩選器結束 -->
     </div>
     <!-- 方案篩選器與方案列表結束 -->
     <!-- 頁碼開始 -->
@@ -183,6 +280,12 @@ export default {
         selectedCategories: [],
         budget: 10000,
         sort: "'%%'",
+        showMobileFilters: {
+          showFramework: false,
+          showCategories: false,
+          showBudget: false,
+          showSort: false,
+        },
       },
       categoryList: [],
       allProjectsArr: [],
@@ -250,6 +353,17 @@ export default {
           this.filterData.selectedAll = false;
         }
 
+        // 判斷：任一行動版篩選鈕被點擊時，關聯外框 css 的布靈值就要連動
+        let showCategories = this.filterData.showMobileFilters.showCategories;
+        let showBudget = this.filterData.showMobileFilters.showBudget;
+        let showSort = this.filterData.showMobileFilters.showSort;
+
+        if (showCategories || showBudget || showSort) {
+          this.filterData.showMobileFilters.showFramework = true;
+        } else if (!showCategories || !showBudget || !showSort) {
+          this.filterData.showMobileFilters.showFramework = false;
+        }
+
         const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
         const vm = this;
 
@@ -280,7 +394,17 @@ export default {
     height: 520px;
     border: 1px solid $bootstrap-border-color;
     box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    left: 0;
     top: $desktop-nav-bar-height;
+    @include media-breakpoint-down(lg) {
+      width: 100%;
+      height: auto;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 9999;
+    }
     h5 {
       font-weight: 700;
     }
@@ -336,6 +460,23 @@ export default {
             white-space: nowrap;
             text-overflow: ellipsis;
           }
+          .card-people-num,
+          .card-price {
+            bottom: 20px;
+          }
+          .card-people-num {
+            left: 20px;
+            font-size: 14px;
+          }
+          .card-price {
+            right: 20px;
+            font-size: 14px;
+            .price {
+              font-size: 18px;
+              font-weight: 700;
+              color: darkred;
+            }
+          }
         }
       }
     }
@@ -345,6 +486,25 @@ export default {
     width: 80%;
     img {
       width: 60%;
+    }
+  }
+  #mobile-filter {
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid $bootstrap-border-color;
+    background-color: $sail;
+    left: 0;
+    bottom: 0;
+    z-index: 9999;
+    li {
+      width: 33.3%;
+      list-style: none;
+      text-align: center;
+      line-height: 2rem;
+      &:nth-child(2n + 2) {
+        border-left: 1px solid $bootstrap-border-color;
+        border-right: 1px solid $bootstrap-border-color;
+      }
     }
   }
 }

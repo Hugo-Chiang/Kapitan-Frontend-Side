@@ -25,7 +25,7 @@
       </h6>
       <div
         class="d-inline-block"
-        v-if="inCreatingMode || breadCrumbData.currentPage != 2"
+        v-if="!inCreatingMode || breadCrumbData.currentPage != 2"
       >
         <div id="rechoose-mode-link" class="d-flex justify-content-end">
           <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
