@@ -10,13 +10,17 @@
       <aside
         id="aside-bar"
         class="card pb-4 col-xl-2 d-xl-block order-xl-0 order-3"
-        :class="{ 'd-none': !filterData.showMobileFilters.showFramework }"
+        :class="{
+          'show-mobile-filter-anim': filterData.showMobileFilters.showFramework,
+        }"
       >
         <div class="card-body">
           <!-- 挑選地點開始 -->
           <h5
             class="mb-0 d-xl-block"
-            :class="{ 'd-none': !filterData.showMobileFilters.showCategories }"
+            :class="{
+              'd-none': !filterData.showMobileFilters.showCategories,
+            }"
           >
             挑選地點
           </h5>
@@ -60,7 +64,9 @@
           <!-- 人均預算開始 -->
           <h5
             class="mt-4 mb-0 d-xl-block"
-            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
+            :class="{
+              'd-none': !filterData.showMobileFilters.showBudget,
+            }"
           >
             人均預算
           </h5>
@@ -75,16 +81,18 @@
             {{ Number(filterData.budget) | currency | dollarSign
             }}<span class="budget-remark">（含）以下</span>
           </div>
-          <input
-            type="range"
-            class="form-range d-xl-block"
-            :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
-            min="0"
-            max="10000"
-            step="500"
-            id="budget"
-            v-model="filterData.budget"
-          />
+          <div>
+            <input
+              type="range"
+              class="form-range d-xl-block"
+              :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
+              min="0"
+              max="10000"
+              step="500"
+              id="budget"
+              v-model="filterData.budget"
+            />
+          </div>
           <!-- 人均預算結束 -->
           <!-- 結果排序開始 -->
           <h5
@@ -110,6 +118,28 @@
             <option value="'%%'">評價（高）</option>
           </select>
           <!-- 結果排序結束 -->
+          <!-- （行動版）行動版按鈕開始 -->
+          <button
+            id="mobile-filter-btn"
+            class="btn btn-primary mt-4"
+            :class="{
+              'd-none': !filterData.showMobileFilters.showFramework,
+            }"
+            @click.prevent="filterData.showMobileFilters.showNothing = true"
+          >
+            套用條件
+          </button>
+          <!-- （行動版）行動版按鈕結束 -->
+          <!-- 套用設定通知開始 -->
+          <h3
+            class="mt-5 text-center d-xl-none"
+            :class="{
+              'd-none': filterData.showMobileFilters.showFramework,
+            }"
+          >
+            已套用設定！
+          </h3>
+          <!-- 套用設定通知結束 -->
         </div>
       </aside>
       <!-- （桌面版）方案篩選器結束 -->
@@ -271,6 +301,7 @@ import Pagination from "@/components/pages/sub-components/Pagination";
 export default {
   data() {
     return {
+      aa: true,
       breadCrumbData: {
         pagesArr: ["首頁", "挑選航程"],
         currentPage: 2,
@@ -281,6 +312,7 @@ export default {
         budget: 10000,
         sort: "'%%'",
         showMobileFilters: {
+          showNothing: true,
           showFramework: false,
           showCategories: false,
           showBudget: false,
@@ -319,6 +351,9 @@ export default {
       });
   },
   methods: {
+    ccc() {
+      alert("click");
+    },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAndSerial(arr, num) {
       this.currentPageContentArr = arr;
@@ -354,14 +389,24 @@ export default {
         }
 
         // 判斷：任一行動版篩選鈕被點擊時，關聯外框 css 的布靈值就要連動
+        let showNothing = this.filterData.showMobileFilters.showNothing;
         let showCategories = this.filterData.showMobileFilters.showCategories;
         let showBudget = this.filterData.showMobileFilters.showBudget;
         let showSort = this.filterData.showMobileFilters.showSort;
 
         if (showCategories || showBudget || showSort) {
           this.filterData.showMobileFilters.showFramework = true;
+          this.filterData.showMobileFilters.showNothing = false;
         } else if (!showCategories || !showBudget || !showSort) {
           this.filterData.showMobileFilters.showFramework = false;
+        }
+
+        // 判斷：行動版篩選項目與外框皆不顯示時，觸發全不顯示的布靈值
+        if (showNothing) {
+          this.filterData.showMobileFilters.showFramework = false;
+          this.filterData.showMobileFilters.showCategories = false;
+          this.filterData.showMobileFilters.showBudget = false;
+          this.filterData.showMobileFilters.showSort = false;
         }
 
         const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
@@ -379,6 +424,9 @@ export default {
     // 監看（方法）：換頁即將捲軸置頂
     currentPageContentArr() {
       window.scrollTo(0, 0);
+    },
+    aa() {
+      this.aa = this.aa;
     },
   },
 };
@@ -403,7 +451,9 @@ export default {
       position: fixed;
       left: 0;
       bottom: 0;
-      z-index: 9999;
+      z-index: 9998;
+      transform: translate3d(0, 100%, 0);
+      transition: transform 1.3s;
     }
     h5 {
       font-weight: 700;
@@ -422,6 +472,16 @@ export default {
         color: black;
       }
     }
+    // #mobile-filter-btn {
+    //   visibility: hidden;
+    //   @include media-breakpoint-down(lg) {
+    //     visibility: visible;
+    //   }
+    // }
+  }
+  .show-mobile-filter-anim {
+    transform: translate3d(0, 0, 0);
+    transition: transform 1s;
   }
   // 方案篩選器結束
   // 方案列表開始
