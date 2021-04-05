@@ -100,10 +100,12 @@
                 :id="requiredInputTitle.orderDetailStatus"
                 class="form-control form-select-lg"
                 v-model="returneContentArr[returneIndex]['ORDER_DETAIL_STATUS']"
+                :disabled="adminLevel > 2"
               >
                 <option value="2">已完成</option>
                 <option value="1">進行中</option>
                 <option value="0">已取消</option>
+                <option value="-1">僅供測試</option>
               </select>
             </div>
             <!-- 細項狀態 select 結束 -->
@@ -330,6 +332,7 @@
 export default {
   data() {
     return {
+      adminLevel: null,
       modalData: {
         callBy: null,
         situation: {
@@ -480,6 +483,19 @@ export default {
       this.$eventBus.$on("emitModalValue", (value) => {
         this.modalData.emitValue = value;
       });
+
+      const queryAdminAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
+      const session = this.GlobalFunctions.getKapitanSession("backstage");
+      const vm = this;
+
+      this.$http
+        .post(queryAdminAuthAPI, session)
+        .then((response) => {
+          vm.adminLevel = response.data.adminLevel;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {
@@ -530,6 +546,7 @@ export default {
       vm.$http
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
+          console.log(response);
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message = response.data;
         })

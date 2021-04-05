@@ -35,6 +35,7 @@
               <option value="%%">全部</option>
               <option value="1">上線中</option>
               <option value="0">已下線</option>
+              <option value="-1">僅供測試</option>
             </select>
           </div>
         </div>
@@ -79,8 +80,8 @@
           </div>
           <div class="form-group col-md-3">
             <label for="project-price-beyond" class="form-label"
-              >人均價格<span class="remarks">（含）以下</span
-            ></label>
+              >人均價格<span class="remarks">（含）以下</span></label
+            >
             <div class="h-50 px-1 d-flex flex-column align-items-start">
               <div class="project-price-str">
                 {{
@@ -158,9 +159,7 @@
               </td>
               <td class="text-center">
                 {{
-                  currentPageContentArr[index]["PROJECT_STATUS"] == 0
-                    ? "已下線"
-                    : "上線中"
+                  currentPageContentArr[index]["PROJECT_STATUS"] | projectStatus
                 }}
               </td>
             </tr>

@@ -60,6 +60,7 @@
               <option value="2">已完成</option>
               <option value="1">進行中</option>
               <option value="0">已取消</option>
+              <option value="-1">僅供測試</option>
             </select>
           </div>
           <div class="form-group col-md-3">

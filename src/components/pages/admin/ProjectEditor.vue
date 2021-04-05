@@ -48,9 +48,11 @@
                 :id="requiredInputTitle.projectStatus"
                 class="form-control form-select-lg"
                 v-model="editDetails.projectStatus"
+                :disabled="adminLevel > 2"
               >
                 <option value="1">上線中</option>
                 <option value="0">已下線</option>
+                <option value="-1">僅供測試</option>
               </select>
             </div>
             <!-- 方案狀態結束 -->
@@ -339,6 +341,7 @@ import { VueEditor } from "vue2-editor";
 export default {
   data() {
     return {
+      adminLevel: null,
       inCreatingMode: null,
       breadCrumbData: {
         pagesArr: ["管理系統：查詢方案", "管理系統：編輯方案"],
@@ -478,8 +481,11 @@ export default {
   methods: {
     // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
     initializeEditor() {
+      const queryAdminAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
       const categoryListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryCategoryList.php`;
       const departureLocationListAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryDepartureLocationList.php`;
+      const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
+      const session = this.GlobalFunctions.getKapitanSession("backstage");
       const vm = this;
 
       vm.editDetails.projectName = "";
@@ -495,28 +501,32 @@ export default {
       vm.editDetails.projectDepartureLocation = "LC0001";
       vm.editorPrompt = "";
 
-      this.$http.get(categoryListAPI).then((response) => {
-        vm.renderData.categoryList = response.data;
-      });
-      this.$http.get(departureLocationListAPI).then((response) => {
-        vm.renderData.departureLocationList = response.data;
-      });
-
       if (this.currentPath.indexOf("Project-Creation") == -1)
         this.inCreatingMode = false;
       else this.inCreatingMode = true;
 
-      if (this.inCreatingMode) {
-        const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
-        this.$http
-          .post(queryCreatingIDAPI, this.currentManager)
-          .then((response) => {
-            vm.managingProjectID = response.data;
-          });
-      } else {
-        this.managingProjectID = localStorage.getItem("managingProject");
-        this.queryProjectDetails();
-      }
+      Promise.all([
+        this.$http.get(categoryListAPI),
+        this.$http.get(departureLocationListAPI),
+        this.$http.post(queryAdminAuthAPI, session),
+      ])
+        .then((response) => {
+          vm.renderData.categoryList = response[0].data;
+          vm.renderData.departureLocationList = response[1].data;
+          vm.adminLevel = response[2].data.adminLevel;
+
+          if (vm.inCreatingMode) {
+            if (vm.adminLevel > 2) vm.editDetails.projectStatus = -1;
+            else vm.editDetails.projectStatus = 0;
+            return vm.$http.post(queryCreatingIDAPI, vm.currentManager);
+          } else {
+            vm.managingProjectID = localStorage.getItem("managingProject");
+            vm.queryProjectDetails();
+          }
+        })
+        .then((response) => {
+          if (vm.inCreatingMode) vm.managingProjectID = response.data;
+        });
     },
     // 方法：向後端查詢欲編輯項目的內容，以利進行雙向綁定編修
     queryProjectDetails() {

@@ -89,16 +89,20 @@ Vue.filter("dollarSign", function (n) {
 // 全域註冊：翻譯資料庫中各種數字所代表的狀態意涵
 Vue.filter("memberStatus", function (n) {
   switch (n) {
+    case '-1' || -1:
+      return '僅供測試';
     case '0' || 0:
       return '停權';
     case '1' || 1:
-      return '警告';
-    case '2' || 2:
       return '正常';
+    case '2' || 2:
+      return '警告';
   }
 });
 Vue.filter("orderStatus", function (n) {
   switch (n) {
+    case '-1' || -1:
+      return '僅供測試';
     case '0' || 0:
       return '已取消';
     case '1' || 1:
@@ -109,6 +113,8 @@ Vue.filter("orderStatus", function (n) {
 });
 Vue.filter("orderDetailStatus", function (n) {
   switch (n) {
+    case '-1' || -1:
+      return '僅供測試';
     case '0' || 0:
       return '已取消';
     case '1' || 1:
@@ -119,6 +125,8 @@ Vue.filter("orderDetailStatus", function (n) {
 });
 Vue.filter("projectStatus", function (n) {
   switch (n) {
+    case '-1' || -1:
+      return '僅供測試';
     case '0' || 0:
       return '已下線';
     case '1' || 1:

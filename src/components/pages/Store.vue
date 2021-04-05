@@ -87,7 +87,7 @@
               class="form-range d-xl-block"
               :class="{ 'd-none': !filterData.showMobileFilters.showBudget }"
               min="0"
-              max="10000"
+              max="5000"
               step="500"
               id="budget"
               v-model="filterData.budget"
@@ -148,7 +148,7 @@
         <ul
           v-if="currentPageContentArr.length > 0"
           id="cards-list"
-          class="d-flex flex-wrap justify-content-md-between justify-content-center"
+          class="d-flex flex-wrap justify-content-sm-between justify-content-center"
         >
           <!-- 方案卡片開始 -->
           <router-link
@@ -301,7 +301,6 @@ import Pagination from "@/components/pages/sub-components/Pagination";
 export default {
   data() {
     return {
-      aa: true,
       breadCrumbData: {
         pagesArr: ["首頁", "挑選航程"],
         currentPage: 2,

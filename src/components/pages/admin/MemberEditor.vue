@@ -28,7 +28,7 @@
         <div class="col-8">
           <div class="form-row">
             <!-- 會員狀態開始 -->
-            <div class="form-group col-2">
+            <div class="form-group col-3">
               <label :for="requiredInputTitle.memberStatus">{{
                 requiredInputTitle.memberStatus
               }}</label>
@@ -36,10 +36,12 @@
                 :id="requiredInputTitle.memberStatus"
                 class="form-control form-select-lg"
                 v-model="editDetails.memberStatus"
+                :disabled="adminLevel > 2"
               >
                 <option value="1">正常</option>
                 <option value="2">警告</option>
                 <option value="0">停權</option>
+                <option value="-1">僅供測試</option>
               </select>
             </div>
             <!-- 會員狀態結束 -->
@@ -320,6 +322,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      adminLevel: null,
       inCreatingMode: null,
       managingMember: "",
       repeatRegister: false,
@@ -442,11 +445,12 @@ export default {
         this.inCreatingMode = false;
       else this.inCreatingMode = true;
 
+      const queryAdminAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
       const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
       const queryMemberInfoAPI = `${process.env.REMOTE_HOST_PATH}/API/Universal/QueryMemberInfo.php`;
+      const session = this.GlobalFunctions.getKapitanSession("backstage");
       const vm = this;
 
-      vm.editDetails.memberStatus = 1;
       vm.editDetails.memberRegDate = new Date().Format("yyyy-MM-ddThh:mm");
       vm.editDetails.memberAccount = "";
       vm.editDetails.memberPassword = "";
@@ -458,20 +462,28 @@ export default {
       vm.editDetails.ECphone = "";
       vm.editDetails.ECemail = "";
 
-      if (this.inCreatingMode) {
-        this.$http
-          .post(queryCreatingIDAPI, this.currentManager)
-          .then((response) => {
-            console.log(response);
+      this.$http
+        .post(queryAdminAuthAPI, session)
+        .then((response) => {
+          vm.adminLevel = response.data.adminLevel;
+
+          if (vm.inCreatingMode) {
+            if (vm.adminLevel > 2) vm.editDetails.memberStatus = -1;
+            else vm.editDetails.memberStatus = 1;
+            return vm.$http.post(queryCreatingIDAPI, vm.currentManager);
+          } else {
+            vm.managingMember = localStorage.getItem("managingMember");
+            return vm.$http.post(queryMemberInfoAPI, vm.managingMember);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .then((response) => {
+          if (vm.inCreatingMode) {
             vm.managingMember = response.data;
             localStorage.setItem("managingMember", vm.managingMember);
-          });
-      } else {
-        vm.managingMember = localStorage.getItem("managingMember");
-
-        this.$http
-          .post(queryMemberInfoAPI, vm.managingMember)
-          .then((response) => {
+          } else {
             vm.editDetails.memberStatus = response.data["MEMBER_STATUS"];
             vm.editDetails.memberRegDate = new Date(
               response.data["MEMBER_REGISTERED_DATE"]
@@ -484,11 +496,11 @@ export default {
             vm.editDetails.ECname = response.data["MEMBER_EC_NAME"];
             vm.editDetails.ECphone = response.data["MEMBER_EC_PHONE"];
             vm.editDetails.ECemail = response.data["MEMBER_EC_EMAIL"];
-          })
-          .catch((respponse) => {
-            console.log(respponse);
-          });
-      }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 方法：根據會員帳號向後端詢問會員資訊
     queryMemberAccount() {

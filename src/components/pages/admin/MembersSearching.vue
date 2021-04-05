@@ -29,6 +29,7 @@
               <option value="1">正常</option>
               <option value="2">警告</option>
               <option value="0">停權</option>
+              <option value="-1">僅供測試</option>
             </select>
           </div>
           <!-- 會員狀態結束 -->
@@ -139,7 +140,9 @@
                 {{ currentPageContentArr[index]["MEMBER_REGISTERED_DATE"] }}
               </td>
               <td class="text-center">
-                {{ currentPageContentArr[index]["MEMBER_STATUS"] }}
+                {{
+                  currentPageContentArr[index]["MEMBER_STATUS"] | memberStatus
+                }}
               </td>
             </tr>
           </tbody>

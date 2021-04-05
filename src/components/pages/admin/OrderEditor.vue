@@ -28,7 +28,7 @@
         <div class="col-10">
           <div class="form-row">
             <!-- 訂單狀態開始 -->
-            <div class="form-group col-md-2">
+            <div class="form-group col-3">
               <label :for="requiredInputTitle.orderStatus">{{
                 requiredInputTitle.orderStatus
               }}</label>
@@ -36,15 +36,17 @@
                 :id="requiredInputTitle.orderStatus"
                 class="form-control form-select-lg"
                 v-model="editDetails.orderStatus"
+                :disabled="adminLevel > 2"
               >
                 <option value="2">已完成</option>
                 <option value="1">進行中</option>
                 <option value="0">已取消</option>
+                <option value="-1">僅供測試</option>
               </select>
             </div>
             <!-- 訂單狀態結束 -->
             <!-- 所屬會員ID開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true, regex: /^MB\d{7}$/, length: 9 }"
                 v-slot="{ errors, classes }"
@@ -67,7 +69,7 @@
             </div>
             <!-- 所屬會員ID結束 -->
             <!-- 訂單日期開始 -->
-            <div class="form-group col-md-5">
+            <div class="form-group col-5">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -91,7 +93,7 @@
           </div>
           <div class="form-row">
             <!-- 訂單未折扣總計開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -114,7 +116,7 @@
             </div>
             <!-- 訂單未折扣總計結束 -->
             <!-- 訂單應折扣總額開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -139,7 +141,7 @@
           </div>
           <div class="form-row">
             <!-- 訂購人姓名開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -162,7 +164,7 @@
             </div>
             <!-- 訂購人姓名結束 -->
             <!-- 訂購人電話開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -185,7 +187,7 @@
             </div>
             <!-- 訂購人電話結束 -->
             <!-- 訂購人電子信箱開始 -->
-            <div class="form-group col-md-4">
+            <div class="form-group col-4">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -210,7 +212,7 @@
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -233,7 +235,7 @@
             </div>
             <!-- 緊急聯絡人姓名結束 -->
             <!-- 緊急聯絡人電話開始 -->
-            <div class="form-group col-md-3">
+            <div class="form-group col-3">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -256,7 +258,7 @@
             </div>
             <!-- 緊急聯絡人電話結束 -->
             <!-- 緊急聯絡人電子信箱開始 -->
-            <div class="form-group col-md-4">
+            <div class="form-group col-4">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -338,6 +340,7 @@ import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetai
 export default {
   data() {
     return {
+      adminLevel: null,
       inCreatingMode: null,
       managingOrder: "",
       breadCrumbData: {
@@ -366,7 +369,9 @@ export default {
           // 刪除方案詢問經確認後進行刪除，成敗與否都將倒回管理頁
           if (this.situation.event.indexOf("刪除訂單") != -1) {
             const deleteOrderAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/DeleteOrder.php`;
-            const session = this.callBy.GlobalFunctions.getKapitanSession("backstage");
+            const session = this.callBy.GlobalFunctions.getKapitanSession(
+              "backstage"
+            );
 
             let sendingObj = {
               session: session,
@@ -442,11 +447,13 @@ export default {
         this.inCreatingMode = false;
       else this.inCreatingMode = true;
 
+      const queryAdminAuthAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminSignInAuthentication.php`;
       const queryCreatingIDAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryCreatingID.php`;
       const queryOrderDataAPI = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryOrderData.php`;
+      const session = this.GlobalFunctions.getKapitanSession("backstage");
       const vm = this;
 
-      vm.editDetails.orderStatus = 1;
+      vm.editDetails.orderStatus = "";
       vm.editDetails.orderDate = new Date().Format("yyyy-MM-ddThh:mm");
       vm.editDetails.orderTotalConsumption = 0;
       vm.editDetails.orderTotalDiscount = 0;
@@ -458,20 +465,28 @@ export default {
       vm.editDetails.ECemail = "";
       vm.editDetails.memberID = "";
 
-      if (this.inCreatingMode) {
-        this.$http
-          .post(queryCreatingIDAPI, this.currentManager)
-          .then((response) => {
-            console.log(response);
+      this.$http
+        .post(queryAdminAuthAPI, session)
+        .then((response) => {
+          vm.adminLevel = response.data.adminLevel;
+
+          if (this.inCreatingMode) {
+            if (vm.adminLevel > 2) vm.editDetails.orderStatus = -1;
+            else vm.editDetails.orderStatus = 1;
+            return vm.$http.post(queryCreatingIDAPI, this.currentManager);
+          } else {
+            vm.managingOrder = localStorage.getItem("managingOrder");
+            return vm.$http.post(queryOrderDataAPI, vm.managingOrder);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .then((response) => {
+          if (this.inCreatingMode) {
             vm.managingOrder = response.data;
             localStorage.setItem("managingOrder", vm.managingOrder);
-          });
-      } else {
-        vm.managingOrder = localStorage.getItem("managingOrder");
-
-        this.$http
-          .post(queryOrderDataAPI, vm.managingOrder)
-          .then((response) => {
+          } else {
             vm.editDetails.orderStatus = response.data["ORDER_STATUS"];
             vm.editDetails.orderDate = new Date(
               response.data["ORDER_DATE"]
@@ -487,11 +502,11 @@ export default {
             vm.editDetails.ECphone = response.data["ORDER_EC_PHONE"];
             vm.editDetails.ECemail = response.data["ORDER_EC_EMAIL"];
             vm.editDetails.memberID = response.data["FK_MEMBER_ID_for_OD"];
-          })
-          .catch((respponse) => {
-            console.log(respponse);
-          });
-      }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 方法：更新訂單資料
     updateOrderData() {
