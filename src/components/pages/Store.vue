@@ -118,18 +118,18 @@
             <option value="'%%'">評價（高）</option>
           </select>
           <!-- 結果排序結束 -->
-          <!-- （行動版）行動版按鈕開始 -->
+          <!-- 操作按鈕開始 -->
           <button
-            id="mobile-filter-btn"
-            class="btn btn-primary mt-4"
-            :class="{
-              'd-none': !filterData.showMobileFilters.showFramework,
-            }"
-            @click.prevent="filterData.showMobileFilters.showNothing = true"
+            id="filter-button"
+            class="btn btn-primary d-xl-block mx-xl-auto mt-5"
+            :class="
+              filterData.showMobileFilters.showFramework ? 'd-block' : 'd-none'
+            "
+            @click.prevent="queryFilteringProjects"
           >
             套用條件
           </button>
-          <!-- （行動版）行動版按鈕結束 -->
+          <!-- 操作按鈕結束 -->
           <!-- 套用設定通知開始 -->
           <h3
             class="mt-5 text-center d-xl-none"
@@ -274,7 +274,7 @@
     </div>
     <!-- 方案篩選器與方案列表結束 -->
     <!-- 頁碼開始 -->
-    <div class="row mb-5">
+    <div id="pagination-row" class="row position-relative mb-5">
       <div
         class="col-12 d-flex justify-content-center"
         id="pagination-container"
@@ -308,7 +308,14 @@ export default {
       },
       filterData: {
         selectedAll: true,
-        selectedCategories: [],
+        selectedCategories: [
+          "CG0001",
+          "CG0002",
+          "CG0003",
+          "CG0004",
+          "CG0005",
+          "CG0006",
+        ],
         budget: 10000,
         sort: "'%%'",
         showMobileFilters: {
@@ -343,16 +350,26 @@ export default {
       .get(categoryListAPI)
       .then((response) => {
         vm.categoryList = response.data;
+        console.log(vm.filterData);
         return vm.$http.post(projectsListAPI, JSON.stringify(vm.filterData));
       })
       .then((response) => {
-        vm.checkSelectAll();
         vm.allProjectsArr = response.data;
       });
   },
   methods: {
-    ccc() {
-      alert("click");
+    // 方法：向後端詢問符合篩選條件的內容
+    queryFilteringProjects() {
+      const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
+      const vm = this;
+
+      this.$http
+        .post(projectsListAPI, JSON.stringify(vm.filterData))
+        .then((response) => {
+          vm.allProjectsArr = response.data;
+        });
+
+      this.filterData.showMobileFilters.showNothing = true;
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAndSerial(arr, num) {
@@ -366,7 +383,6 @@ export default {
       // 判斷：點擊全選 checkbox 與否將影響其餘所有選項是否全選
       if (this.filterData.selectedAll) {
         for (const category of checkboxs) {
-          console.log("推");
           this.filterData.selectedCategories.push(category.value);
         }
       } else {
@@ -408,25 +424,12 @@ export default {
           this.filterData.showMobileFilters.showBudget = false;
           this.filterData.showMobileFilters.showSort = false;
         }
-
-        const projectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectsList.php`;
-        const vm = this;
-
-        this.$http
-          .post(projectsListAPI, JSON.stringify(vm.filterData))
-          .then((response) => {
-            vm.allProjectsArr = response.data;
-          });
       },
       deep: true,
-      immediate: true,
     },
     // 監看（方法）：換頁即將捲軸置頂
     currentPageContentArr() {
       window.scrollTo(0, 0);
-    },
-    aa() {
-      this.aa = this.aa;
     },
   },
 };
@@ -472,12 +475,6 @@ export default {
         color: black;
       }
     }
-    // #mobile-filter-btn {
-    //   visibility: hidden;
-    //   @include media-breakpoint-down(lg) {
-    //     visibility: visible;
-    //   }
-    // }
   }
   .show-mobile-filter-anim {
     transform: translate3d(0, 0, 0);
@@ -566,6 +563,9 @@ export default {
         border-right: 1px solid $bootstrap-border-color;
       }
     }
+  }
+  #pagination-row {
+    z-index: -1;
   }
 }
 </style>
