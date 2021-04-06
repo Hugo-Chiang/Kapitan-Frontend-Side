@@ -115,7 +115,7 @@
             <option value="PROJECT_ORIGINAL_PRICE_PER_PERSON ASC">
               價格（低）
             </option>
-            <option value="'%%'">評價（高）</option>
+            <!-- <option value="'%%'">評價（高）</option> -->
           </select>
           <!-- 結果排序結束 -->
           <!-- 操作按鈕開始 -->
@@ -485,7 +485,7 @@ export default {
     padding: 0px 30px;
     &::after {
       content: "";
-      width: 255.5px;
+      width: 255px;
     }
     @include media-breakpoint-down(md) {
       padding: 0px 60px;
@@ -494,7 +494,7 @@ export default {
       padding: 0;
     }
     .router-link {
-      width: 255.5px;
+      width: 255px;
       .card {
         height: 22rem;
         color: black;

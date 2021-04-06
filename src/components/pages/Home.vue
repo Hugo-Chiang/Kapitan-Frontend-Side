@@ -1,23 +1,128 @@
 <template>
-  <div class="container">
-    <img src="http://pic.pimg.tw/k640640/1403285068-3601410781.jpg" alt="" />
-  </div>
+  <main id="home-page" class="container-fluid">
+    <section id="projects-carousel-area" class="position-relative">
+      <a href="" @click.prevent="aa(1)">上頁</a>
+      <ul
+        id="cards-list"
+        class="position-absolute d-flex justify-content-between"
+      >
+        <!-- 方案卡片開始 -->
+        <router-link
+          v-for="(project, index) in carouselData.carouselProjectsArr"
+          :key="project['PROJECT_ID']"
+          :data-id="project['PROJECT_ID']"
+          :to="{
+            name: '方案',
+            params: {
+              selectedProjectID:
+                carouselData.carouselProjectsArr[index]['PROJECT_ID'],
+            },
+          }"
+          class="router-link d-block mx-lg-0 mx-md-1 mb-5"
+        >
+          <li class="card" :key="project['PROJECT_ID']">
+            <img
+              class="card-img-top"
+              :src="
+                project['PROJECT_AVATAR_URL'] != null
+                  ? GlobalVariables.cloudUrlprefix +
+                    project['PROJECT_AVATAR_URL']
+                  : GlobalVariables.cloudUrlprefix +
+                    GlobalVariables.cloudNoImgUrl
+              "
+              alt="這裡是卡片頂圖"
+            />
+            <div class="card-body position-relative">
+              <h6 class="card-title">
+                {{ project["PROJECT_NAME"] }}
+              </h6>
+              <p class="card-text"></p>
+              <div class="row">
+                <div
+                  class="card-people-num col-6 pl-0 position-absolute d-flex align-items-center"
+                >
+                  <span class="d-inline-block mr-1">
+                    <i class="fas fa-users"></i>
+                  </span>
+                  <span class="d-inline-block">
+                    {{ project["PROJECT_MIN_NUM_OF_PEOPLE"] }} -
+                    {{ project["PROJECT_MAX_NUM_OF_PEOPLE"] }}
+                  </span>
+                </div>
+                <div class="card-price col-6 pr-0 text-right position-absolute">
+                  每人
+                  <span class="price">
+                    {{
+                      Number(project["PROJECT_ORIGINAL_PRICE_PER_PERSON"])
+                        | currency
+                        | dollarSign
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </router-link>
+        <!-- 方案卡片結束 -->
+      </ul>
+      <a href="" @click.prevent="aa(-1)">下頁</a>
+    </section>
+  </main>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      carouselData: {
+        carouselProjectsArr: [],
+        carouselPagination: 2,
+        carouselMoveOnXaxis: 0,
+      },
+    };
   },
   created() {
     window.scrollTo(0, 0);
 
     // 因應Heroku休眠機制，所做的後端喚醒行為，並不具備太多意義
-    const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
+    // const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
 
-    this.$http.get(api).then((response) => {
-      console.log(response.data);
+    // this.$http.get(api).then((response) => {
+    //   console.log(response.data);
+    // });
+
+    // 初始化航程分類與清單
+    const randomProjectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryRandomProjectsList.php`;
+    const vm = this;
+
+    this.$http.get(randomProjectsListAPI).then((response) => {
+      vm.carouselData.carouselProjectsArr = response.data;
     });
+  },
+  methods: {
+    aa(para) {
+      let routerLinks = document.querySelectorAll(".router-link");
+      let carouselProjectsArr = this.carouselData.carouselProjectsArr;
+      let Xaxis = this.carouselData.carouselMoveOnXaxis;
+
+      this.carouselData.carouselMoveOnXaxis += 355 * para;
+
+      for (const routerLink of routerLinks) {
+        routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
+      }
+
+      // if (para == 1) {
+      //   this.carouselData.carouselMoveOnXaxis = 326.625 * para;
+
+      //   for (const routerLink of routerLinks) {
+      //     routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
+      //   }
+
+      //   // let firstItem = carouselProjectsArr.slice(0, 1);
+      //   // this.carouselData.carouselProjectsArr = carouselProjectsArr.slice(1);
+      //   // this.carouselData.carouselProjectsArr.push(firstItem);
+      // }
+    },
   },
 };
 </script>
@@ -25,13 +130,78 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/all.scss";
 
-.container {
-  border: 1px solid red;
+#home-page {
+  // border: 1px solid red;
   height: 1000px;
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  // padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: 500px 0 $main-container-pt;
   img {
     display: block;
     margin: auto;
+  }
+  #projects-carousel-area {
+    width: 967px;
+    height: 400px;
+    border: 1px solid blue;
+    transform: translate3d(-50%, -50%, 0);
+    left: 50%;
+    overflow: hidden;
+    #cards-list {
+      border: 1px solid red;
+      width: 2032px;
+      padding: 0;
+      // left: 0%;
+      // @include media-breakpoint-down(md) {
+      //   padding: 0px 60px;
+      // }
+      // @include media-breakpoint-down(sm) {
+      //   padding: 0;
+      // }
+      .router-link {
+        width: 255px;
+        transition: transform 0.8s cubic-bezier(0.43, 0.195, 0.02, 1);
+        .card {
+          height: 22rem;
+          color: black;
+          box-shadow: 1px 1px 1px 0.5px rgba(0, 0, 0, 0.2);
+          img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            @include border-top-radius($card-inner-border-radius);
+          }
+          .card-body {
+            height: 75%;
+            .card-title {
+              font-weight: 600;
+            }
+            .card-text {
+              height: 40%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+            .card-people-num,
+            .card-price {
+              bottom: 20px;
+            }
+            .card-people-num {
+              left: 20px;
+              font-size: 14px;
+            }
+            .card-price {
+              right: 20px;
+              font-size: 14px;
+              .price {
+                font-size: 18px;
+                font-weight: 700;
+                color: darkred;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

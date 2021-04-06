@@ -133,13 +133,13 @@
     </section>
     <!-- 方案細節章節結束 -->
     <!-- 方案評價章節開始 -->
-    <section id="comments-area" class="row mb-5">
+    <!-- <section id="comments-area" class="row mb-5">
       <div class="col-12">
         <h3>旅客評價</h3>
         <hr />
         <div class="commentsContainer"></div>
       </div>
-    </section>
+    </section> -->
     <!-- 方案評價章節結束 -->
   </main>
 </template>

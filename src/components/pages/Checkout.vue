@@ -178,7 +178,7 @@ export default {
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "重複訂購";
             vm.modalData.situation.message = response.data.message;
-            vm.modalData.situation.data = response.data.invalidAProjects;
+            vm.modalData.situation.data = response.data.invalidProjects;
           }
         })
         .catch((error) => {
