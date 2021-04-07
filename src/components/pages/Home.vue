@@ -18,7 +18,7 @@
     <!-- 服務形象章節結束 -->
     <!-- 服務摘要章節開始 -->
     <section id="chapter-summary" class="container">
-      <h2 class="text-center">便捷的遊艇行程</h2>
+      <h2 class="text-center mb-3">便捷的遊艇行程</h2>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum fuga
         placeat totam, nobis sequi voluptatibus voluptatum distinctio, nostrum
@@ -29,8 +29,8 @@
     <!-- 服務摘要章節結束 -->
     <!-- 方案輪播章節開始 -->
     <section id="chapter-carousel" class="container position-relative mx-auto">
-      <h2 class="text-center">豐富的方案選擇</h2>
-      <p>
+      <h2 class="text-center mb-3">豐富的方案選擇</h2>
+      <p class="mb-5">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum facilis
         eius ipsum architecto error accusamus quas ea, mollitia impedit. Minus
         non numquam fugit temporibus nam ad vero? Tenetur, rerum quas!
@@ -131,21 +131,36 @@
         </div>
       </div>
       <!-- 操作按鈕開始 -->
-      <button class="btn btn-primary d-xl-block mx-xl-auto mt-5">
-        挑選航程
-      </button>
+      <router-link :to="{ name: '挑選航程' }">
+        <button class="btn btn-primary d-xl-block mx-xl-auto mt-5">
+          挑選航程
+        </button>
+      </router-link>
       <!-- 操作按鈕結束 -->
     </section>
     <!-- 方案輪播章節結束 -->
     <!-- 誘導註冊章節開始 -->
     <section id="chapter-summary" class="container">
-      <h2 class="text-center">立即成為會員</h2>
-      <p>
+      <h2 class="text-center mb-3">立即成為會員</h2>
+      <p class="mb-5">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum fuga
         placeat totam, nobis sequi voluptatibus voluptatum distinctio, nostrum
         deserunt vel alias eos dolor ratione doloremque eum ex natus tempora
         exercitationem!
       </p>
+      <!-- 操作按鈕開始 -->
+      <router-link :to="{ name: '登入註冊' }">
+        <button class="btn btn-primary d-xl-block mx-xl-auto mt-5">
+          立即註冊
+        </button>
+      </router-link>
+      <!-- 操作按鈕結束 -->
+    </section>
+    <!-- 誘導註冊章節結束 -->
+    <!-- 誘導註冊章節開始 -->
+    <section id="chapter-summary" class="container">
+      <h2 class="text-center mb-3">合作夥伴</h2>
+      <hr>
     </section>
     <!-- 誘導註冊章節結束 -->
   </main>
