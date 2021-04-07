@@ -1,15 +1,49 @@
 <template>
   <main id="home-page" class="container-fluid">
-    <section id="chapter-carousel" class="position-relative mx-auto">
+    <!-- 服務形象章節開始 -->
+    <section id="chapter-image" class="mb-5">
+      <div class="video-container position-relative">
+        <iframe
+          src="https://www.youtube.com/embed/s2ykMeInEZ0?controls=0&showinfo=0&mute=1&rel=0&autoplay=1&loop=1&playlist=s2ykMeInEZ0"
+          frameborder="0"
+          allowfullscreen
+          class="position-absolute"
+        ></iframe>
+        <h1 id="slogan" class="text-center position-absolute">
+          現在就成為一位甲必丹
+          <h2 class="text-center mt-1">重新喚醒冒險熱情，重新啟動親海基因</h2>
+        </h1>
+      </div>
+    </section>
+    <!-- 服務形象章節結束 -->
+    <!-- 服務摘要章節開始 -->
+    <section id="chapter-summary" class="container">
+      <h2 class="text-center">便捷的遊艇行程</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum fuga
+        placeat totam, nobis sequi voluptatibus voluptatum distinctio, nostrum
+        deserunt vel alias eos dolor ratione doloremque eum ex natus tempora
+        exercitationem!
+      </p>
+    </section>
+    <!-- 服務摘要章節結束 -->
+    <!-- 方案輪播章節開始 -->
+    <section id="chapter-carousel" class="container position-relative mx-auto">
+      <h2 class="text-center">豐富的方案選擇</h2>
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum facilis
+        eius ipsum architecto error accusamus quas ea, mollitia impedit. Minus
+        non numquam fugit temporibus nam ad vero? Tenetur, rerum quas!
+      </p>
       <div
         class="carousel-controls left-arrow d-inline-block position-absolute"
-        @click="aa(1)"
+        @click="slideCarousel(1)"
       >
         <i class="fas fa-chevron-left"></i>
       </div>
       <div
         class="carousel-controls right-arrow d-inline-block position-absolute"
-        @click="aa(-1)"
+        @click="slideCarousel(-1)"
       >
         <i class="fas fa-chevron-right"></i>
       </div>
@@ -53,7 +87,7 @@
                   <div
                     class="card-people-num col-6 pl-0 position-absolute d-flex align-items-center"
                   >
-                    <span class="d-inline-block mr-1">
+                    <span class="d-flex align-items-center mr-1">
                       <i class="fas fa-users"></i>
                     </span>
                     <span class="d-inline-block">
@@ -96,7 +130,24 @@
           </ul>
         </div>
       </div>
+      <!-- 操作按鈕開始 -->
+      <button class="btn btn-primary d-xl-block mx-xl-auto mt-5">
+        挑選航程
+      </button>
+      <!-- 操作按鈕結束 -->
     </section>
+    <!-- 方案輪播章節結束 -->
+    <!-- 誘導註冊章節開始 -->
+    <section id="chapter-summary" class="container">
+      <h2 class="text-center">立即成為會員</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum fuga
+        placeat totam, nobis sequi voluptatibus voluptatum distinctio, nostrum
+        deserunt vel alias eos dolor ratione doloremque eum ex natus tempora
+        exercitationem!
+      </p>
+    </section>
+    <!-- 誘導註冊章節結束 -->
   </main>
 </template>
 
@@ -130,7 +181,8 @@ export default {
     });
   },
   methods: {
-    aa(para) {
+    // 方法：根據響應式畫面寬度和輸入方向，移動對應距離的輪播卡片
+    slideCarousel(direction) {
       let routerLinks = document.querySelectorAll(".router-link");
       let innerWidth = window.innerWidth;
       let cardWidth = 255;
@@ -149,14 +201,11 @@ export default {
         cardPlusSpace = cardWidth + 50;
       }
 
-      if (offSet + para != -4 || offSet + para != 1) {
-        this.carouselData.carouselCurrentOffSet += para;
+      if (offSet + direction != -4 || offSet + direction != 1) {
+        this.carouselData.carouselCurrentOffSet += direction;
         this.carouselData.carouselXaxisPixels =
           cardPlusSpace * this.returnOffSet;
         let Xaxis = this.carouselData.carouselXaxisPixels;
-
-        console.log(offSet);
-        console.log(Xaxis);
 
         for (const routerLink of routerLinks) {
           routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
@@ -180,17 +229,51 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/all.scss";
 
+$chapter-margin: 100px;
+
 #home-page {
-  height: 1000px;
-  // padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
-  padding: 500px 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   img {
     display: block;
     margin: auto;
   }
+  #chapter-image {
+    opacity: 0.65;
+    .video-container {
+      overflow: hidden;
+      width: 100vw -18px;
+      height: 65vh;
+      margin-bottom: 60px;
+      iframe {
+        width: 100vw;
+        height: 100vh;
+        transform: translate(-50%, -50%);
+        top: 55%;
+        left: 50%;
+        z-index: -99;
+        @media (min-aspect-ratio: 16/9) {
+          height: 56.25vw;
+        }
+        @media (max-aspect-ratio: 16/9) {
+          width: 177.78vh;
+        }
+      }
+      #slogan {
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        font-size: 3rem;
+        color: $sail;
+        text-shadow: 3px 3px 4px black;
+      }
+    }
+  }
+  #chapter-summary {
+    margin-bottom: $chapter-margin;
+  }
   #chapter-carousel {
-    border: 1px solid black;
     width: 1140px;
+    margin-bottom: $chapter-margin;
     @include media-breakpoint-down(lg) {
       width: 960px;
     }
@@ -233,7 +316,6 @@ export default {
         width: 259px;
       }
       #cards-list {
-        border: 1ppx solid blue;
         width: 2030px;
         padding: 0;
         @include media-breakpoint-down(lg) {
