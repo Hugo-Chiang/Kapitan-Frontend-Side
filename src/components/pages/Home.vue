@@ -13,7 +13,7 @@
       >
         <i class="fas fa-chevron-right"></i>
       </div>
-      <div id="projects-carousel-area" class="position-relative">
+      <div id="projects-carousel-area" class="position-relative mx-auto">
         <ul
           id="cards-list"
           class="position-absolute d-flex justify-content-between"
@@ -30,7 +30,7 @@
                   carouselData.carouselProjectsArr[index]['PROJECT_ID'],
               },
             }"
-            class="router-link d-block mx-lg-0 mx-md-1 mb-5"
+            class="router-link d-block"
           >
             <li class="card" :key="project['PROJECT_ID']">
               <img
@@ -132,13 +132,27 @@ export default {
   methods: {
     aa(para) {
       let routerLinks = document.querySelectorAll(".router-link");
+      let innerWidth = window.innerWidth;
+      let cardWidth = 255;
+      let cardPlusSpace = 0;
       let offSet = this.carouselData.carouselCurrentOffSet;
 
-      console.log(offSet);
+      if (innerWidth > 1200) {
+        cardPlusSpace = cardWidth + 100;
+      } else if (innerWidth <= 1200 && innerWidth > 960) {
+        cardPlusSpace = cardWidth + 95;
+      } else if (innerWidth <= 960 && innerWidth > 720) {
+        cardPlusSpace = cardWidth + 50;
+      } else if (innerWidth <= 720 && innerWidth > 540) {
+        cardPlusSpace = cardWidth + 50;
+      } else {
+        cardPlusSpace = cardWidth + 50;
+      }
 
       if (offSet + para != -4 || offSet + para != 1) {
         this.carouselData.carouselCurrentOffSet += para;
-        this.carouselData.carouselXaxisPixels = 355 * this.returnOffSet;
+        this.carouselData.carouselXaxisPixels =
+          cardPlusSpace * this.returnOffSet;
         let Xaxis = this.carouselData.carouselXaxisPixels;
 
         console.log(offSet);
@@ -167,7 +181,6 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #home-page {
-  // border: 1px solid red;
   height: 1000px;
   // padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   padding: 500px 0 $main-container-pt;
@@ -176,13 +189,26 @@ export default {
     margin: auto;
   }
   #chapter-carousel {
-    // border: 1px solid black;
+    border: 1px solid black;
     width: 1140px;
+    @include media-breakpoint-down(lg) {
+      width: 960px;
+    }
+    @include media-breakpoint-down(md) {
+      width: 720px;
+    }
+    @include media-breakpoint-down(sm) {
+      width: 540px;
+    }
+    @include media-breakpoint-down(xs) {
+      width: 100%;
+    }
     .carousel-controls {
       font-size: 32px;
       transform: translate3d(0%, -50%, 0);
       top: 50%;
       cursor: pointer;
+      z-index: 9995;
       &:hover {
         opacity: 0.85;
       }
@@ -194,23 +220,28 @@ export default {
       right: 30px;
     }
     #projects-carousel-area {
-      width: 967px;
+      width: 969px;
       height: 400px;
-      // border: 1px solid blue;
-      transform: translate3d(-50%, 0%, 0);
-      left: 50%;
       overflow: hidden;
+      @include media-breakpoint-down(lg) {
+        width: 609px;
+      }
+      @include media-breakpoint-down(md) {
+        width: 564px;
+      }
+      @include media-breakpoint-down(sm) {
+        width: 259px;
+      }
       #cards-list {
-        // border: 1px solid red;
-        width: 2032px;
+        border: 1ppx solid blue;
+        width: 2030px;
         padding: 0;
-        // left: 0%;
-        // @include media-breakpoint-down(md) {
-        //   padding: 0px 60px;
-        // }
-        // @include media-breakpoint-down(sm) {
-        //   padding: 0;
-        // }
+        @include media-breakpoint-down(lg) {
+          width: 2005px;
+        }
+        @include media-breakpoint-down(md) {
+          width: 1780px;
+        }
         .router-link {
           width: 255px;
           transition: transform 0.8s cubic-bezier(0.43, 0.195, 0.02, 1);
@@ -257,12 +288,10 @@ export default {
         }
       }
       #carousel-pagination-block {
-        // border: 1px solid black;
         transform: translate3d(-50%, 0%, 0);
         left: 50%;
         bottom: 3%;
         #carousel-pagination {
-          // border: 1px solid black;
           width: 60px;
           li {
             list-style: none;
