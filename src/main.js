@@ -22,7 +22,6 @@ import * as rules from 'vee-validate/dist/rules';
 // 導入驗證套件 vee-validate 相關內容結束
 import App from './App';
 import router from './router';
-import eventBus from "./eventBus"
 // 導入雲端圖庫套件 cloudinary-vue 相關內容開始
 import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue";
 // 導入雲端圖庫套件 cloudinary-vue 相關內容結束
@@ -42,7 +41,7 @@ window.$ = $;
 Vue.config.productionTip = false;
 
 // 掛載上述引用個元件、檔案等等
-Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, Cloudinary, {
+Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, Cloudinary, {
   configuration: { cloudName: "demo" },
   components: {
     CldImage,
@@ -50,6 +49,8 @@ Vue.use(VueAxios, axios, $, Bootstrap, DatePicker, Vue2Leaflet, eventBus, Cloudi
   }
 }, VueEditor);
 
+// 掛載 eventBus
+Vue.prototype.$eventBus = new Vue();
 // 掛載上述引用的自定義變數和函式等等
 Vue.prototype.GlobalVariables = GlobalVariables;
 Vue.prototype.GlobalFunctions = GlobalFunctions;

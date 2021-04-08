@@ -78,11 +78,18 @@
                   type="email"
                   class="form-control"
                   placeholder="請輸入電子信箱..."
+                  v-model="subscribeEMAIL"
                   aria-label="Recipient's username"
                   aria-describedby="basic-addon2"
                 />
                 <div class="input-group-append">
-                  <button class="btn" type="button">訂閱</button>
+                  <button
+                    class="btn"
+                    type="button"
+                    @click.prevent="subscribeEDM"
+                  >
+                    訂閱
+                  </button>
                 </div>
               </div>
             </div>
@@ -189,6 +196,7 @@ export default {
           link: "https://www.linkedin.com/",
         },
       },
+      subscribeEMAIL: "",
       showFakeCopyRightDescription: false,
       showFakePrivacyPolicy: false,
     };
@@ -197,6 +205,20 @@ export default {
     // 方法：根據傳入網址前往該地
     linkTo(link) {
       window.location.href = link;
+    },
+    // 方法：根據使用者輸入的電郵地址，透過 SMTP 模擬電子報訂閱情境
+    subscribeEDM() {
+      let smtp = this.GlobalVariables.Email;
+
+      smtp.send({
+        SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
+        To: this.subscribeEMAIL,
+        From: "Kapitan@service.com",
+        Subject: "感謝您訂閱甲必丹電子報！",
+        Body:
+          "這是一封前端作品的電子報訂閱模擬信。一般情況下，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。",
+      });
+      // .then((message) => alert(message));
     },
   },
 };

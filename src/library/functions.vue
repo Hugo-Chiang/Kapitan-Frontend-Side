@@ -50,28 +50,8 @@ function getKapitanSession(sessionUseAtStr) {
   return session;
 }
 
-// 函式：透過 session 向後端查明目前登入的會員 ID
-// function verifySignInedMember() {
-//   const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignInAuthentication.php`;
-//   const session = this.GlobalFunctions.getKapitanSession("forestage");
-
-//   this.$http
-//     .post(api, session)
-//     .then((response) => {
-//       if (response.data.sessionCheck) {
-//         console.log(response.data);
-//         console.log(response.data.signInedID);
-//         return response.data.signInedID;
-//       }
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// }
-
 export default {
   format,
   getKapitanSession,
-  // verifySignInedMember,
 };
 </script>
