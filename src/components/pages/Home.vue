@@ -11,20 +11,31 @@
         ></iframe>
         <h1 id="slogan" class="text-center position-absolute">
           現在就成為一位甲必丹
-          <h2 class="text-center mt-1">重新喚醒冒險熱情，重新啟動親海基因</h2>
+          <h2 class="text-center mt-2">喚醒冒險熱情×重啟親海基因</h2>
         </h1>
       </div>
     </section>
     <!-- 服務形象章節結束 -->
     <!-- 服務摘要章節開始 -->
-    <section id="chapter-summary" class="container">
-      <h2 class="text-center mb-3">便捷的遊艇行程</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum fuga
-        placeat totam, nobis sequi voluptatibus voluptatum distinctio, nostrum
-        deserunt vel alias eos dolor ratione doloremque eum ex natus tempora
-        exercitationem!
-      </p>
+    <section id="chapter-summary" class="container d-flex flex-column">
+      <h2 class="text-center mb-5">便捷的預約流程</h2>
+      <div id="booking-process" class="d-flex justify-content-between">
+        <div
+          class="step-block d-flex flex-column"
+          :class="index % 2 != 0 ? 'justify-content-center' : ''"
+          v-for="(step, index) in bookingProcessData"
+          :key="step.name"
+        >
+          <img
+            class="d-block mx-auto"
+            :class="index % 2 != 0 ? 'arrow' : ''"
+            :src="`${step.iconUrl}`"
+            alt=""
+          />
+          <h4 class="text-center mt-3">{{ step.name }}</h4>
+          <p>{{ index % 2 != 0 ? '' : step.description }}</p>
+        </div>
+      </div>
     </section>
     <!-- 服務摘要章節結束 -->
     <!-- 方案輪播章節開始 -->
@@ -160,7 +171,7 @@
     <!-- 誘導註冊章節開始 -->
     <section id="chapter-summary" class="container">
       <h2 class="text-center mb-3">合作夥伴</h2>
-      <hr>
+      <hr />
     </section>
     <!-- 誘導註冊章節結束 -->
   </main>
@@ -175,17 +186,45 @@ export default {
         carouselCurrentOffSet: 0,
         carouselXaxisPixels: 0,
       },
+      bookingProcessData: [
+        {
+          stepIndex: 0,
+          name: "網路預約",
+          description: "233",
+          iconUrl:
+            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617864910/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nhsu2aebmf51uksv22gr.png",
+        },
+        {
+          stepIndex: 1,
+          name: "",
+          iconUrl:
+            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617865914/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
+        },
+        {
+          stepIndex: 2,
+          name: "獲取驗證",
+          description: "",
+          iconUrl:
+            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617864910/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nv8pnayasuzeb38p6jij.png",
+        },
+        {
+          stepIndex: 3,
+          name: "",
+          iconUrl:
+            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617865914/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
+        },
+        {
+          stepIndex: 4,
+          name: "立即出遊",
+          description: "",
+          iconUrl:
+            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617864910/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/bl9oki2dkspl5zet0owp.png",
+        },
+      ],
     };
   },
   created() {
     window.scrollTo(0, 0);
-
-    // 因應Heroku休眠機制，所做的後端喚醒行為，並不具備太多意義
-    // const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/WakeUpBackend.php`;
-
-    // this.$http.get(api).then((response) => {
-    //   console.log(response.data);
-    // });
 
     // 初始化航程分類與清單
     const randomProjectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryRandomProjectsList.php`;
@@ -248,17 +287,13 @@ $chapter-margin: 100px;
 
 #home-page {
   padding: $desktop-nav-bar-height 0 $main-container-pt;
-  img {
-    display: block;
-    margin: auto;
-  }
   #chapter-image {
     opacity: 0.65;
     .video-container {
       overflow: hidden;
       width: 100vw -18px;
       height: 65vh;
-      margin-bottom: 60px;
+      margin-bottom: $chapter-margin;
       iframe {
         width: 100vw;
         height: 100vh;
@@ -285,6 +320,22 @@ $chapter-margin: 100px;
   }
   #chapter-summary {
     margin-bottom: $chapter-margin;
+    #booking-process {
+      padding: 0 240px;
+      .step-block {
+        // border: 1px solid red;
+        width: 120px;
+        img {
+          height: 60px;
+        }
+        .arrow {
+          height: 40px;
+        }
+        h4 {
+          font-weight: 700;
+        }
+      }
+    }
   }
   #chapter-carousel {
     width: 1140px;
