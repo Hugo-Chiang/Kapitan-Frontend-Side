@@ -200,6 +200,8 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
+    console.log(this.$route.params.selectedProjectID);
+
     // 向後端請調本頁方案內容
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;
@@ -211,7 +213,6 @@ export default {
           response.data.projectContent["PROJECT_NAME"];
         vm.selectedProject.selectedProjectContent.projectAvatarUrl =
           response.data.projectContent["PROJECT_AVATAR_URL"];
-        console.log(response.data.projectContent["PROJECT_CAROUSEL_URL"]);
         vm.selectedProject.selectedProjectContent.projectCarouselImgs = JSON.parse(
           response.data.projectContent["PROJECT_CAROUSEL_URL"]
         );

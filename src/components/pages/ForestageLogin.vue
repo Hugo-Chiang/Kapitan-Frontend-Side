@@ -220,7 +220,7 @@
 export default {
   data() {
     return {
-      signInMode: true,
+      signInMode: null,
       signIned: false,
       loginData: {
         showRemark: false,
@@ -266,6 +266,21 @@ export default {
         },
       },
     };
+  },
+  created() {
+    window.scrollTo(0, 0);
+
+    // 判斷是否為首頁帶來的註冊戶
+    if (this.$route.params.signInMode != undefined) {
+      this.signInMode = false;
+    } else {
+      this.signInMode = true;
+    }
+
+    this.modalData.callBy = this;
+    this.$eventBus.$on("emitModalValue", (value) => {
+      this.modalData.emitValue = value;
+    });
   },
   methods: {
     // 方法：根據輸入電郵向後端詢問是否重複註冊
@@ -357,14 +372,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  created() {
-    window.scrollTo(0, 0);
-
-    this.modalData.callBy = this;
-    this.$eventBus.$on("emitModalValue", (value) => {
-      this.modalData.emitValue = value;
-    });
   },
   watch: {
     // 監看（方法）：切換登入註冊模式將重置各類回饋的初始值

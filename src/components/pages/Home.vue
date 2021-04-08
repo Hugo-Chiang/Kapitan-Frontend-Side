@@ -11,7 +11,9 @@
         ></iframe>
         <h1 id="slogan" class="text-center position-absolute">
           出海吧，台灣人
-          <h2 class="text-center mt-2">喚醒冒險熱情×重啟親海基因</h2>
+          <h2 id="sub-slogan" class="text-center mt-2">
+            喚醒冒險熱情×重啟親海基因
+          </h2>
         </h1>
       </div>
     </section>
@@ -55,7 +57,7 @@
                 }"
                 class="router-link d-block"
               >
-                <li class="card" :key="project['PROJECT_ID']">
+                <li class="card" :key="project['PROJECT_NAME']">
                   <img
                     class="card-img-top"
                     :src="
@@ -108,7 +110,7 @@
                 class="p-0 m-0 d-flex justify-content-between"
               >
                 <li
-                  v-for="(page, index) in 4"
+                  v-for="(page, index) in returnBeyondIndex"
                   :class="
                     Math.abs(carouselData.carouselCurrentOffSet) == index
                       ? 'current-page'
@@ -120,8 +122,13 @@
             </div>
           </div>
           <!-- 操作按鈕開始 -->
-          <router-link :to="{ name: '挑選航程' }">
-            <button class="btn btn-primary d-xl-block mx-xl-auto mt-5">
+          <router-link
+            :to="{
+              name: '挑選航程',
+              signInMode: false,
+            }"
+          >
+            <button id="select-voyage-btn" class="btn d-block mx-auto mt-5">
               挑選航程
             </button>
           </router-link>
@@ -136,16 +143,19 @@
         <div class="col-12">
           <h2 class="chapter-title text-center mb-2">超便捷的預約流程</h2>
           <h5 class="mx-auto mb-5 text-center">三個步驟即能開展您專屬的航程</h5>
-          <div id="booking-process" class="d-flex justify-content-between">
+          <div
+            id="booking-process"
+            class="d-flex flex-md-row justify-content-between flex-column align-items-center"
+          >
             <div
               class="step-block d-flex flex-column"
               :class="index % 2 != 0 ? 'justify-content-center' : ''"
               v-for="(step, index) in bookingProcessData"
-              :key="step.name"
+              :key="step.stepIndex"
             >
               <img
-                class="d-block mx-auto"
-                :class="index % 2 != 0 ? 'arrow' : ''"
+                class="mx-auto"
+                :class="index % 2 != 0 ? 'arrow d-md-block' : 'd-block'"
                 :src="`${step.iconUrl}`"
                 alt=""
               />
@@ -167,8 +177,9 @@
           <h5 class="mx-auto mb-5 text-center">現在就成為一位甲必丹</h5>
           <div class="framework">
             <router-link
-              class="router-link d-block position-relative"
-              :to="{ name: '登入註冊' }"
+              id="register-link"
+              class="d-block position-relative"
+              :to="{ name: '登入註冊', params: { signInMode: false } }"
             >
               <img
                 src="../../assets/img/forestage/home/yacht-party.jpeg"
@@ -181,12 +192,6 @@
       </div>
     </section>
     <!-- 誘導註冊章節結束 -->
-    <!-- 誘導註冊章節開始 -->
-    <!-- <section id="chapter-summary" class="container">
-      <h2 class="chapter-title text-center mb-3">合作夥伴</h2>
-      <hr />
-    </section> -->
-    <!-- 誘導註冊章節結束 -->
   </main>
 </template>
 
@@ -194,10 +199,12 @@
 export default {
   data() {
     return {
+      windowWidth: window.innerWidth,
       carouselData: {
         carouselProjectsArr: [],
         carouselCurrentOffSet: 0,
         carouselXaxisPixels: 0,
+        beyondIndex: 4,
       },
       bookingProcessData: [
         {
@@ -205,33 +212,38 @@ export default {
           name: "網路預約",
           description: "成為甲必丹會員，在網站上預約非72小時內的行程",
           iconUrl:
-            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617864910/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nhsu2aebmf51uksv22gr.png",
+            this.GlobalVariables.cloudUrlprefix +
+            "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nhsu2aebmf51uksv22gr.png",
         },
         {
           stepIndex: 1,
           name: "",
           iconUrl:
-            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617865914/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
+            this.GlobalVariables.cloudUrlprefix +
+            "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
         },
         {
           stepIndex: 2,
           name: "獲取憑證",
           description: "獲取系統寄發的預約憑證，48小時內可以取消",
           iconUrl:
-            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617864910/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nv8pnayasuzeb38p6jij.png",
+            this.GlobalVariables.cloudUrlprefix +
+            "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/nv8pnayasuzeb38p6jij.png",
         },
         {
           stepIndex: 3,
           name: "",
           iconUrl:
-            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617865914/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
+            this.GlobalVariables.cloudUrlprefix +
+            "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/hzldarybdbxzfyfmpj5k.png",
         },
         {
           stepIndex: 4,
           name: "開心出遊",
           description: "根據預約憑證前往會合碼頭，盡情享受水上時光",
           iconUrl:
-            "https://res.cloudinary.com/hugo-chiang/image/upload/v1617868655/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/m4zjzxm32nigiosophvt.png",
+            this.GlobalVariables.cloudUrlprefix +
+            "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/m4zjzxm32nigiosophvt.png",
         },
       ],
     };
@@ -251,24 +263,29 @@ export default {
     // 方法：根據響應式畫面寬度和輸入方向，移動對應距離的輪播卡片
     slideCarousel(direction) {
       let routerLinks = document.querySelectorAll(".router-link");
-      let innerWidth = window.innerWidth;
       let cardWidth = 255;
       let cardPlusSpace = 0;
       let offSet = this.carouselData.carouselCurrentOffSet;
 
-      if (innerWidth > 1200) {
+      if (this.windowWidth > 1200) {
         cardPlusSpace = cardWidth + 100;
-      } else if (innerWidth <= 1200 && innerWidth > 960) {
+      } else if (this.windowWidth <= 1200 && this.windowWidth > 960) {
         cardPlusSpace = cardWidth + 95;
-      } else if (innerWidth <= 960 && innerWidth > 720) {
+        this.carouselData.beyondIndex = 5;
+      } else if (this.windowWidth <= 960 && this.windowWidth > 720) {
         cardPlusSpace = cardWidth + 50;
-      } else if (innerWidth <= 720 && innerWidth > 540) {
+        this.carouselData.beyondIndex = 5;
+      } else if (this.windowWidth <= 720 && this.windowWidth > 540) {
         cardPlusSpace = cardWidth + 50;
+        this.carouselData.beyondIndex = 6;
       } else {
         cardPlusSpace = cardWidth + 50;
+        this.carouselData.beyondIndex = 6;
       }
 
-      if (offSet + direction != -4 || offSet + direction != 1) {
+      let beyondIndex = this.carouselData.beyondIndex;
+
+      if (offSet + direction != beyondIndex * -1 || offSet + direction != 1) {
         this.carouselData.carouselCurrentOffSet += direction;
         this.carouselData.carouselXaxisPixels =
           cardPlusSpace * this.returnOffSet;
@@ -284,11 +301,28 @@ export default {
     // 計算（方法）：根據輪播所在頁碼索引，於超界時回傳最最大值或最小值
     returnOffSet() {
       let offSet = this.carouselData.carouselCurrentOffSet;
-      if (offSet < -3) this.carouselData.carouselCurrentOffSet = -3;
+      let beyondIndex = this.carouselData.beyondIndex;
+
+      if (offSet < (beyondIndex - 1) * -1)
+        this.carouselData.carouselCurrentOffSet = (beyondIndex - 1) * -1;
       else if (offSet > 0) this.carouselData.carouselCurrentOffSet = 0;
       else return this.carouselData.carouselCurrentOffSet;
 
       return this.carouselData.carouselCurrentOffSet;
+    },
+    // 計算（方法）：根據視窗大小，回傳輪播頁碼的出界值
+    returnBeyondIndex() {
+      if (this.windowWidth > 1200) {
+        return 4;
+      } else if (this.windowWidth <= 1200 && this.windowWidth > 960) {
+        return 5;
+      } else if (this.windowWidth <= 960 && this.windowWidth > 720) {
+        return 5;
+      } else if (this.windowWidth <= 720 && this.windowWidth > 540) {
+        return 6;
+      } else {
+        return 6;
+      }
     },
   },
 };
@@ -327,27 +361,53 @@ $chapter-margin: 120px;
         }
       }
       #slogan {
+        width: 100%;
         transform: translate(-50%, -50%);
         left: 50%;
         top: 50%;
         font-size: 3rem;
         color: $sail;
         text-shadow: 3px 3px 4px black;
+        @include media-breakpoint-down(sm) {
+          font-size: 2.5rem;
+        }
+        #sub-slogan {
+          @include media-breakpoint-down(xs) {
+            font-size: 1.5rem;
+          }
+        }
       }
     }
   }
   #chapter-summary {
     margin-bottom: $chapter-margin;
     #booking-process {
+      // border: 1px solid blue;
       padding: 0 180px;
+      @include media-breakpoint-down(lg) {
+        padding: 0 90px;
+      }
+      @include media-breakpoint-down(md) {
+        padding: 0 30px;
+      }
+      @include media-breakpoint-down(sm) {
+        padding: 0;
+      }
       .step-block {
         // border: 1px solid red;
         width: 150px;
+        @include media-breakpoint-down(md) {
+          width: 120px;
+        }
         img {
           height: 60px;
         }
         .arrow {
           height: 40px;
+          @include media-breakpoint-down(sm) {
+            height: 40px;
+            transform: rotate(90deg);
+          }
         }
         h4 {
           font-weight: 700;
@@ -372,9 +432,6 @@ $chapter-margin: 120px;
     }
     @include media-breakpoint-down(xs) {
       width: 100%;
-    }
-    p {
-      width: 500px;
     }
     .carousel-controls {
       font-size: 32px;
@@ -466,6 +523,12 @@ $chapter-margin: 120px;
         bottom: 3%;
         #carousel-pagination {
           width: 60px;
+          @include media-breakpoint-down(lg) {
+            width: 70px;
+          }
+          @include media-breakpoint-down(sm) {
+            width: 80px;
+          }
           li {
             list-style: none;
             width: 10px;
@@ -474,9 +537,22 @@ $chapter-margin: 120px;
             background-color: #dddddd;
           }
           .current-page {
-            background-color: black;
+            background-color: $deep-teal;
           }
         }
+      }
+    }
+    #select-voyage-btn {
+      width: 120px;
+      height: 45px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      border: transparent;
+      background-color: $deep-teal;
+      color: $sail;
+      &:hover {
+        opacity: 0.9;
       }
     }
   }
@@ -485,12 +561,13 @@ $chapter-margin: 120px;
     .framework {
       width: 100%;
       overflow: hidden;
-      .router-link {
+      #register-link {
         &:hover {
           transform: scale(1.1);
           transition: transform 1.5s;
         }
         img {
+          width: 100%;
           opacity: 0.9;
         }
         #click-register {
@@ -505,6 +582,12 @@ $chapter-margin: 120px;
           transform: translate3d(-50%, -50%, 0);
           top: 50%;
           left: 50%;
+          @include media-breakpoint-down(sm) {
+            width: 180px;
+            height: 60px;
+            font-size: 30px;
+            line-height: 60px;
+          }
         }
       }
     }

@@ -163,7 +163,7 @@
             }"
             class="router-link d-block mx-lg-0 mx-md-1 mb-5"
           >
-            <li class="card" :key="project['PROJECT_ID']">
+            <li class="card" :key="project['PROJECT_NAME']">
               <img
                 class="card-img-top"
                 :src="
@@ -315,7 +315,7 @@ export default {
           "CG0005",
           "CG0006",
         ],
-        budget: 10000,
+        budget: 5000,
         sort: "'%%'",
         showMobileFilters: {
           showNothing: true,
