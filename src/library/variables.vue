@@ -2,9 +2,9 @@
 const cloudName = "hugo-chiang";
 const cloudUrlprefix = "https://res.cloudinary.com/hugo-chiang/image/upload/";
 const cloudNoImgUrl =
-  "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Projects-Avatar/x8lajfn9a6zcknrg51v6";
+  "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/ur4ulenyc0zq7gwhewfn.jpg";
 const cloudNoAvatarUrl =
-  "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Mess-Upload/Members-Avatar/m0uyfclhnsaauzzmot5g";
+  "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/jg4rylsnwucotopfjaz9.png";
 const membersAvatarPreset = "FE-SP-0001-Kapitan-Members-Avatar";
 const projectAvatarPreset = "FE-SP-0001-Kapitan-Projects-Avatar";
 const projectContentPreset = "FE-SP-0001-Kapitan-Projects-Content";

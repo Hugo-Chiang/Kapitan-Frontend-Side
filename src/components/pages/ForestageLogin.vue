@@ -389,7 +389,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 .backgroud {
-  background-image: url("../../assets/img/forestage/login/background.jpg");
+  background-image: url("https://res.cloudinary.com/hugo-chiang/image/upload/v1617899627/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/bowzalnszxt7mz9in6xx.png");
   opacity: 0.95;
   background-size: cover;
   background-position: center;

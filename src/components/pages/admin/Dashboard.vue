@@ -136,7 +136,7 @@ export default {
 
 .backgroud {
   height: 100vh;
-  background-image: url("../../../assets/img/backstage/dashboard-backgroud.jpg");
+  background-image: url("https://res.cloudinary.com/hugo-chiang/image/upload/v1617899185/Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/vpiyzmzxucpzrgud9nuk.jpg");
   opacity: 0.95;
   .container {
     padding-top: 80px;

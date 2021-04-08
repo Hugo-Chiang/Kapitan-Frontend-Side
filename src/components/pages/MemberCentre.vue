@@ -72,7 +72,10 @@
           <div class="card-body welcome-sub-page" v-else>
             <div id="welcome-message-block" class="mx-auto py-5">
               <img
-                src="../../assets/img/forestage/member-centre/girl-on-yacht.jpg"
+                :src="
+                  this.GlobalVariables.cloudUrlprefix +
+                  'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/mnacpujka8ttmlxf5n5w.jpg'
+                "
                 alt=""
               />
               <h3 class="text-center mb-3">準備啟航了嗎？</h3>

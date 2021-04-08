@@ -242,7 +242,10 @@
           >
             <h3 class="text-center">什麼都沒有呢...</h3>
             <img
-              src="../../../assets/img/forestage/member-centre/couple-on-the-beach.jpg"
+              :src="
+                this.GlobalVariables.cloudUrlprefix +
+                'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/vatcqfigc74lghjbqfxv.png'
+              "
               alt=""
               class="my-3"
             />

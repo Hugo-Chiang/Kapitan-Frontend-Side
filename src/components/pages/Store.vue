@@ -218,7 +218,10 @@
           >
             <h3 class="text-center">未能找到符合您篩選的條件</h3>
             <img
-              src="../../assets/img/forestage/store/island-and-yachts.jpg"
+              :src="
+                this.GlobalVariables.cloudUrlprefix +
+                'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/glng164ywqhmq6s7xaje.png'
+              "
               alt=""
               class="my-5"
             />

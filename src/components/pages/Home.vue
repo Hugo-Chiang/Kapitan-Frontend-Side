@@ -182,7 +182,10 @@
               :to="{ name: '登入註冊', params: { signInMode: false } }"
             >
               <img
-                src="../../assets/img/forestage/home/yacht-party.jpeg"
+                :src="
+                  this.GlobalVariables.cloudUrlprefix +
+                  'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/se0t3xsriype9vl0j9vc.jpg'
+                "
                 alt=""
               />
               <div id="click-register" class="position-absolute">點擊註冊</div>
