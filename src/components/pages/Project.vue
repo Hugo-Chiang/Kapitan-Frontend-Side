@@ -252,7 +252,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #project-page {
-  padding: $desktop-nav-bar-height 0 $main-container-pt;
+  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   .nav-item {
     cursor: pointer;
   }

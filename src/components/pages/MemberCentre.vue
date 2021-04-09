@@ -1,95 +1,102 @@
 <template>
-  <main id="member-centre-page" class="container mb-5">
-    <!-- 麵包屑開始 -->
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
-    <!-- 麵包屑結束 -->
-    <div class="row">
-      <!-- 側邊欄位開始 -->
-      <aside class="col-lg-3 mb-lg-0 col-12 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <div
-              class="avatar-block d-flex justify-content-center align-items-center mx-auto my-3"
-            >
-              <div class="d-flex justify-content-center align-items-center">
-                <img
-                  :src="
-                    memberInfo.avatarUrl == null
-                      ? GlobalVariables.cloudUrlprefix +
-                        GlobalVariables.cloudNoAvatarUrl
-                      : GlobalVariables.cloudUrlprefix + memberInfo.avatarUrl
-                  "
-                  alt=""
-                />
-              </div>
-            </div>
-            <div class="text-center">
-              <h6>
-                {{ memberInfo.nickname || "尊敬的甲必丹會員" }}
-              </h6>
-            </div>
-            <hr />
-            <ul class="p-0">
-              <li
-                class="text-center mt-4 d-flex justify-content-center align-items-center"
-                v-for="list in asideList"
-                :key="list.name"
-                :class="currentSubPage == list.name ? 'current-sub-page' : ''"
-                @click="currentSubPage = list.name"
+  <main id="member-centre-page" class="container-fluid mb-5">
+    <!-- 橫幅開始 -->
+    <Cover :coverData="coverData"></Cover>
+    <!-- 橫幅結束 -->
+    <div class="container">
+      <!-- 麵包屑開始 -->
+      <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+      <!-- 麵包屑結束 -->
+      <div class="row">
+        <!-- 側邊欄位開始 -->
+        <aside class="col-lg-3 mb-lg-0 col-12 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="avatar-block d-flex justify-content-center align-items-center mx-auto my-3"
               >
-                <div
-                  class="icon-block d-flex justify-content-center align-items-center mr-1"
-                >
-                  <i :class="list.iconClass"></i>
+                <div class="d-flex justify-content-center align-items-center">
+                  <img
+                    :src="
+                      memberInfo.avatarUrl == null
+                        ? GlobalVariables.cloudUrlprefix +
+                          GlobalVariables.cloudNoAvatarUrl
+                        : GlobalVariables.cloudUrlprefix + memberInfo.avatarUrl
+                    "
+                    alt=""
+                  />
                 </div>
-                {{ list.name }}
-              </li>
-            </ul>
+              </div>
+              <div class="text-center">
+                <h6>
+                  {{ memberInfo.nickname || "尊敬的甲必丹會員" }}
+                </h6>
+              </div>
+              <hr />
+              <ul class="p-0">
+                <li
+                  class="text-center mt-4 d-flex justify-content-center align-items-center"
+                  v-for="list in asideList"
+                  :key="list.name"
+                  :class="currentSubPage == list.name ? 'current-sub-page' : ''"
+                  @click="currentSubPage = list.name"
+                >
+                  <div
+                    class="icon-block d-flex justify-content-center align-items-center mr-1"
+                  >
+                    <i :class="list.iconClass"></i>
+                  </div>
+                  {{ list.name }}
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </aside>
-      <!-- 側邊欄位結束 -->
-      <!-- 主要內容（切換）開始 -->
-      <section class="col-lg-9 col-12">
-        <div class="card">
-          <!-- （切換）基本資料開始 -->
-          <MemberInfoEditor
-            v-if="currentSubPage == '基本資料'"
-            :memberInfo="memberInfo.propsObj"
-            @emitCloseEditor="backToWelcomePage"
-          ></MemberInfoEditor>
-          <!-- （切換）基本資料結束 -->
-          <!-- （切換）查詢訂單開始 -->
-          <MemberOrdersSearching
-            v-else-if="currentSubPage == '查詢訂單'"
-            :memberID="memberInfo.ID"
-          ></MemberOrdersSearching>
-          <!-- （切換）查詢訂單開始 -->
-          <!-- <MemberCommentsSearching
+        </aside>
+        <!-- 側邊欄位結束 -->
+        <!-- 主要內容（切換）開始 -->
+        <section class="col-lg-9 col-12">
+          <div class="card">
+            <!-- （切換）基本資料開始 -->
+            <MemberInfoEditor
+              v-if="currentSubPage == '基本資料'"
+              :memberInfo="memberInfo.propsObj"
+              @emitCloseEditor="backToWelcomePage"
+            ></MemberInfoEditor>
+            <!-- （切換）基本資料結束 -->
+            <!-- （切換）查詢訂單開始 -->
+            <MemberOrdersSearching
+              v-else-if="currentSubPage == '查詢訂單'"
+              :memberID="memberInfo.ID"
+            ></MemberOrdersSearching>
+            <!-- （切換）查詢訂單開始 -->
+            <!-- <MemberCommentsSearching
             v-else-if="currentSubPage == '我的評價'"
             :memberID="memberInfo.ID"
           ></MemberCommentsSearching> -->
-          <div class="card-body welcome-sub-page" v-else>
-            <div id="welcome-message-block" class="mx-auto py-5">
-              <img
-                :src="
-                  this.GlobalVariables.cloudUrlprefix +
-                  'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/mnacpujka8ttmlxf5n5w.jpg'
-                "
-                alt=""
-              />
-              <h3 class="text-center mb-3">準備啟航了嗎？</h3>
-              <h6 class="text-center">點選大頭貼下方的功能以進行操作</h6>
+            <div class="card-body welcome-sub-page" v-else>
+              <div id="welcome-message-block" class="mx-auto py-5">
+                <img
+                  :src="
+                    this.GlobalVariables.cloudUrlprefix +
+                    'Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/mnacpujka8ttmlxf5n5w.jpg'
+                  "
+                  alt=""
+                />
+                <h3 class="text-center mb-3">準備啟航了嗎？</h3>
+                <h6 class="text-center">點選大頭貼下方的功能以進行操作</h6>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <!-- 主要內容（切換）結束 -->
+        </section>
+        <!-- 主要內容（切換）結束 -->
+      </div>
     </div>
   </main>
 </template>
 
 <script>
+// 導入橫幅元件
+import Cover from "@/components/pages/sub-components/Cover";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入會員中心的 3 個次級內容元件
@@ -100,6 +107,14 @@ import MemberCommentsSearching from "@/components/pages/sub-components/MemberCom
 export default {
   data() {
     return {
+      coverData: {
+        imgUrl:
+          this.GlobalVariables.cloudUrlprefix +
+          "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/vy4coyk24onrob2tcy4c.jpg",
+        position: "center",
+        mainTitle: "會員中心",
+        subTitle: "",
+      },
       breadCrumbData: {
         pagesArr: ["首頁", "會員中心"],
         currentPage: 2,
@@ -118,6 +133,7 @@ export default {
     };
   },
   components: {
+    Cover,
     Breadcrumb,
     MemberInfoEditor,
     MemberOrdersSearching,
@@ -166,7 +182,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #member-centre-page {
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   h1 {
     margin-top: 200px;
   }

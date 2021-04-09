@@ -1,12 +1,12 @@
 <template>
   <main id="cart-page" class="container">
-    <!-- 麵包屑開始 -->
-    <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
-    <!-- 麵包屑結束 -->
     <div class="row">
       <div class="col-12">
         <h2 v-if="returnCurrentPage == '購物車'">您的購物車</h2>
         <h2 v-else>進行結帳</h2>
+        <!-- 麵包屑開始 -->
+        <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
+        <!-- 麵包屑結束 -->
         <hr />
       </div>
     </div>

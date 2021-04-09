@@ -33,7 +33,10 @@ import FormContactInfo from "@/components/pages/sub-components/FormContactInfo";
 export default {
   data() {
     return {
-      memberID: "",
+      memberData: {
+        memberID: "",
+        memberAccount: "",
+      },
       syncMemberInfo: {},
       requiredInputTitle: {
         MCname: "主要聯絡人姓名",
@@ -107,8 +110,8 @@ export default {
         .post(signInAuthenticationAPI, session)
         .then((response) => {
           if (response.data.sessionCheck) {
-            vm.memberID = response.data.signInedID;
-            return vm.$http.post(queryMemberInfoAPI, vm.memberID);
+            vm.memberData.memberID = response.data.signInedID;
+            return vm.$http.post(queryMemberInfoAPI, vm.memberData.memberID);
           }
         })
         .catch((error) => {
@@ -156,7 +159,8 @@ export default {
       });
 
       let json = JSON.stringify({
-        memberID: vm.memberID,
+        memberID: vm.memberData.memberID,
+        memberAccount: vm.memberData.memberAccount,
         ordererContactInfo: inputOrdererInfo,
         orderDetails: orderDetailsArr,
       });
@@ -170,6 +174,16 @@ export default {
               vm.deleteInvalidProjects;
             vm.modalData.situation.event = "訂購成功";
             vm.modalData.situation.message = response.data.message;
+
+            let smtp = vm.GlobalVariables.Email;
+
+            smtp.send({
+              SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
+              To: response.data.noticeEmails,
+              From: "Kapitan@service.com",
+              Subject: `甲必丹系統信│訂單【${response.data.orderID}】訂購成功！`,
+              Body: "<p>這是一封前端作品的電子報訂閱模擬信。</p>",
+            });
 
             localStorage.removeItem("savingProjects");
             vm.$eventBus.$emit("emitCartUpdate", 0);

@@ -293,7 +293,7 @@
       <!-- 頁碼開始 -->
       <div id="pagination-row" class="row position-relative mb-5">
         <div
-          class="col-12 d-flex justify-content-center"
+          class="col-xl-10 ml-xl-auto col-12 d-flex justify-content-center"
           id="pagination-container"
         >
           <Pagination
@@ -324,7 +324,8 @@ export default {
       coverData: {
         imgUrl:
           this.GlobalVariables.cloudUrlprefix +
-          "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/vy4coyk24onrob2tcy4c.jpg",
+          "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/xenzeoqyu3uyqnjumwig.png",
+        position: "bottom",
         mainTitle: "挑選航程",
         subTitle: "",
       },
@@ -466,7 +467,6 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #store-page {
-  // padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
   padding: $desktop-nav-bar-height 0 $main-container-pt;
   // 方案篩選器開始
   aside {
