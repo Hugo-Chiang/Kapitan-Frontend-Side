@@ -127,7 +127,7 @@
               <span
                 class="fake-copy-right-des text-warning"
                 v-show="showFakeCopyRightDescription"
-                >（練習作品而已，絕大多數圖文來自網路）</span
+                >（練習作品而已，絕大多數影音圖文來自網路）</span
               >
             </h6>
           </div>
@@ -262,8 +262,9 @@ export default {
             To: this.subscribeData.subscribeEmail,
             From: "Kapitan@service.com",
             Subject: "感謝您訂閱甲必丹電子報！",
-            Body:
-              "<p>這是一封前端作品的電子報訂閱模擬信。在這個情境中，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。</p><p>祝您今天一切順利！</p>",
+            Body: `<p>這是一封前端作品的電子報訂閱模擬信。</p>
+              <p>在這個情境中，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。</p>
+              <p>祝您今天一切順利！</p>`,
           })
           .then(() => {
             vm.subscribeData.subscribeEmail = "";

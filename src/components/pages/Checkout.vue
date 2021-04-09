@@ -176,13 +176,32 @@ export default {
             vm.modalData.situation.message = response.data.message;
 
             let smtp = vm.GlobalVariables.Email;
+            let certificateArr = response.data.certificateArr;
+            let emailContent = `<p>這是一封前端作品的訂單完成模擬信。</p><p>在這個情境中，您會收到企業發送給您的訂購憑證：<ul>`;
+
+            for (let i = 0; i < certificateArr.length; i++) {
+              let str = `
+                  <li>
+                    ${certificateArr[i].orderDetailID}：${certificateArr[i].certificate}
+                    <div style="width: 200px;">
+                        <img src='http://bwipjs-api.metafloor.com/?bcid=code128&text=${certificateArr[i].certificate}'
+                            style="width: 100%;">
+                    </div>
+                  </li>`;
+
+              emailContent = emailContent + str;
+            }
+
+            emailContent =
+              emailContent +
+              `<ul></p><p>您將依據這個憑證與（碼頭）工作人員相認。</p><p>祝您今天一切順利！</p>`;
 
             smtp.send({
               SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
               To: response.data.noticeEmails,
               From: "Kapitan@service.com",
-              Subject: `甲必丹系統信│訂單【${response.data.orderID}】訂購成功！`,
-              Body: "<p>這是一封前端作品的電子報訂閱模擬信。</p>",
+              Subject: `甲必丹遊艇城│訂單【${response.data.orderID}】訂購成功！`,
+              Body: emailContent,
             });
 
             localStorage.removeItem("savingProjects");
