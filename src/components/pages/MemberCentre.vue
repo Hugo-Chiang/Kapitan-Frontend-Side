@@ -99,10 +99,9 @@
 import Cover from "@/components/pages/sub-components/Cover";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
-// 導入會員中心的 3 個次級內容元件
+// 導入會員中心的 2 個次級內容元件
 import MemberInfoEditor from "@/components/pages/sub-components/MemberInfoEditor";
 import MemberOrdersSearching from "@/components/pages/sub-components/MemberOrdersSearching";
-import MemberCommentsSearching from "@/components/pages/sub-components/MemberCommentsSearching";
 
 export default {
   data() {
@@ -137,7 +136,6 @@ export default {
     Breadcrumb,
     MemberInfoEditor,
     MemberOrdersSearching,
-    MemberCommentsSearching,
   },
   created() {
     window.scrollTo(0, 0);

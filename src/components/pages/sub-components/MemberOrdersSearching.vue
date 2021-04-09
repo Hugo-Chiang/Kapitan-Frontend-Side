@@ -164,21 +164,40 @@
           </div>
           <div class="card-body container py-4">
             <div class="row">
-              <div
-                class="col-md-4 col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center mb-sm-0 flex-column mb-3"
-              >
-                <h6 class="text-sm-center mb-md-0 mb-sm-4 mb-1">
-                  <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
-                    方案狀態<span class="colon d-md-none">：</span>
-                  </h6>
-                  {{ orderDetail["ORDER_DETAIL_STATUS"] | orderDetailStatus }}
-                </h6>
-                <h6 class="text-sm-center mb-md-0 mb-sm-3 mb-1">
-                  <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
-                    會合地點<span class="colon d-md-none">：</span>
-                  </h6>
-                  {{ allContentArr[0]["LOCATION_NAME"] }}
-                </h6>
+              <div class="col-md-4 col-12">
+                <div class="row pl-sm-3 mb-md-0 mb-4">
+                  <div
+                    class="col-12 d-flex flex-sm-row justify-content-sm-between align-items-sm-center mb-sm-3 flex-column mb-3"
+                  >
+                    <h6 class="text-sm-center mb-md-0 mb-sm-2 mb-1">
+                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
+                        方案狀態<span class="colon d-md-none">：</span>
+                      </h6>
+                      {{
+                        orderDetail["ORDER_DETAIL_STATUS"] | orderDetailStatus
+                      }}
+                    </h6>
+                    <h6 class="text-sm-center mb-md-0 mb-sm-2 mb-1">
+                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
+                        會合地點<span class="colon d-md-none">：</span>
+                      </h6>
+                      {{ allContentArr[0]["LOCATION_NAME"] }}
+                    </h6>
+                  </div>
+                  <div class="col-12">
+                    <h6 class="text-sm-center mb-md-0 mb-sm-3 mb-1">
+                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
+                        購買憑證<span class="colon d-md-none">：</span>
+                      </h6>
+                    </h6>
+                    <div class="bar-code-block d-block">
+                      <img
+                        :src="`http://bwipjs-api.metafloor.com/?bcid=code128&text=${orderDetail['ORDER_DETAIL_CERTIFICATE']}&alttext=${orderDetail['ORDER_DETAIL_CERTIFICATE']}`"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-md-8 col-12">
                 <div class="row mb-3">
@@ -473,6 +492,16 @@ a {
     .order-detail-amount {
       color: darkred;
       font-size: 18px;
+    }
+    .bar-code-block {
+      width: 90%;
+      margin: auto;
+      @include media-breakpoint-down(xs) {
+        margin: 0;
+      }
+      img {
+        width: 100%;
+      }
     }
   }
   #pagination-container {

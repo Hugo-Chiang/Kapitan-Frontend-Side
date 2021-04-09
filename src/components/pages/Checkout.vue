@@ -185,7 +185,7 @@ export default {
                   <li>
                     ${certificateArr[i].orderDetailID}：${certificateArr[i].certificate}
                     <div style="width: 200px;">
-                        <img src='http://bwipjs-api.metafloor.com/?bcid=code128&text=${certificateArr[i].certificate}'
+                        <img src='http://bwipjs-api.metafloor.com/?bcid=code128&text=${certificateArr[i].certificate}&alttext=%28${certificateArr[i].orderDetailID}%29${certificateArr[i].certificate}'
                             style="width: 100%;">
                     </div>
                   </li>`;

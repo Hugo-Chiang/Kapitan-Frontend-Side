@@ -261,7 +261,7 @@ export default {
             SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
             To: this.subscribeData.subscribeEmail,
             From: "Kapitan@service.com",
-            Subject: "感謝您訂閱甲必丹電子報！",
+            Subject: "甲必丹系統信│感謝您訂閱甲必丹電子報！",
             Body: `<p>這是一封前端作品的電子報訂閱模擬信。</p>
               <p>在這個情境中，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。</p>
               <p>祝您今天一切順利！</p>`,
