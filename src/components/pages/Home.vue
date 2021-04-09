@@ -343,7 +343,7 @@ $chapter-margin: 120px;
     color: $deep-teal;
   }
   #chapter-image {
-    opacity: 0.65;
+    background-color: rgba(225, 225, 225, 0.35);
     .video-container {
       overflow: hidden;
       width: 100vw -18px;
@@ -370,7 +370,7 @@ $chapter-margin: 120px;
         top: 50%;
         font-size: 3rem;
         color: $sail;
-        text-shadow: 3px 3px 4px black;
+        text-shadow: 2px 2px 3px black;
         @include media-breakpoint-down(sm) {
           font-size: 2.5rem;
         }
@@ -385,7 +385,6 @@ $chapter-margin: 120px;
   #chapter-summary {
     margin-bottom: $chapter-margin;
     #booking-process {
-      // border: 1px solid blue;
       padding: 0 180px;
       @include media-breakpoint-down(lg) {
         padding: 0 90px;
@@ -397,7 +396,6 @@ $chapter-margin: 120px;
         padding: 0;
       }
       .step-block {
-        // border: 1px solid red;
         width: 150px;
         @include media-breakpoint-down(md) {
           width: 120px;
