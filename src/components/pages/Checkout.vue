@@ -175,6 +175,7 @@ export default {
             vm.modalData.situation.event = "訂購成功";
             vm.modalData.situation.message = response.data.message;
 
+            // 模擬發送購買憑證信
             let smtp = vm.GlobalVariables.Email;
             let certificateArr = response.data.certificateArr;
             let emailContent = `<p>這是一封前端作品的訂單完成模擬信。</p><p>在這個情境中，您會收到企業發送給您的訂購憑證：<ul>`;

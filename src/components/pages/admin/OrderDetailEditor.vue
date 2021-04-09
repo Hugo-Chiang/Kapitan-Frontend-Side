@@ -74,6 +74,7 @@
             <OrderDetailsForm
               v-show="inEditingIndex != -1"
               :inCreatingMode="inCreatingMode"
+              :managingOrder="managingOrder"
               :currentPageContentArr.sync="currentPageContentArr"
               :inEditingIndex.sync="inEditingIndex"
               @emitRerenderRequest="initializeEditor"
@@ -230,8 +231,12 @@ export default {
 
       if (this.inCreatingMode) {
         breadCrumbData = {
-          pagesArr: ["管理系統：新增訂單", "管理系統：新增細項"],
-          currentPage: 2,
+          pagesArr: [
+            "管理系統：查詢訂單",
+            "管理系統：編輯訂單",
+            "管理系統：新增細項",
+          ],
+          currentPage: 3,
         };
       } else {
         breadCrumbData = {

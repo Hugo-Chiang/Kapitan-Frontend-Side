@@ -285,18 +285,20 @@
       </div>
       <div class="row">
         <!-- 操作按鈕開始 -->
-        <div class="col-1 mt-4">
+        <div class="col-5 mt-4">
+          <input
+            type="button"
+            class="btn btn-info mr-2"
+            v-if="!inCreatingMode"
+            value="編輯細項"
+            @click.prevent="$router.push({ name: '管理系統：編輯細項' })"
+          />
           <input
             type="button"
             class="btn btn-info"
-            :value="inCreatingMode ? '新增細項' : '編輯細項'"
-            @click.prevent="
-              $router.push(
-                inCreatingMode
-                  ? { name: '管理系統：新增細項' }
-                  : { name: '管理系統：編輯細項' }
-              )
-            "
+            v-if="!inCreatingMode"
+            value="新增細項"
+            @click.prevent="$router.push({ name: '管理系統：新增細項' })"
           />
         </div>
         <div class="col-4 ml-auto">
@@ -334,8 +336,6 @@
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入頁碼元件
 import Pagination from "@/components/pages/sub-components/Pagination";
-// 導入細項編輯元件
-import OrderDetailsForm from "@/components/pages/admin/sub-components/OrderDetailsForm";
 
 export default {
   data() {
@@ -439,7 +439,7 @@ export default {
     this.initializeeditor();
   },
   props: ["currentManager", "currentPath"],
-  components: { Breadcrumb, Pagination, OrderDetailsForm },
+  components: { Breadcrumb, Pagination },
   methods: {
     // 方法：初始化編輯器內容，以便呈現新增或編輯模式的差異功能
     initializeeditor() {

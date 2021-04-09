@@ -219,6 +219,7 @@
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.newOrderID"
+                  :disabled="inCreatingMode"
                   placeholder="OD0000001"
                   v-model="
                     returneContentArr[returneIndex]['FK_ORDER_ID_for_ODD']
@@ -467,12 +468,17 @@ export default {
           ORDER_DETAIL_EC_EMAIL: "",
           PROJECT_ID: "",
           BOOKING_DATE: "",
-          FK_ORDER_ID_for_ODD: "",
+          FK_ORDER_ID_for_ODD: this.managingOrder,
         },
       ],
     };
   },
-  props: ["inCreatingMode", "currentPageContentArr", "inEditingIndex"],
+  props: [
+    "inCreatingMode",
+    "managingOrder",
+    "currentPageContentArr",
+    "inEditingIndex",
+  ],
   created() {
     this.initializeEditor();
   },
