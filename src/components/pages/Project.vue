@@ -1,146 +1,140 @@
 <template>
-  <main id="project-page" class="container">
-    <!-- 方案輪播章節開始 -->
-    <Carousel :carouselData="carouselData"></Carousel>
-    <!-- 方案輪播章節結束 -->
-    <!-- 網站麵包屑開始 -->
-    <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
-    <!-- 網站麵包屑結束 -->
-    <!-- 方案摘要章節開始 -->
-    <section id="project-summary-area" class="row mt-4 mb-5">
-      <div id="project-summary" class="col-lg-8 col-12">
-        <h1>
-          {{ selectedProject.selectedProjectContent.projectName }}
-        </h1>
-        <hr />
-        <section
-          v-html="selectedProject.selectedProjectContent.projectSummary"
-        ></section>
-      </div>
-      <div id="project-price" class="col-lg-4 col-12 position-sticky">
-        <div class="card text-center">
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <!-- 方案人數開始 -->
-              <li class="list-group-item">
-                <div class="row mt-2">
-                  <div id="project-min-num-of-people" class="col-6">
-                    <h6>最低成團人數</h6>
-                    <div class="my-3">
-                      <span>
-                        {{
-                          selectedProject.selectedProjectContent
-                            .projectMinNumOfPeople
-                        }}</span
-                      >人
+  <main id="project-page" class="container-fluid">
+    <div class="container">
+      <!-- 方案輪播章節開始 -->
+      <Carousel :carouselData="carouselData"></Carousel>
+      <!-- 方案輪播章節結束 -->
+      <!-- 網站麵包屑開始 -->
+      <Breadcrumb :breadCrumbData="breadCrumbData"></Breadcrumb>
+      <!-- 網站麵包屑結束 -->
+      <!-- 方案摘要章節開始 -->
+      <section id="project-summary-area" class="row mt-4 mb-5">
+        <div id="project-summary" class="col-lg-8 col-12">
+          <h1>
+            {{ selectedProject.selectedProjectContent.projectName }}
+          </h1>
+          <hr />
+          <section
+            v-html="selectedProject.selectedProjectContent.projectSummary"
+          ></section>
+        </div>
+        <div id="project-price" class="col-lg-4 col-12 position-sticky">
+          <div class="card text-center">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <!-- 方案人數開始 -->
+                <li class="list-group-item">
+                  <div class="row mt-2">
+                    <div id="project-min-num-of-people" class="col-6">
+                      <h6>最低成團人數</h6>
+                      <div class="my-3">
+                        <span>
+                          {{
+                            selectedProject.selectedProjectContent
+                              .projectMinNumOfPeople
+                          }}</span
+                        >人
+                      </div>
+                    </div>
+                    <div id="project-max-num-of-people" class="col-6">
+                      <h6>最高容納人數</h6>
+                      <div class="my-3">
+                        <span>
+                          {{
+                            selectedProject.selectedProjectContent
+                              .projectMaxNumOfPeople
+                          }}</span
+                        >人
+                      </div>
                     </div>
                   </div>
-                  <div id="project-max-num-of-people" class="col-6">
-                    <h6>最高容納人數</h6>
-                    <div class="my-3">
-                      <span>
-                        {{
-                          selectedProject.selectedProjectContent
-                            .projectMaxNumOfPeople
-                        }}</span
-                      >人
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <!-- 方案人數結束 -->
-              <!-- 人均售價開始 -->
-              <li class="list-group-item">
-                <div
-                  class="my-3"
-                  v-if="
-                    selectedProject.selectedProjectContent
-                      .projectPricePerPerson != ''
-                  "
-                  :key="
-                    selectedProject.selectedProjectContent.projectPricePerPerson
-                  "
-                >
-                  每位成員特惠價：<span id="price-per-person">
-                    {{
+                </li>
+                <!-- 方案人數結束 -->
+                <!-- 人均售價開始 -->
+                <li class="list-group-item">
+                  <div
+                    class="my-3"
+                    v-if="
+                      selectedProject.selectedProjectContent
+                        .projectPricePerPerson != ''
+                    "
+                    :key="
                       selectedProject.selectedProjectContent
                         .projectPricePerPerson
-                        | currency
-                        | dollarSign
-                    }}
-                  </span>
-                </div>
-              </li>
-              <!-- 人均售價結束 -->
-            </ul>
+                    "
+                  >
+                    每位成員特惠價：<span id="price-per-person">
+                      {{
+                        selectedProject.selectedProjectContent
+                          .projectPricePerPerson
+                          | currency
+                          | dollarSign
+                      }}
+                    </span>
+                  </div>
+                </li>
+                <!-- 人均售價結束 -->
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    <!-- 方案摘要章節結束 -->
-    <!-- 方案購買章節開始 -->
-    <section id="project-purchase-area" class="row mb-5">
-      <div class="col-12">
-        <h3>方案確認</h3>
-        <hr />
-        <!-- 方案購買卡片開始 -->
-        <div id="project-purchase-card" class="card">
-          <div class="card-header">
-            <!-- 方案購買卡片頁籤開始 -->
-            <ul class="nav nav-tabs card-header-tabs">
-              <li
-                class="nav-item"
-                v-for="(tab, index) in tabs.tabsArr"
-                :key="index"
-              >
-                <a
-                  class="nav-link"
-                  :class="tabs.currentTab == tab ? 'active' : ''"
-                  @click.prevent="tabs.currentTab = tab"
-                  >{{ tab }}</a
+      </section>
+      <!-- 方案摘要章節結束 -->
+      <!-- 方案購買章節開始 -->
+      <section id="project-purchase-area" class="row mb-5">
+        <div class="col-12">
+          <h3>方案確認</h3>
+          <hr />
+          <!-- 方案購買卡片開始 -->
+          <div id="project-purchase-card" class="card">
+            <div class="card-header">
+              <!-- 方案購買卡片頁籤開始 -->
+              <ul class="nav nav-tabs card-header-tabs">
+                <li
+                  class="nav-item"
+                  v-for="(tab, index) in tabs.tabsArr"
+                  :key="index"
                 >
-              </li>
-            </ul>
-            <!-- 方案購買卡片頁籤結束 -->
+                  <a
+                    class="nav-link"
+                    :class="tabs.currentTab == tab ? 'active' : ''"
+                    @click.prevent="tabs.currentTab = tab"
+                    >{{ tab }}</a
+                  >
+                </li>
+              </ul>
+              <!-- 方案購買卡片頁籤結束 -->
+            </div>
+            <!-- 方案購買卡片主要內容（元件）開始 -->
+            <TabDefault
+              :selectedProject="selectedProject"
+              v-if="tabs.currentTab == '選擇方案'"
+            ></TabDefault>
+            <TabLocation
+              v-else-if="tabs.currentTab == '會合地點'"
+              :departureLocationInfo="
+                selectedProject.selectedProjectDepartureLocation
+              "
+            ></TabLocation>
+            <TabTerms v-else></TabTerms>
+            <!-- 方案購買卡片主要內容（元件）結束 -->
           </div>
-          <!-- 方案購買卡片主要內容（元件）開始 -->
-          <TabDefault
-            :selectedProject="selectedProject"
-            v-if="tabs.currentTab == '選擇方案'"
-          ></TabDefault>
-          <TabLocation
-            v-else-if="tabs.currentTab == '會合地點'"
-            :departureLocationInfo="
-              selectedProject.selectedProjectDepartureLocation
-            "
-          ></TabLocation>
-          <TabTerms v-else></TabTerms>
-          <!-- 方案購買卡片主要內容（元件）結束 -->
+          <!-- 方案購買卡片結束 -->
         </div>
-        <!-- 方案購買卡片結束 -->
-      </div>
-    </section>
-    <!-- 方案購買章節結束 -->
-    <!-- 方案細節章節開始 -->
-    <section id="project-details-area" class="row mb-5">
-      <div class="col-12">
-        <h3>服務內容</h3>
-        <hr />
-        <article
-          v-html="selectedProject.selectedProjectContent.projectDescription"
-        ></article>
-      </div>
-    </section>
-    <!-- 方案細節章節結束 -->
-    <!-- 方案評價章節開始 -->
-    <!-- <section id="comments-area" class="row mb-5">
-      <div class="col-12">
-        <h3>旅客評價</h3>
-        <hr />
-        <div class="commentsContainer"></div>
-      </div>
-    </section> -->
-    <!-- 方案評價章節結束 -->
+      </section>
+      <!-- 方案購買章節結束 -->
+      <!-- 方案細節章節開始 -->
+      <section id="project-details-area" class="row mb-5">
+        <div class="col-12">
+          <h3>服務內容</h3>
+          <hr />
+          <article
+            v-html="selectedProject.selectedProjectContent.projectDescription"
+          ></article>
+        </div>
+      </section>
+      <!-- 方案細節章節結束 -->
+    </div>
   </main>
 </template>
 
@@ -252,7 +246,7 @@ export default {
 @import "../../assets/scss/all.scss";
 
 #project-page {
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   .nav-item {
     cursor: pointer;
   }

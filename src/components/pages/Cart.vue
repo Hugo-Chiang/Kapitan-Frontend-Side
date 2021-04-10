@@ -1,190 +1,201 @@
 <template>
-  <main id="cart-page" class="container">
-    <div class="row">
-      <div class="col-12">
-        <h2 v-if="returnCurrentPage == '購物車'">您的購物車</h2>
-        <h2 v-else>進行結帳</h2>
-        <!-- 麵包屑開始 -->
-        <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
-        <!-- 麵包屑結束 -->
-        <hr />
+  <main id="cart-page" class="container-fluid">
+    <!-- 橫幅開始 -->
+    <Cover :coverData="coverData"></Cover>
+    <!-- 橫幅結束 -->
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 v-if="returnCurrentPage == '購物車'">您的購物車</h2>
+          <h2 v-else>進行結帳</h2>
+          <!-- 麵包屑開始 -->
+          <Breadcrumb :breadCrumbData="returnBreadCrumbData"></Breadcrumb>
+          <!-- 麵包屑結束 -->
+          <hr />
+        </div>
       </div>
+      <!-- 驗證套件 vee-validate 監看區域開始 -->
+      <ValidationObserver v-slot="{ invalid }">
+        <!-- 購物車區域開始 -->
+        <section id="cart-area" class="row d-flex">
+          <!-- 訂單列表部分開始 -->
+          <div
+            id="order-details-container"
+            class="order-lg-1 col-lg-9 order-2 col-12"
+          >
+            <div class="card">
+              <div class="card-header px-3 d-flex align-items-center">
+                <!-- 判定是否切換為結帳頁面 -->
+                <h5 v-if="returnCurrentPage == '購物車'">已選方案</h5>
+                <h5 v-else>第一步：確認方案內容</h5>
+                <button
+                  id="clear-cart-btn"
+                  class="btn btn-danger ml-auto"
+                  @click.prevent="clearCart"
+                  v-if="
+                    returnCurrentPage == '購物車' &&
+                    confirmProjectsArr.length != 0
+                  "
+                >
+                  清空購物車
+                </button>
+              </div>
+              <div class="card-body py-0 position-relative">
+                <!-- 方案項目開始 -->
+                <CartListItem
+                  v-for="(project, index) in confirmProjectsArr"
+                  :data-id="
+                    project.bookingProjectID + '-' + project.bookingProjectDate
+                  "
+                  :list="confirmProjectsArr"
+                  :index="index"
+                  :listItem="project"
+                  :currentPage="returnCurrentPage"
+                  :key="index"
+                ></CartListItem>
+                <!-- 方案項目結束 -->
+              </div>
+              <!-- 購物車全空提醒語開始 -->
+              <div
+                id="empty-cart-message"
+                class="d-flex justify-content-center align-items-center"
+                v-if="confirmProjectsArr.length == 0"
+              >
+                <h6>
+                  您的購物車目前是空的呢。
+                  請到「挑選航程」頁看看有沒有喜歡的方案吧！
+                </h6>
+              </div>
+              <!-- 購物車全空提醒語結束 -->
+            </div>
+            <!-- 結帳區域開始 -->
+            <router-view
+              ref="cart"
+              :confirmProjectsArr="confirmProjectsArr"
+              :returnCurrentPage="returnCurrentPage"
+            ></router-view>
+            <!-- 結帳區域結束 -->
+            <!-- </ValidationObserver> -->
+          </div>
+          <!-- 訂單列表部分結束 -->
+          <!-- 訂單總額部分開始 -->
+          <div
+            id="order-amount-card-container"
+            class="px-0 order-lg-2 col-lg-3 order-1 col-10 mx-auto"
+          >
+            <div class="card text-center" style="width: 18rem">
+              <div class="card-body">
+                <h5 class="card-title">訂單概覽</h5>
+                <ul
+                  class="order-amount-list my-4 mx-auto d-flex flex-lg-column align-items-start"
+                >
+                  <li class="mr-lg-0 mr-4">
+                    <span class="order-amount-title d-inline-block mr-1"
+                      >選購：</span
+                    ><span class="order-amount-block d-inline-block">{{
+                      confirmProjectsArr.length
+                    }}</span
+                    >個方案
+                  </li>
+                  <li>
+                    <span class="order-amount-title d-inline-block mr-1"
+                      >總計：</span
+                    ><span class="order-amount-block d-inline-block">{{
+                      returnAmout | currency
+                    }}</span
+                    >元
+                  </li>
+                </ul>
+                <!-- 判斷該出現屬於購物車還是結帳頁的行動按鈕 -->
+                <button
+                  class="btn btn-action-now"
+                  @click.prevent="$router.push('/Cart/Checkout')"
+                  v-if="
+                    returnCurrentPage == '購物車' &&
+                    confirmProjectsArr.length > 0
+                  "
+                >
+                  進行結帳
+                </button>
+                <input
+                  v-else-if="
+                    returnCurrentPage != '購物車' &&
+                    confirmProjectsArr.length > 0
+                  "
+                  type="submit"
+                  :value="invalid ? '請填資料' : '立即結帳'"
+                  class="btn btn-action-now"
+                  :class="{ 'invalid-btn': invalid }"
+                  :disabled="invalid"
+                  @click.prevent="
+                    $refs.cart.$refs.formContactInfo.emitCheckOutData
+                  "
+                  data-toggle="modal"
+                  data-target="#modal"
+                  data-backdrop="static"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- 訂單總額部分結束 -->
+        </section>
+        <!-- 購物車區域結束 -->
+        <section id="recommend-area" class="row mb-5"></section>
+        <!-- （行動版）結帳按鈕開始 -->
+        <div
+          id="mobile-collapse-window"
+          class="px-4 py-3 mx-auto d-flex justify-content-between align-items-center"
+          @click.prevent="$router.push('/Cart/Checkout')"
+        >
+          <ul class="order-amount-list p-0 m-0">
+            <li class="mr-lg-0 mr-4">
+              <span class="order-amount-title d-inline-block mr-1">選購：</span
+              ><span class="order-amount-block d-inline-block">{{
+                confirmProjectsArr.length
+              }}</span
+              >個方案
+            </li>
+            <li>
+              <span class="order-amount-title d-inline-block mr-1">總計：</span
+              ><span class="order-amount-block d-inline-block">{{
+                returnAmout | currency
+              }}</span
+              >元
+            </li>
+          </ul>
+          <button
+            v-if="
+              returnCurrentPage == '購物車' && confirmProjectsArr.length > 0
+            "
+            class="btn btn-action-now d-flex align-items-center"
+          >
+            <h5 class="mb-0 d-inline-block">進行結帳</h5>
+          </button>
+          <input
+            v-else-if="
+              returnCurrentPage != '購物車' && confirmProjectsArr.length > 0
+            "
+            type="submit"
+            :value="invalid ? '請填資料' : '立即結帳'"
+            class="btn btn-action-now"
+            :class="{ 'invalid-btn': invalid }"
+            :disabled="invalid"
+            @click.prevent="$refs.cart.$refs.formContactInfo.emitCheckOutData"
+            data-toggle="modal"
+            data-target="#modal"
+            data-backdrop="static"
+          />
+        </div>
+        <!-- （行動版）結帳按鈕開始結束 -->
+      </ValidationObserver>
+      <!-- 驗證套件 vee-validate 監看區域結束 -->
     </div>
-    <!-- 驗證套件 vee-validate 監看區域開始 -->
-    <ValidationObserver v-slot="{ invalid }">
-      <!-- 購物車區域開始 -->
-      <section id="cart-area" class="row d-flex">
-        <!-- 訂單列表部分開始 -->
-        <div
-          id="order-details-container"
-          class="order-lg-1 col-lg-9 order-2 col-12"
-        >
-          <div class="card">
-            <div class="card-header px-3 d-flex align-items-center">
-              <!-- 判定是否切換為結帳頁面 -->
-              <h5 v-if="returnCurrentPage == '購物車'">已選方案</h5>
-              <h5 v-else>第一步：確認方案內容</h5>
-              <button
-                id="clear-cart-btn"
-                class="btn btn-danger ml-auto"
-                @click.prevent="clearCart"
-                v-if="
-                  returnCurrentPage == '購物車' &&
-                  confirmProjectsArr.length != 0
-                "
-              >
-                清空購物車
-              </button>
-            </div>
-            <div class="card-body py-0 position-relative">
-              <!-- 方案項目開始 -->
-              <CartListItem
-                v-for="(project, index) in confirmProjectsArr"
-                :data-id="
-                  project.bookingProjectID + '-' + project.bookingProjectDate
-                "
-                :list="confirmProjectsArr"
-                :index="index"
-                :listItem="project"
-                :currentPage="returnCurrentPage"
-                :key="index"
-              ></CartListItem>
-              <!-- 方案項目結束 -->
-            </div>
-            <!-- 購物車全空提醒語開始 -->
-            <div
-              id="empty-cart-message"
-              class="d-flex justify-content-center align-items-center"
-              v-if="confirmProjectsArr.length == 0"
-            >
-              <h6>
-                您的購物車目前是空的呢。
-                請到「挑選航程」頁看看有沒有喜歡的方案吧！
-              </h6>
-            </div>
-            <!-- 購物車全空提醒語結束 -->
-          </div>
-          <!-- 結帳區域開始 -->
-          <router-view
-            ref="cart"
-            :confirmProjectsArr="confirmProjectsArr"
-            :returnCurrentPage="returnCurrentPage"
-          ></router-view>
-          <!-- 結帳區域結束 -->
-          <!-- </ValidationObserver> -->
-        </div>
-        <!-- 訂單列表部分結束 -->
-        <!-- 訂單總額部分開始 -->
-        <div
-          id="order-amount-card-container"
-          class="px-0 order-lg-2 col-lg-3 order-1 col-10 mx-auto"
-        >
-          <div class="card text-center" style="width: 18rem">
-            <div class="card-body">
-              <h5 class="card-title">訂單概覽</h5>
-              <ul
-                class="order-amount-list my-4 mx-auto d-flex flex-lg-column align-items-start"
-              >
-                <li class="mr-lg-0 mr-4">
-                  <span class="order-amount-title d-inline-block mr-1"
-                    >選購：</span
-                  ><span class="order-amount-block d-inline-block">{{
-                    confirmProjectsArr.length
-                  }}</span
-                  >個方案
-                </li>
-                <li>
-                  <span class="order-amount-title d-inline-block mr-1"
-                    >總計：</span
-                  ><span class="order-amount-block d-inline-block">{{
-                    returnAmout | currency
-                  }}</span
-                  >元
-                </li>
-              </ul>
-              <!-- 判斷該出現屬於購物車還是結帳頁的行動按鈕 -->
-              <button
-                class="btn btn-action-now"
-                @click.prevent="$router.push('/Cart/Checkout')"
-                v-if="
-                  returnCurrentPage == '購物車' && confirmProjectsArr.length > 0
-                "
-              >
-                進行結帳
-              </button>
-              <input
-                v-else-if="
-                  returnCurrentPage != '購物車' && confirmProjectsArr.length > 0
-                "
-                type="submit"
-                :value="invalid ? '請填資料' : '立即結帳'"
-                class="btn btn-action-now"
-                :class="{ 'invalid-btn': invalid }"
-                :disabled="invalid"
-                @click.prevent="
-                  $refs.cart.$refs.formContactInfo.emitCheckOutData
-                "
-                data-toggle="modal"
-                data-target="#modal"
-                data-backdrop="static"
-              />
-            </div>
-          </div>
-        </div>
-        <!-- 訂單總額部分結束 -->
-      </section>
-      <!-- 購物車區域結束 -->
-      <section id="recommend-area" class="row mb-5"></section>
-      <!-- （行動版）結帳按鈕開始 -->
-      <div
-        id="mobile-collapse-window"
-        class="px-4 py-3 mx-auto d-flex justify-content-between align-items-center"
-        @click.prevent="$router.push('/Cart/Checkout')"
-      >
-        <ul class="order-amount-list p-0 m-0">
-          <li class="mr-lg-0 mr-4">
-            <span class="order-amount-title d-inline-block mr-1">選購：</span
-            ><span class="order-amount-block d-inline-block">{{
-              confirmProjectsArr.length
-            }}</span
-            >個方案
-          </li>
-          <li>
-            <span class="order-amount-title d-inline-block mr-1">總計：</span
-            ><span class="order-amount-block d-inline-block">{{
-              returnAmout | currency
-            }}</span
-            >元
-          </li>
-        </ul>
-        <button
-          v-if="returnCurrentPage == '購物車' && confirmProjectsArr.length > 0"
-          class="btn btn-action-now d-flex align-items-center"
-        >
-          <h5 class="mb-0 d-inline-block">進行結帳</h5>
-        </button>
-        <input
-          v-else-if="
-            returnCurrentPage != '購物車' && confirmProjectsArr.length > 0
-          "
-          type="submit"
-          :value="invalid ? '請填資料' : '立即結帳'"
-          class="btn btn-action-now"
-          :class="{ 'invalid-btn': invalid }"
-          :disabled="invalid"
-          @click.prevent="$refs.cart.$refs.formContactInfo.emitCheckOutData"
-          data-toggle="modal"
-          data-target="#modal"
-          data-backdrop="static"
-        />
-      </div>
-      <!-- （行動版）結帳按鈕開始結束 -->
-    </ValidationObserver>
-    <!-- 驗證套件 vee-validate 監看區域結束 -->
   </main>
 </template>
 
 <script>
+// 導入橫幅元件
+import Cover from "@/components/pages/sub-components/Cover";
 // 導入麵包屑元件
 import Breadcrumb from "@/components/pages/sub-components/Breadcrumb";
 // 導入結帳項目元件
@@ -193,10 +204,18 @@ import CartListItem from "@/components/pages/sub-components/CartListItem";
 export default {
   data() {
     return {
+      coverData: {
+        imgUrl:
+          this.GlobalVariables.cloudUrlprefix +
+          "Side-Projects/Frontend-Side-Projects-0001-Kapitan/Web-Imgs/drdyjyrnzf4okxt1kxjy.jpg",
+        position: "0% 5%",
+        mainTitle: "購物車",
+        subTitle: "",
+      },
       confirmProjectsArr: JSON.parse(localStorage.getItem("savingProjects")),
     };
   },
-  components: { Breadcrumb, CartListItem },
+  components: { Cover, Breadcrumb, CartListItem },
   created() {
     window.scrollTo(0, 0);
 
@@ -252,10 +271,8 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/all.scss";
 
-$desktop-nav-bar-height: 105px;
-
 #cart-page {
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   .btn-action-now {
     background-color: $action-now !important;
     color: $sail;

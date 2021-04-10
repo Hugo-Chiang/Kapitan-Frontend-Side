@@ -110,7 +110,7 @@
                 class="p-0 m-0 d-flex justify-content-between"
               >
                 <li
-                  v-for="(page, index) in returnBeyondIndex"
+                  v-for="(page, index) in carouselData.beyondIndex"
                   :class="
                     Math.abs(carouselData.carouselCurrentOffSet) == index
                       ? 'current-page'
@@ -254,6 +254,10 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
+    // 監聽 resize 事件，以利輪播頁碼有良好的響應式反饋，並進行初始化
+    window.addEventListener("resize", this.refreshBeyondIndex);
+    this.refreshBeyondIndex();
+
     // 初始化航程分類與清單
     const randomProjectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryRandomProjectsList.php`;
     const vm = this;
@@ -299,6 +303,22 @@ export default {
         }
       }
     },
+    // 方法：
+    refreshBeyondIndex() {
+      let windowWidth = window.innerWidth;
+
+      if (windowWidth > 1200) {
+        this.carouselData.beyondIndex = 4;
+      } else if (windowWidth <= 1200 && windowWidth > 960) {
+        this.carouselData.beyondIndex = 5;
+      } else if (windowWidth <= 960 && windowWidth > 720) {
+        this.carouselData.beyondIndex = 5;
+      } else if (windowWidth <= 720 && windowWidth > 540) {
+        this.carouselData.beyondIndex = 6;
+      } else {
+        this.carouselData.beyondIndex = 6;
+      }
+    },
   },
   computed: {
     // 計算（方法）：根據輪播所在頁碼索引，於超界時回傳最最大值或最小值
@@ -312,20 +332,6 @@ export default {
       else return this.carouselData.carouselCurrentOffSet;
 
       return this.carouselData.carouselCurrentOffSet;
-    },
-    // 計算（方法）：根據視窗大小，回傳輪播頁碼的出界值
-    returnBeyondIndex() {
-      if (this.windowWidth > 1200) {
-        return 4;
-      } else if (this.windowWidth <= 1200 && this.windowWidth > 960) {
-        return 5;
-      } else if (this.windowWidth <= 960 && this.windowWidth > 720) {
-        return 5;
-      } else if (this.windowWidth <= 720 && this.windowWidth > 540) {
-        return 6;
-      } else {
-        return 6;
-      }
     },
   },
 };

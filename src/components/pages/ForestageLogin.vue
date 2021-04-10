@@ -393,7 +393,7 @@ export default {
   opacity: 0.95;
   background-size: cover;
   background-position: center;
-  padding: $desktop-nav-bar-height + $main-container-pt 0 $main-container-pt;
+  padding: $desktop-nav-bar-height 0 $main-container-pt;
   .container {
     height: 800px;
     padding-top: 80px;

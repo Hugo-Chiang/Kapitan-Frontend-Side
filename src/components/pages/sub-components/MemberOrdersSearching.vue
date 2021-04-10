@@ -501,6 +501,7 @@ a {
       }
       img {
         width: 100%;
+        height: 46px;
       }
     }
   }
