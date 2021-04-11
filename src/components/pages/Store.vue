@@ -198,7 +198,7 @@
                     <div
                       class="card-people-num col-6 pl-0 position-absolute d-flex align-items-center"
                     >
-                      <span class="d-inline-block mr-1">
+                      <span class="d-inline-block mr-2">
                         <i class="fas fa-users"></i>
                       </span>
                       <span class="d-inline-block">

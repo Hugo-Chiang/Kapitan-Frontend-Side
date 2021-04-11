@@ -170,14 +170,14 @@ export default {
         (x) => new Date(x).toLocaleDateString()
       );
       let timeNow = new Date();
-      let todayMidnight = new Date(
+      let timeLimitMidnight = new Date(
         timeNow.getFullYear(),
         timeNow.getMonth(),
-        timeNow.getDate()
+        timeNow.getDate() + 4
       );
 
       return (
-        date < todayMidnight ||
+        date < timeLimitMidnight ||
         bookedDateArr.find(
           (bookedDate) => bookedDate == date.toLocaleDateString()
         )
