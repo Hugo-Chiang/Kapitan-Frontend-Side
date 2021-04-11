@@ -85,7 +85,10 @@ export default {
   components: { LMap, LTileLayer, LMarker, LPopup, LIcon },
   created() {
     // 詢問使用者位置，以利使用者使用 google 地圖導覽功能
-    navigator.geolocation.getCurrentPosition(this.getUserLocationSucess);
+    navigator.geolocation.getCurrentPosition(
+      this.getUserLocationSucess,
+      this.getUserLocationFailed
+    );
 
     this.mapData.mapMarkerLocation = [
       this.departureLocationInfo.locationLat,
@@ -93,9 +96,20 @@ export default {
     ];
   },
   methods: {
-    // 回呼函式：獲知使用者位置成功
+    // 回呼函式：獲知使用者位置成功，將地點寫入 Data 供導航使用
     getUserLocationSucess(location) {
-      this.userLocation = [location.coords.latitude, location.coords.longitude];
+      if (userLocation[0] == 0 || userLocation[1] == 0) {
+        this.userLocation = [];
+      } else {
+        this.userLocation = [
+          location.coords.latitude,
+          location.coords.longitude,
+        ];
+      }
+    },
+    // 回呼函式：獲知使用者位置失敗，將地點寫入 Data 供導航使用
+    getUserLocationFailed() {
+      this.userLocation = [];
     },
   },
   watch: {
