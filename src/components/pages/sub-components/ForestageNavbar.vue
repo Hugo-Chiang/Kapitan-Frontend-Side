@@ -150,28 +150,14 @@ export default {
         signIn: {
           path: "/Login",
           ItemID: "sign-in-link",
-          selfClass: [
-            "nav-link",
-            "text-link",
-            "nav-link",
-            "ml-md-auto",
-            "ml-3",
-            "mr-4",
-          ],
+          selfClass: ["nav-link", "text-link", "ml-md-auto", "ml-3", "mr-4"],
           routerTo: "/Login",
           selfText: "登入註冊",
         },
         // 導覽列連結：登出連結
         signOut: {
           ItemID: "sign-out-link",
-          selfClass: [
-            "nav-link",
-            "text-link",
-            "nav-link",
-            "ml-md-auto",
-            "ml-3",
-            "mr-4",
-          ],
+          selfClass: ["nav-link", "text-link", "ml-md-auto", "ml-3", "mr-4"],
           selfText: "立即登出",
           routerTo: "",
         },
@@ -547,6 +533,7 @@ nav {
       .hamburger-menu-link {
         font-weight: 600;
         color: black;
+        cursor: pointer;
         &:hover {
           color: $tiffany-blue;
         }

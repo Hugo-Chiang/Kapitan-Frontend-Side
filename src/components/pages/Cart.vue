@@ -90,20 +90,20 @@
                   class="order-amount-list my-4 mx-auto d-flex flex-lg-column align-items-start"
                 >
                   <li class="mr-lg-0 mr-4">
-                    <span class="order-amount-title d-inline-block mr-1"
+                    <span class="projects-num-title d-inline-block mr-1"
                       >選購：</span
-                    ><span class="order-amount-block d-inline-block">{{
+                    ><span class="projects-num d-inline-block">{{
                       confirmProjectsArr.length
                     }}</span
-                    >個方案
+                    >&nbsp;個方案
                   </li>
                   <li>
                     <span class="order-amount-title d-inline-block mr-1"
                       >總計：</span
-                    ><span class="order-amount-block d-inline-block">{{
+                    ><span class="order-amount d-inline-block">{{
                       returnAmout | currency
                     }}</span
-                    >元
+                    >&nbsp;元
                   </li>
                 </ul>
                 <!-- 判斷該出現屬於購物車還是結帳頁的行動按鈕 -->
@@ -149,18 +149,18 @@
         >
           <ul class="order-amount-list p-0 m-0">
             <li class="mr-lg-0 mr-4">
-              <span class="order-amount-title d-inline-block mr-1">選購：</span
-              ><span class="order-amount-block d-inline-block">{{
+              <span class="projects-num-title d-inline-block mr-1">選購：</span
+              ><span class="projects-num d-inline-block">{{
                 confirmProjectsArr.length
-              }}</span
-              >個方案
+              }}</span>
+              個方案
             </li>
             <li>
               <span class="order-amount-title d-inline-block mr-1">總計：</span
-              ><span class="order-amount-block d-inline-block">{{
+              ><span class="order-amount d-inline-block">{{
                 returnAmout | currency
-              }}</span
-              >元
+              }}</span>
+              元
             </li>
           </ul>
           <button
@@ -362,6 +362,13 @@ export default {
         }
         li {
           list-style: none;
+          .projects-num,
+          .order-amount {
+            font-weight: 700;
+          }
+          .order-amount {
+            color: darkred;
+          }
         }
       }
     }
@@ -382,6 +389,13 @@ export default {
     .order-amount-list {
       li {
         list-style: none;
+        .projects-num,
+        .order-amount {
+          font-weight: 700;
+        }
+        .order-amount {
+          color: darkred;
+        }
       }
     }
     button {

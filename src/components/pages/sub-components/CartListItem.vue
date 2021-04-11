@@ -98,9 +98,9 @@
     </div>
     <!-- 金額統計結束 -->
     <!-- 刪除單項方案開始 -->
-    <div class="col-md-1 col-sm-1 my-sm-0 order-4 col-12 my-3 d-flex">
+    <div class="col-md-1 col-sm-1 my-sm-0 order-4 col-12 my-3">
       <a
-        class="delete-single-project-icon d-inline-block mx-auto"
+        class="delete-single-project-icon d-flex justify-content-center align-items-center"
         href=""
         @click.prevent="deleteSingleProject"
         v-if="currentPage == '購物車'"
