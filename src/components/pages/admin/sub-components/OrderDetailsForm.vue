@@ -314,7 +314,7 @@
                 href=""
                 @click.prevent="
                   inCreatingMode
-                    ? $router.push({ name: '管理系統：新增訂單' })
+                    ? $router.push({ name: '管理系統：編輯訂單' })
                     : $emit('update:inEditingIndex', -1)
                 "
                 >不儲存關閉</a
