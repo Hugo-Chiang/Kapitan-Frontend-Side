@@ -508,7 +508,7 @@ export default {
       transition: transform 1.3s;
     }
     h5 {
-      font-weight: 700;
+      font-weight: 500;
     }
     #category-list {
       li {
@@ -517,7 +517,7 @@ export default {
     }
     .budget {
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
       color: darkred;
       .budget-remark {
         font-size: 12px;
@@ -565,7 +565,7 @@ export default {
         .card-body {
           height: 75%;
           .card-title {
-            font-weight: 600;
+            font-weight: 500;
           }
           .card-text {
             height: 40%;

@@ -531,7 +531,7 @@ nav {
         margin: 0px 0px 0px 5px;
       }
       .hamburger-menu-link {
-        font-weight: 600;
+        font-weight: 500;
         color: black;
         cursor: pointer;
         &:hover {

@@ -293,11 +293,13 @@ footer {
     padding: 0;
   }
   h5 {
+    font-weight: 400;
     @include media-breakpoint-down(sm) {
       font-size: 18px;
     }
   }
   h6 {
+    font-weight: 300;
     @include media-breakpoint-down(sm) {
       font-size: 16px;
     }
@@ -351,7 +353,7 @@ footer {
         .contact-text-block {
           color: $sail;
           font-size: 18px;
-          font-weight: 400;
+          font-weight: 300;
           cursor: pointer;
         }
         .contact-text-block,

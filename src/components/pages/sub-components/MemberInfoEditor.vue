@@ -267,7 +267,7 @@
           >
             <input
               type="button"
-              class="btn btn-primary mr-sm-0 mr-2"
+              class="btn btn-primary mr-2"
               :class="{ 'invalid-btn': invalid }"
               value="修改個資"
               :disabled="invalid"

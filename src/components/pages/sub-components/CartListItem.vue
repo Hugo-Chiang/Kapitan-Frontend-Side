@@ -178,7 +178,7 @@ export default {
     }
   }
   .project-name {
-    font-weight: 600;
+    font-weight: 500;
     color: $deep-teal;
     @include media-breakpoint-down(md) {
       font-size: 15px;

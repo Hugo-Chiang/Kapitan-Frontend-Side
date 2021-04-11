@@ -5,7 +5,7 @@
         class="mb-2"
         src="../../../assets/img/Kapitan-Logo-Vertical-Version-01.png"
       />
-      <h3 class="h3 mb-3 font-weight-normal">請登入管理系統</h3>
+      <h4 class="h4 mt-1 mb-4">請登入管理系統</h4>
       <div
         class="input-area"
         :class="{ shaking: signInFailedFeedback.signInFailedAnime }"

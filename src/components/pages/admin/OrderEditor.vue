@@ -303,7 +303,7 @@
         </div>
         <div class="col-4 ml-auto">
           <div
-            class="action-buttons-block mr-4 ml-auto mt-4 px-3 d-flex justify-content-around align-items-center"
+            class="action-buttons-block mr-4 ml-auto mt-4 px-4 d-flex justify-content-around align-items-center"
           >
             <input
               type="button"
@@ -562,6 +562,7 @@ export default {
     .delete-project-btn {
       font-size: 13px;
       a {
+        font-weight: 400;
         color: darkred;
       }
     }

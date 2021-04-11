@@ -286,55 +286,10 @@ export default {
     cursor: not-allowed;
   }
   .card-title {
-    font-weight: 600;
+    font-weight: 500;
   }
   #clear-cart-btn {
     background-color: darkcyan;
-  }
-  .project-row {
-    height: 150px;
-    @include media-breakpoint-down(md) {
-      height: 250px;
-    }
-    .router-link {
-      color: black;
-      .project-avatar-block {
-        width: 120px;
-        height: 80px;
-        overflow: hidden;
-        .project-avatar {
-          height: 100%;
-        }
-      }
-      .project-name {
-        font-weight: 600;
-        color: $deep-teal;
-        @include media-breakpoint-down(md) {
-          font-size: 15px;
-        }
-      }
-      .project-name-booking-date {
-        font-size: 14px;
-        @include media-breakpoint-down(md) {
-          font-size: 13px;
-        }
-      }
-    }
-    .adjust-num-title {
-      font-size: 14px;
-    }
-    .project-final-price {
-      color: darkred;
-      @include media-breakpoint-down(md) {
-        font-size: 16px;
-      }
-    }
-    .delete-single-project-icon {
-      color: black;
-    }
-    .project-divider {
-      height: 30px;
-    }
   }
   #empty-cart-message {
     height: 200px;

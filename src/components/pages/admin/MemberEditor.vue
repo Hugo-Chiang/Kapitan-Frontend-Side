@@ -666,6 +666,7 @@ export default {
     .delete-project-btn {
       font-size: 13px;
       a {
+        font-weight: 400;
         color: darkred;
       }
     }

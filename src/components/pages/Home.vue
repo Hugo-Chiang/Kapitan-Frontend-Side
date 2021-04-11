@@ -380,8 +380,11 @@ $chapter-margin: 120px;
 #home-page {
   padding: $desktop-nav-bar-height 0 $main-container-pt;
   .chapter-title {
-    font-weight: 700;
+    font-weight: 600;
     color: $deep-teal;
+  }
+  h5 {
+    font-weight: 400;
   }
   #chapter-image {
     background-color: rgba(225, 225, 225, 0.35);
@@ -493,7 +496,7 @@ $chapter-margin: 120px;
             .card-body {
               height: 75%;
               .card-title {
-                font-weight: 600;
+                font-weight: 500;
               }
               .card-text {
                 height: 40%;
@@ -552,7 +555,7 @@ $chapter-margin: 120px;
       height: 45px;
       border-radius: 10px;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 400;
       border: transparent;
       background-color: $deep-teal;
       color: $sail;
@@ -590,7 +593,7 @@ $chapter-margin: 120px;
           }
         }
         h4 {
-          font-weight: 700;
+          font-weight: 600;
         }
         p {
           width: 205px;

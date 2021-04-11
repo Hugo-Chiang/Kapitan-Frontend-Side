@@ -92,7 +92,7 @@
                 type="range"
                 class="form-range"
                 min="0"
-                max="10000"
+                max="5000"
                 step="500"
                 id="project-price-beyond"
                 v-model="queryData.projectPriceBeyond"
@@ -208,7 +208,7 @@ export default {
         projectStatus: "",
         projectCategory: "",
         projectDepartureLocation: "",
-        projectPriceBeyond: 10000,
+        projectPriceBeyond: 5000,
       },
       categoryList: [],
       allProjectsArr: [],

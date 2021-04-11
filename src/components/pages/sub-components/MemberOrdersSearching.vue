@@ -420,6 +420,7 @@ a {
 .card-body {
   .mini-title {
     font-size: 12px;
+    font-weight: 500;
     @include media-breakpoint-down(sm) {
       font-size: 15px;
     }
@@ -446,6 +447,7 @@ a {
       }
       .list-item-info {
         font-size: 15px;
+        font-weight: 400;
       }
     }
     .identify-id-or-name {

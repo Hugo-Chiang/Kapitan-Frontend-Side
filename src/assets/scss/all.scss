@@ -1,6 +1,7 @@
 @import "~bootstrap/scss/functions";
 @import "/variables";
 @import "~bootstrap/scss/bootstrap";
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
 
 // 自定義顏色
 $kapitan-logo: #152A69;
@@ -33,6 +34,7 @@ $cover-mb: 60px;
 *{
     box-sizing: border-box !important;
     text-decoration: none  !important;
+    font-family: 'Noto Sans TC', sans-serif;
 }
 
 input:checked{
