@@ -330,7 +330,7 @@ export default {
     },
   },
   watch: {
-    // 監看：路由改變時將於 data 紀錄當前路徑，以便渲染導覽列
+    // 監看（方法）：路由改變時將於 data 紀錄當前路徑，以便渲染導覽列
     $route(to, from) {
       this.currentPath = this.$router.currentRoute.path;
     },
@@ -529,6 +529,9 @@ nav {
     margin: 0;
     @include media-breakpoint-up(lg) {
       display: none;
+    }
+    @include media-breakpoint-down(md) {
+      padding: 5px 80px;
     }
     @include media-breakpoint-down(sm) {
       padding: 5px 60px;

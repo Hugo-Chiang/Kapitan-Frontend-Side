@@ -361,9 +361,9 @@ export default {
       let offSet = this.carouselData.carouselCurrentOffSet;
       let beyondIndex = this.carouselData.beyondIndex;
 
-      if (offSet >= beyondIndex)
+      if (offSet >= beyondIndex) this.carouselData.carouselCurrentOffSet = 0;
+      else if (offSet < 0)
         this.carouselData.carouselCurrentOffSet = beyondIndex - 1;
-      else if (offSet < 0) this.carouselData.carouselCurrentOffSet = 0;
       else return this.carouselData.carouselCurrentOffSet;
 
       return this.carouselData.carouselCurrentOffSet;
@@ -479,7 +479,7 @@ $chapter-margin: 120px;
         }
         .carousel-router-link {
           width: 255px;
-          transition: transform 2s cubic-bezier(0.43, 0.195, 0.02, 1);
+          transition: transform 1.5s cubic-bezier(0.43, 0.195, 0.02, 1);
           .card {
             height: 22rem;
             color: black;

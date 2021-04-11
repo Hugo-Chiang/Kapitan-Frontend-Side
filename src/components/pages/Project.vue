@@ -33,7 +33,8 @@
                             selectedProject.selectedProjectContent
                               .projectMinNumOfPeople
                           }}</span
-                        >人
+                        >
+                        人
                       </div>
                     </div>
                     <div id="project-max-num-of-people" class="col-6">
@@ -44,7 +45,8 @@
                             selectedProject.selectedProjectContent
                               .projectMaxNumOfPeople
                           }}</span
-                        >人
+                        >
+                        人
                       </div>
                     </div>
                   </div>

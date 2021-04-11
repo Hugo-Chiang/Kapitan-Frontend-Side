@@ -21,6 +21,9 @@ $blush-pink: #eb8f90;
 $action-now: #f16c5d;
 $bootstrap-border-color: rgba(0, 0, 0, 0.125);
 
+// 覆寫 Bootstrap 變數
+$blue: $deep-teal !important;
+
 // 自定義距離
 $desktop-nav-bar-height: 105px;
 $main-container-pt: 60px;
@@ -30,6 +33,10 @@ $cover-mb: 60px;
 *{
     box-sizing: border-box !important;
     text-decoration: none  !important;
+}
+
+input:checked{
+  background-color: #000e2b;
 }
 
 // 去除input樣式預設的增減按鈕開始

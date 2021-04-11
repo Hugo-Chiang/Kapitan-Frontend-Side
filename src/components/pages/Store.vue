@@ -125,7 +125,7 @@
               <option disabled selected value>－請選擇－</option>
               <option value="'%%'">預設</option>
               <option value="PROJECT_ORIGINAL_PRICE_PER_PERSON ASC">
-                價格（低）
+                價格 ▲
               </option>
               <!-- <option value="'%%'">評價（高）</option> -->
             </select>
@@ -133,7 +133,7 @@
             <!-- 操作按鈕開始 -->
             <button
               id="filter-button"
-              class="btn btn-primary d-xl-block mx-xl-auto mt-5"
+              class="btn btn-primary d-xl-block mx-xl-auto mt-5 mb-2"
               :class="
                 filterData.showMobileFilters.showFramework
                   ? 'd-block'
@@ -143,6 +143,12 @@
             >
               套用條件
             </button>
+            <a
+              id="set-filter-default"
+              class="d-block mx-xl-auto text-center"
+              @click.prevent="setFilterDefault"
+              >恢復預設</a
+            >
             <!-- 操作按鈕結束 -->
             <!-- 套用設定通知開始 -->
             <h3
@@ -151,7 +157,7 @@
                 'd-none': filterData.showMobileFilters.showFramework,
               }"
             >
-              已套用設定！
+              收回視窗
             </h3>
             <!-- 套用設定通知結束 -->
           </div>
@@ -378,7 +384,6 @@ export default {
       .get(categoryListAPI)
       .then((response) => {
         vm.categoryList = response.data;
-        console.log(vm.filterData);
         return vm.$http.post(projectsListAPI, JSON.stringify(vm.filterData));
       })
       .then((response) => {
@@ -398,6 +403,19 @@ export default {
         });
 
       this.filterData.showMobileFilters.showNothing = true;
+    },
+    // 方法：將篩選條件恢復為預設狀態
+    setFilterDefault() {
+      this.filterData.selectedCategories = [];
+      this.filterData.budget = 0;
+      this.filterData.sort = "";
+
+      let checkboxs = document.querySelectorAll(".category-checkbox");
+      for (const category of checkboxs) {
+        this.filterData.selectedCategories.push(category.value);
+      }
+      this.filterData.budget = 5000;
+      this.filterData.sort = "'%%'";
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAndSerial(arr, num) {
@@ -425,6 +443,9 @@ export default {
         // 判斷：任一 checkbox 未選將取消全選，所有 checkbox 皆選則連帶全選
         let checkboxs = document.querySelectorAll(".category-checkbox");
         let selectedNum = this.filterData.selectedCategories.length;
+
+        console.log(selectedNum);
+        console.log(checkboxs.length);
 
         if (selectedNum == checkboxs.length) {
           this.filterData.selectedAll = true;
@@ -503,7 +524,14 @@ export default {
         color: black;
       }
     }
+    #set-filter-default {
+      width: 65px;
+      font-size: 14px;
+      color: black;
+      cursor: pointer;
+    }
   }
+
   .show-mobile-filter-anim {
     transform: translate3d(0, 0, 0);
     transition: transform 1s;
@@ -586,6 +614,7 @@ export default {
       list-style: none;
       text-align: center;
       line-height: 2rem;
+      cursor: pointer;
       &:nth-child(2n + 2) {
         border-left: 1px solid $bootstrap-border-color;
         border-right: 1px solid $bootstrap-border-color;
