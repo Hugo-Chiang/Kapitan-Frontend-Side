@@ -28,13 +28,13 @@
           </h5>
           <div
             class="carousel-controls left-arrow d-inline-block position-absolute"
-            @click="slideCarousel(1)"
+            @click="slideCarousel(-1)"
           >
             <i class="fas fa-chevron-left"></i>
           </div>
           <div
             class="carousel-controls right-arrow d-inline-block position-absolute"
-            @click="slideCarousel(-1)"
+            @click="slideCarousel(1)"
           >
             <i class="fas fa-chevron-right"></i>
           </div>
@@ -57,7 +57,12 @@
                 }"
                 class="router-link d-block"
               >
-                <li class="card" :key="project['PROJECT_NAME']">
+                <li
+                  class="card"
+                  :key="project['PROJECT_NAME']"
+                  @mouseenter="stopPlayCarousel"
+                  @mouseleave="autoPlayCarousel"
+                >
                   <img
                     class="card-img-top"
                     :src="
@@ -208,6 +213,9 @@ export default {
         carouselCurrentOffSet: 0,
         carouselXaxisPixels: 0,
         beyondIndex: 4,
+        cardWidth: 255,
+        cardPlusSpace: 0,
+        autoPlay: null,
       },
       bookingProcessData: [
         {
@@ -255,8 +263,10 @@ export default {
     window.scrollTo(0, 0);
 
     // 監聽 resize 事件，以利輪播頁碼有良好的響應式反饋，並進行初始化
-    window.addEventListener("resize", this.refreshBeyondIndex);
-    this.refreshBeyondIndex();
+    window.addEventListener("resize", this.refreshCarouselConfig);
+    // 初始化輪播設定
+    this.refreshCarouselConfig();
+    this.autoPlayCarousel();
 
     // 初始化航程分類與清單
     const randomProjectsListAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryRandomProjectsList.php`;
@@ -267,56 +277,78 @@ export default {
     });
   },
   methods: {
-    // 方法：根據響應式畫面寬度和輸入方向，移動對應距離的輪播卡片
-    slideCarousel(direction) {
-      let routerLinks = document.querySelectorAll(".router-link");
-      let cardWidth = 255;
-      let cardPlusSpace = 0;
-      let offSet = this.carouselData.carouselCurrentOffSet;
-
-      if (this.windowWidth > 1200) {
-        cardPlusSpace = cardWidth + 100;
-      } else if (this.windowWidth <= 1200 && this.windowWidth > 960) {
-        cardPlusSpace = cardWidth + 95;
-        this.carouselData.beyondIndex = 5;
-      } else if (this.windowWidth <= 960 && this.windowWidth > 720) {
-        cardPlusSpace = cardWidth + 50;
-        this.carouselData.beyondIndex = 5;
-      } else if (this.windowWidth <= 720 && this.windowWidth > 540) {
-        cardPlusSpace = cardWidth + 50;
-        this.carouselData.beyondIndex = 6;
-      } else {
-        cardPlusSpace = cardWidth + 50;
-        this.carouselData.beyondIndex = 6;
-      }
-
-      let beyondIndex = this.carouselData.beyondIndex;
-
-      if (offSet + direction != beyondIndex * -1 || offSet + direction != 1) {
-        this.carouselData.carouselCurrentOffSet += direction;
-        this.carouselData.carouselXaxisPixels =
-          cardPlusSpace * this.returnOffSet;
-        let Xaxis = this.carouselData.carouselXaxisPixels;
-
-        for (const routerLink of routerLinks) {
-          routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
-        }
-      }
-    },
-    // 方法：
-    refreshBeyondIndex() {
+    // 方法：根據視窗寬度回傳輪播設定，包含頁碼與移動幅度
+    refreshCarouselConfig() {
       let windowWidth = window.innerWidth;
 
       if (windowWidth > 1200) {
         this.carouselData.beyondIndex = 4;
+        this.carouselData.cardPlusSpace = this.carouselData.cardWidth + 100;
       } else if (windowWidth <= 1200 && windowWidth > 960) {
         this.carouselData.beyondIndex = 5;
+        this.carouselData.cardPlusSpace = this.carouselData.cardWidth + 95;
       } else if (windowWidth <= 960 && windowWidth > 720) {
         this.carouselData.beyondIndex = 5;
+        this.carouselData.cardPlusSpace = this.carouselData.cardWidth + 50;
       } else if (windowWidth <= 720 && windowWidth > 540) {
         this.carouselData.beyondIndex = 6;
+        this.carouselData.cardPlusSpace = this.carouselData.cardWidth + 50;
       } else {
         this.carouselData.beyondIndex = 6;
+        this.carouselData.cardPlusSpace = this.carouselData.cardWidth + 50;
+      }
+    },
+    // 方法：透過 setInterval 達到自動播放的效果
+    autoPlayCarousel() {
+      const vm = this;
+      this.carouselData.autoPlay = setInterval(() => {
+        vm.slideCarouselForAutoPlay();
+      }, 1500);
+    },
+    // 方法：透過 clearInterval 達到停止播放的效果
+    stopPlayCarousel() {
+      clearInterval(this.carouselData.autoPlay);
+    },
+    // 方法：根據響應式畫面寬度和輸入方向，移動對應距離的輪播卡片
+    slideCarousel(direction) {
+      let routerLinks = document.querySelectorAll(".router-link");
+      let offSet = this.carouselData.carouselCurrentOffSet;
+      let beyondIndex = this.carouselData.beyondIndex;
+
+      if (offSet + direction < beyondIndex || offSet + direction >= 0) {
+        this.carouselData.carouselCurrentOffSet += direction;
+        this.carouselData.carouselXaxisPixels =
+          this.carouselData.cardPlusSpace * this.returnOffSet;
+        let Xaxis = this.carouselData.carouselXaxisPixels * -1;
+
+        for (const routerLink of routerLinks) {
+          console.log(Xaxis);
+          routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
+        }
+      }
+
+      this.stopPlayCarousel();
+    },
+    // 方法：自動播放所用的響應式滑動方法，一些細節跟上個方法有點不同
+    slideCarouselForAutoPlay() {
+      let routerLinks = document.querySelectorAll(".router-link");
+      let offSet = this.carouselData.carouselCurrentOffSet;
+      let beyondIndex = this.carouselData.beyondIndex;
+      let Xaxis = 0;
+
+      if (offSet != beyondIndex - 1) {
+        this.carouselData.carouselCurrentOffSet++;
+        this.carouselData.carouselXaxisPixels =
+          this.carouselData.cardPlusSpace *
+          this.carouselData.carouselCurrentOffSet;
+        Xaxis = this.carouselData.carouselXaxisPixels * -1;
+      } else {
+        this.carouselData.carouselCurrentOffSet = 0;
+        Xaxis = 0;
+      }
+
+      for (const routerLink of routerLinks) {
+        routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
       }
     },
   },
@@ -326,9 +358,9 @@ export default {
       let offSet = this.carouselData.carouselCurrentOffSet;
       let beyondIndex = this.carouselData.beyondIndex;
 
-      if (offSet < (beyondIndex - 1) * -1)
-        this.carouselData.carouselCurrentOffSet = (beyondIndex - 1) * -1;
-      else if (offSet > 0) this.carouselData.carouselCurrentOffSet = 0;
+      if (offSet >= beyondIndex)
+        this.carouselData.carouselCurrentOffSet = beyondIndex - 1;
+      else if (offSet < 0) this.carouselData.carouselCurrentOffSet = 0;
       else return this.carouselData.carouselCurrentOffSet;
 
       return this.carouselData.carouselCurrentOffSet;
