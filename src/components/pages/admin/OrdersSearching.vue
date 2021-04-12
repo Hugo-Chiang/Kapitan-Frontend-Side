@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-10">
         <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group col-3">
             <label for="order-id">訂單編號</label>
             <input
               type="text"
@@ -14,7 +14,7 @@
               v-model="queryData.orderID"
             />
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-3">
             <label for="order-date">訂單日期</label>
             <input
               type="date"
@@ -23,7 +23,7 @@
               v-model="queryData.orderDate"
             />
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-4">
             <label for="member-account">會員帳號</label>
             <input
               type="eamil"
@@ -48,7 +48,7 @@
     <div class="row">
       <div class="col-10">
         <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group col-3">
             <label for="order-status">訂單狀態</label>
             <select
               id="order-status"
@@ -63,7 +63,7 @@
               <option value="-1">僅供測試</option>
             </select>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group col-3">
             <label for="orderer-name">訂購人姓名</label>
             <input
               type="text"
@@ -73,7 +73,7 @@
               v-model="queryData.ordererName"
             />
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-4">
             <label for="orderer-phone">訂購人手機</label>
             <input
               type="text"
@@ -83,7 +83,7 @@
               v-model="queryData.ordererPhone"
             />
           </div>
-          <div class="form-group col-md-1 ml-3">
+          <div class="form-group col-1 ml-3">
             <label for="">&nbsp;</label>
             <input
               type="button"

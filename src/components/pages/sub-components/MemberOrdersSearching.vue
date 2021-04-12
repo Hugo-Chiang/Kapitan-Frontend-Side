@@ -40,7 +40,9 @@
             正在檢視：<span>{{ viewingOrder.ID }}</span> 號訂單
           </h6>
           <h6 class="d-md-inline-block mx-md-3">
-            訂單狀態：<span>{{ viewingOrder.status | orderStatus }}</span>
+            訂單狀態：<span :class="statusClass[viewingOrder.status]">{{
+              viewingOrder.status | orderStatus
+            }}</span>
           </h6>
           <h6 class="d-md-inline-block">
             訂單日期：<span>{{ viewingOrder.date }}</span>
@@ -121,9 +123,10 @@
                 <h6 class="list-item-info m-md-0 text-md-center mb-1">
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     訂單狀態<span class="colon d-md-none">：</span>
-                    <!-- <span v-else>細項狀態</span> -->
                   </h6>
-                  {{ order["ORDER_STATUS"] | orderStatus }}
+                  <span :class="statusClass[order['ORDER_STATUS']]">
+                    {{ order["ORDER_STATUS"] | orderStatus }}
+                  </span>
                 </h6>
               </div>
             </div>
@@ -131,127 +134,167 @@
         </ul>
         <!-- 訂單列表結束 -->
         <!-- 訂單細項開始 -->
-        <div
+        <ul
+          id="member-order-details"
           v-else-if="viewingOrder.viewDetails"
-          v-for="orderDetail in currentPageContentArr"
-          :key="orderDetail['ORDER_DETAIL_ID']"
-          class="order-detail card mb-4"
+          class="p-0"
         >
-          <div
-            class="card-header d-flex flex-md-row justify-content-md-between align-items-center flex-column"
+          <li
+            v-for="orderDetail in currentPageContentArr"
+            :key="orderDetail['ORDER_DETAIL_ID']"
+            class="order-detail col-12 mb-4"
           >
-            <div class="d-flex align-items-center">
-              <div class="project-avatar-block mr-2 my-md-0 mt-2 mb-4">
-                <img
-                  :src="
-                    GlobalVariables.cloudUrlprefix +
-                    (orderDetail['PROJECT_AVATAR_URL'] ||
-                      GlobalVariables.cloudNoImgUrl)
-                  "
-                  alt=""
-                />
+            <div class="card">
+              <div
+                class="card-header d-flex flex-md-row justify-content-md-between align-items-center flex-column"
+              >
+                <div class="d-flex align-items-center">
+                  <div class="project-avatar-block mr-2 my-md-0 mt-2 mb-4">
+                    <img
+                      :src="
+                        GlobalVariables.cloudUrlprefix +
+                        (orderDetail['PROJECT_AVATAR_URL'] ||
+                          GlobalVariables.cloudNoImgUrl)
+                      "
+                      alt=""
+                    />
+                  </div>
+                  <h6>
+                    {{ orderDetail["PROJECT_NAME"] }}
+                    <span class="d-block mt-1">
+                      預約日期：{{ orderDetail["BOOKING_DATE"] }}
+                    </span>
+                  </h6>
+                </div>
+                <h6 class="order-detail-amount">
+                  {{
+                    orderDetail["ORDER_DETAIL_AMOUNT"] | currency | dollarSign
+                  }}
+                </h6>
               </div>
-              <h6>
-                {{ orderDetail["PROJECT_NAME"] }}
-                <span class="d-block mt-1">
-                  預約日期：{{ orderDetail["BOOKING_DATE"] }}
-                </span>
-              </h6>
-            </div>
-            <h6 class="order-detail-amount">
-              {{ orderDetail["ORDER_DETAIL_AMOUNT"] | currency | dollarSign }}
-            </h6>
-          </div>
-          <div class="card-body container py-4">
-            <div class="row">
-              <div class="col-md-4 col-12">
-                <div class="row pl-sm-3 mb-md-0 mb-4">
-                  <div
-                    class="col-12 d-flex flex-sm-row justify-content-sm-between align-items-sm-center mb-sm-3 flex-column mb-3"
-                  >
-                    <h6 class="text-sm-center mb-md-0 mb-sm-2 mb-1">
-                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
-                        方案狀態<span class="colon d-md-none">：</span>
-                      </h6>
-                      {{
-                        orderDetail["ORDER_DETAIL_STATUS"] | orderDetailStatus
-                      }}
-                    </h6>
-                    <h6 class="text-sm-center mb-md-0 mb-sm-2 mb-1">
-                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
-                        會合地點<span class="colon d-md-none">：</span>
-                      </h6>
-                      {{ allContentArr[0]["LOCATION_NAME"] }}
-                    </h6>
+              <div class="card-body container py-4 pl-md-4">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="row mb-4">
+                      <div
+                        class="col-xl-4 col-md-5 mr-md-auto d-flex flex-md-row justify-content-md-between align-items-md-center mb-md-0 flex-column mb-3"
+                      >
+                        <h6 class="mb-md-0 mb-md-2 mb-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            方案狀態<span class="colon d-md-none">：</span>
+                          </h6>
+                          <span
+                            :class="
+                              statusClass[orderDetail['ORDER_DETAIL_STATUS']]
+                            "
+                          >
+                            {{
+                              orderDetail["ORDER_DETAIL_STATUS"]
+                                | orderDetailStatus
+                            }}
+                          </span>
+                        </h6>
+                        <h6 class="mb-md-0 mb-md-2 mb-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            會合地點<span class="colon d-md-none">：</span>
+                          </h6>
+                          {{ allContentArr[0]["LOCATION_NAME"] }}
+                        </h6>
+                      </div>
+                      <div class="col-md-5 col-12">
+                        <h6 class="mini-title mb-1">購買憑證：</h6>
+                        <div class="bar-code-block d-lg-inline-block d-block">
+                          <img
+                            :src="`http://bwipjs-api.metafloor.com/?bcid=code128&text=${orderDetail['ORDER_DETAIL_CERTIFICATE']}&alttext=${orderDetail['ORDER_DETAIL_CERTIFICATE']}`"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="col-12">
-                    <h6 class="text-sm-center mb-md-0 mb-sm-3 mb-1">
-                      <h6 class="mini-title d-md-block mb-sm-1 d-inline mb-0">
-                        購買憑證<span class="colon d-md-none">：</span>
-                      </h6>
-                    </h6>
-                    <div class="bar-code-block d-block">
-                      <img
-                        :src="`http://bwipjs-api.metafloor.com/?bcid=code128&text=${orderDetail['ORDER_DETAIL_CERTIFICATE']}&alttext=${orderDetail['ORDER_DETAIL_CERTIFICATE']}`"
-                        alt=""
-                      />
+                    <div class="row mb-3">
+                      <div
+                        class="col-12 d-flex flex-md-row align-items-md-center flex-column"
+                      >
+                        <h6 class="list-item-info flex-md-grow-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            主要聯絡人姓名<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_MC_NAME"] }}
+                        </h6>
+                        <h6 class="list-item-info flex-md-grow-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            主要聯絡人手機<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_MC_PHONE"] }}
+                        </h6>
+                        <h6 class="list-item-info flex-md-grow-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            主要聯絡人電郵<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_MC_EMAIL"] }}
+                        </h6>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div
+                        class="col-12 d-flex flex-md-row align-items-md-center flex-column"
+                      >
+                        <h6 class="list-item-info flex-md-grow-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            緊急聯絡人姓名<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_EC_NAME"] }}
+                        </h6>
+                        <h6 class="list-item-info flex-md-grow-1 mb-2">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            緊急聯絡人手機<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_EC_PHONE"] }}
+                        </h6>
+                        <h6 class="list-item-info flex-md-grow-1">
+                          <h6
+                            class="mini-title d-md-block mb-md-1 d-inline mb-0"
+                          >
+                            緊急聯絡人電郵<span class="colon d-md-none"
+                              >：</span
+                            >
+                          </h6>
+                          {{ orderDetail["ORDER_DETAIL_EC_EMAIL"] }}
+                        </h6>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-8 col-12">
-                <div class="row mb-3">
-                  <div
-                    class="col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center flex-column"
-                  >
-                    <h6 class="list-item-info text-sm-center">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人姓名<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_MC_NAME"] }}
-                    </h6>
-                    <h6 class="list-item-info text-sm-center">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人手機<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_MC_PHONE"] }}
-                    </h6>
-                    <h6 class="list-item-info text-sm-center">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        主要聯絡人電郵<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_MC_EMAIL"] }}
-                    </h6>
-                  </div>
-                </div>
-                <div class="row">
-                  <div
-                    class="col-12 d-flex flex-sm-row justify-content-sm-around align-items-sm-center flex-column"
-                  >
-                    <h6 class="list-item-info text-sm-center">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人姓名<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_EC_NAME"] }}
-                    </h6>
-                    <h6 class="list-item-info text-sm-center mb-2">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人手機<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_EC_PHONE"] }}
-                    </h6>
-                    <h6 class="list-item-info text-sm-center">
-                      <h6 class="mini-title d-sm-block mb-sm-1 d-inline mb-0">
-                        緊急聯絡人電郵<span class="colon d-sm-none">：</span>
-                      </h6>
-                      {{ orderDetail["ORDER_DETAIL_EC_EMAIL"] }}
-                    </h6>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
+          </li>
+        </ul>
         <!-- 訂單細項結束 -->
         <!-- 查無資料開始 -->
         <div v-else>
@@ -302,6 +345,7 @@ export default {
         viewingIndex: null,
         viewDetails: false,
       },
+      statusClass: ["canceled", "processing", "finished"],
       ordersArr: [],
       orderDetailsArr: [],
       itemsNumPerPage: 5,
@@ -417,6 +461,16 @@ a {
   color: black;
 }
 
+.finished {
+  color: green;
+}
+.processing {
+  color: blue;
+}
+.canceled {
+  color: red;
+}
+
 .card-body {
   .mini-title {
     font-size: 12px;
@@ -478,11 +532,9 @@ a {
       }
     }
   }
-  .order-detail {
-    h6 {
-      span {
-        font-size: 13px;
-      }
+  #member-order-details {
+    li {
+      list-style: none;
     }
     .project-avatar-block {
       width: 135px;
@@ -497,13 +549,19 @@ a {
     }
     .bar-code-block {
       width: 90%;
-      margin: auto;
       @include media-breakpoint-down(xs) {
         margin: 0;
       }
       img {
         width: 100%;
         height: 46px;
+      }
+    }
+    .list-item-info {
+      width: 33.3%;
+      font-size: 15px;
+      @include media-breakpoint-down(sm) {
+        width: 100%;
       }
     }
   }

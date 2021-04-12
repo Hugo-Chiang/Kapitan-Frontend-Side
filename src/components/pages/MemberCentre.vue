@@ -61,6 +61,7 @@
               v-if="currentSubPage == '基本資料'"
               :memberInfo="memberInfo.propsObj"
               @emitCloseEditor="backToWelcomePage"
+              @emitUpdateFinished="queryMemberInfo"
             ></MemberInfoEditor>
             <!-- （切換）基本資料結束 -->
             <!-- （切換）查詢訂單開始 -->
@@ -69,10 +70,6 @@
               :memberID="memberInfo.ID"
             ></MemberOrdersSearching>
             <!-- （切換）查詢訂單開始 -->
-            <!-- <MemberCommentsSearching
-            v-else-if="currentSubPage == '我的評價'"
-            :memberID="memberInfo.ID"
-          ></MemberCommentsSearching> -->
             <div class="card-body welcome-sub-page" v-else>
               <div id="welcome-message-block" class="mx-auto py-5">
                 <img

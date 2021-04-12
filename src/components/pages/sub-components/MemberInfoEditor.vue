@@ -279,7 +279,7 @@
             <a
               class="d-inline-block"
               href=""
-              @click.prevent="$emit('emitCloseeditor')"
+              @click.prevent="$emit('emitCloseEditor')"
               >不儲存關閉</a
             >
           </div>
@@ -491,7 +491,7 @@ export default {
         fileReader.readAsDataURL(avatarFile);
       }
     },
-    // 方法：
+    // 方法：根據輸入內容更新會員資料
     updateMemberInfo() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -509,13 +509,14 @@ export default {
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
           vm.modalData.situation.event = "資料庫寫入成功。";
-          vm.modalData.situation.message += response.data;
-          this.vueCloudinaryData.filesData.avatar = "";
+          vm.modalData.situation.message = response.data;
+          vm.vueCloudinaryData.filesData.avatar = "";
+          vm.$emit("emitUpdateFinished");
         })
         .catch((error) => {
           vm.modalData.situation.event = "資料庫寫入失敗。";
-          vm.modalData.situation.message += error.data;
-          this.vueCloudinaryData.filesData.avatar = "";
+          vm.modalData.situation.message = error.data;
+          vm.vueCloudinaryData.filesData.avatar = "";
         });
     },
   },
