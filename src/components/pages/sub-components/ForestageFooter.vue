@@ -253,20 +253,36 @@ export default {
       if (this.subscribeData.subscribeEmail == "") {
         vm.modalData.situation.message = "請輸入電郵地址";
       } else {
-        vm.modalData.situation.message = "感謝您訂閱甲必丹電子報！";
-        this.subscribeData.inputSensitive = false;
+        const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/InsertNewSubscription.php`;
+        const vm = this;
 
-        smtp
-          .send({
-            SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
-            To: this.subscribeData.subscribeEmail,
-            From: "Kapitan@service.com",
-            Subject: "甲必丹系統信│感謝您訂閱甲必丹電子報！",
-            Body: `<p>這是一封前端作品的電子報訂閱模擬信。</p>
-              <p>在這個情境中，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。</p>
-              <p>祝您今天一切順利！</p>`,
+        this.$http
+          .post(api, vm.subscribeData.subscribeEmail)
+          .then((response) => {
+            console.log(response.data);
+            vm.modalData.situation.message = response.data.message;
+
+            if (response.data.status) {
+              return smtp.send({
+                SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
+                To: this.subscribeData.subscribeEmail,
+                From: "Kapitan@service.com",
+                Subject: "甲必丹系統信│感謝您訂閱甲必丹電子報！",
+                Body: `<p>這是一封前端作品的電子報訂閱模擬信。</p>
+                      <p>在這個情境中，您的電郵地址會被寫入企業資料庫，成為發送名單，直到您取消為止。</p>
+                      <p>祝您今天一切順利！</p>`,
+              });
+            }
+          })
+          .catch((error) => {
+            vm.modalData.situation.event = "伺服器異常";
+            vm.modalData.situation.message =
+              "伺服器異常，請稍後再試。造成您的不便，敬請見諒！";
+            vm.modalData.situation.data = error;
+            console.log(error);
           })
           .then(() => {
+            vm.subscribeData.inputSensitive = false;
             vm.subscribeData.subscribeEmail = "";
           });
       }
