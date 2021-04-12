@@ -86,7 +86,6 @@
                 <h6 class="list-item-info m-md-0 mb-1">
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     訂單日期<span class="colon d-md-none">：</span>
-                    <!-- <span v-else>預約日期</span> -->
                   </h6>
                   {{ order["ORDER_DATE"] }}
                 </h6>
@@ -95,21 +94,21 @@
                 >
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     訂購人姓名<span class="colon d-md-none">：</span>
-                    <!-- <span v-else>主要聯絡人姓名</span> -->
                   </h6>
                   {{ order["ORDER_MC_NAME"] }}
                 </h6>
                 <h6 class="list-item-info price m-md-0 text-md-center mb-1">
                   <h6 class="mini-title d-md-block mb-md-1 d-inline mb-0">
                     訂單總額<span class="colon d-md-none">：</span>
-                    <!-- <span v-else>細項總額</span> -->
                   </h6>
-                  {{
-                    (order["ORDER_TOTAL_CONSUMPTION"] -
-                      order["ORDER_TOTAL_DISCOUNT"])
-                      | currency
-                      | dollarSign
-                  }}
+                  <span class="order-amount">
+                    {{
+                      (order["ORDER_TOTAL_CONSUMPTION"] -
+                        order["ORDER_TOTAL_DISCOUNT"])
+                        | currency
+                        | dollarSign
+                    }}
+                  </span>
                 </h6>
                 <h6
                   class="list-item-info m-md-0 text-center d-xl-block d-none"
@@ -502,6 +501,9 @@ a {
       .list-item-info {
         font-size: 15px;
         font-weight: 400;
+      }
+      .order-amount {
+        font-weight: 500;
       }
     }
     .identify-id-or-name {
