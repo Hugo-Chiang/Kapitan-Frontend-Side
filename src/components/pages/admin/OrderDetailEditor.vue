@@ -77,6 +77,7 @@
               :managingOrder="managingOrder"
               :currentPageContentArr.sync="currentPageContentArr"
               :inEditingIndex.sync="inEditingIndex"
+              :currentPath="currentPath"
               @emitRerenderRequest="initializeEditor"
             ></OrderDetailsForm>
           </td>
@@ -230,14 +231,25 @@ export default {
       let breadCrumbData = {};
 
       if (this.inCreatingMode) {
-        breadCrumbData = {
-          pagesArr: [
-            "管理系統：查詢訂單",
-            "管理系統：編輯訂單",
-            "管理系統：新增細項",
-          ],
-          currentPage: 3,
-        };
+        if (this.currentPath.indexOf("Order-Creation") != -1) {
+          breadCrumbData = {
+            pagesArr: [
+              "管理系統：查詢訂單",
+              "管理系統：新增訂單",
+              "管理系統：新增細項",
+            ],
+            currentPage: 3,
+          };
+        } else {
+          breadCrumbData = {
+            pagesArr: [
+              "管理系統：查詢訂單",
+              "管理系統：編輯訂單",
+              "管理系統：新增細項",
+            ],
+            currentPage: 3,
+          };
+        }
       } else {
         breadCrumbData = {
           pagesArr: [

@@ -219,7 +219,13 @@
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.newOrderID"
-                  :disabled="inCreatingMode"
+                  :disabled="
+                    inCreatingMode
+                      ? currentPath.indexOf('Order-Editor') == -1
+                        ? false
+                        : true
+                      : false
+                  "
                   placeholder="OD0000001"
                   v-model="
                     returneContentArr[returneIndex]['FK_ORDER_ID_for_ODD']
@@ -312,11 +318,7 @@
               <a
                 class="d-inline-block position-relative"
                 href=""
-                @click.prevent="
-                  inCreatingMode
-                    ? $router.push({ name: '管理系統：編輯訂單' })
-                    : $emit('update:inEditingIndex', -1)
-                "
+                @click.prevent="backToPrev"
                 >不儲存關閉</a
               >
             </div>
@@ -356,7 +358,7 @@ export default {
           if (this.callBy.inCreatingMode) {
             // 在非新增模式執行資料庫寫入後，成敗與否都將清空表單
             if (this.situation.event.indexOf("資料庫寫入") != -1) {
-              this.callBy.creatDetails = [
+              this.callBy.creatingDetails = [
                 {
                   ORDER_DETAIL_ID: "",
                   ORDER_DETAIL_STATUS: 1,
@@ -455,7 +457,7 @@ export default {
         bookingDate: "預約日期",
         newOrderID: "所屬訂單",
       },
-      creatDetails: [
+      creatingDetails: [
         {
           ORDER_DETAIL_ID: "",
           ORDER_DETAIL_STATUS: 1,
@@ -468,7 +470,10 @@ export default {
           ORDER_DETAIL_EC_EMAIL: "",
           PROJECT_ID: "",
           BOOKING_DATE: "",
-          FK_ORDER_ID_for_ODD: this.managingOrder,
+          FK_ORDER_ID_for_ODD:
+            this.currentPath.indexOf("Order-Creation") != -1
+              ? ""
+              : this.managingOrder,
         },
       ],
     };
@@ -478,6 +483,7 @@ export default {
     "managingOrder",
     "currentPageContentArr",
     "inEditingIndex",
+    "currentPath",
   ],
   created() {
     this.initializeEditor();
@@ -520,7 +526,7 @@ export default {
       if (this.inCreatingMode) {
         sendingObj = {
           session: session,
-          creatDetails: this.creatDetails,
+          creatingDetails: this.creatingDetails,
         };
         api = insertNewOrderDetailsAPI;
       } else {
@@ -561,7 +567,7 @@ export default {
           vm.modalData.situation.message = error.data;
         });
     },
-    // 方法：
+    // 方法：向提示視窗送刪除細項事件
     deleteOrderDetail() {
       this.$eventBus.$emit("emitModalData", this.modalData);
 
@@ -571,15 +577,29 @@ export default {
       } 訂單細項嗎？`;
       this.modalData.situation.buttonType = "yesNo";
     },
+    // 方法：根據路由判斷退回上一頁的正確地點
+    backToPrev() {
+      if (this.inCreatingMode) {
+        if (this.currentPath.indexOf("Order-Creation") != -1) {
+          this.$router.push({ name: "管理系統：新增訂單" });
+        } else {
+          this.$router.push({ name: "管理系統：編輯訂單" });
+        }
+      } else {
+        this.$emit("update:inEditingIndex", -1);
+      }
+    },
   },
   computed: {
+    // 計算（方法）：根據是否為新增模式，回傳既有內容或空白內容
     returneContentArr() {
       if (!this.inCreatingMode) {
         return this.currentPageContentArr;
       } else {
-        return this.creatDetails;
+        return this.creatingDetails;
       }
     },
+    // 計算（方法）：根據是否為新增模式，回傳編輯索引或假索引
     returneIndex() {
       if (!this.inCreatingMode) {
         return this.inEditingIndex;

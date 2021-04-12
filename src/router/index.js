@@ -100,6 +100,12 @@ const router = new Router({
                   meta: { requiresAuth: true }
                 },
                 {
+                  path: '/Admin/Orders-Manager/Order-Creation/Order-Details-Creation',
+                  name: '管理系統：新增細項',
+                  component: OrderDetailEditor,
+                  meta: { requiresAuth: true }
+                },
+                {
                   path: '/Admin/Orders-Manager/Orders-Searching',
                   name: '管理系統：查詢訂單',
                   component: OrdersSearching,

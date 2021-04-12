@@ -497,13 +497,13 @@ export default {
     position: sticky;
     left: 0;
     top: $desktop-nav-bar-height;
+    z-index: 9998;
     @include media-breakpoint-down(lg) {
       width: 100%;
       height: auto;
       position: fixed;
       left: 0;
       bottom: 0;
-      z-index: 9998;
       transform: translate3d(0, 100%, 0);
       transition: transform 1.3s;
     }
@@ -620,9 +620,6 @@ export default {
         border-right: 1px solid $bootstrap-border-color;
       }
     }
-  }
-  #pagination-row {
-    z-index: -1;
   }
 }
 </style>

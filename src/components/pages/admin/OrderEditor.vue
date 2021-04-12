@@ -196,7 +196,7 @@
                   requiredInputTitle.MCemail
                 }}</label>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.MCemail"
@@ -267,7 +267,7 @@
                   requiredInputTitle.ECemail
                 }}</label>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
                   :class="classes"
                   :id="requiredInputTitle.ECemail"
@@ -296,9 +296,20 @@
           <input
             type="button"
             class="btn btn-info"
-            v-if="!inCreatingMode"
             value="新增細項"
-            @click.prevent="$router.push({ name: '管理系統：新增細項' })"
+            @click.prevent="
+              $router.push(
+                inCreatingMode
+                  ? {
+                      path:
+                        '/Admin/Orders-Manager/Order-Creation/Order-Details-Creation',
+                    }
+                  : {
+                      path:
+                        '/Admin/Orders-Manager/Order-Editor/Order-Details-Creation',
+                    }
+              )
+            "
           />
         </div>
         <div class="col-4 ml-auto">
