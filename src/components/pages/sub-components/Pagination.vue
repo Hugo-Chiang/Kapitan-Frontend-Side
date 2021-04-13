@@ -12,13 +12,56 @@
         </a>
       </li>
       <li
-        v-for="(page, index) in totalPagination"
+        v-if="totalPagination > 5"
+        class="page-item"
+        :class="[
+          index + 1 == currentPageNum ? 'active' : '',
+          currentPageNum > 4 ? '' : 'd-none',
+        ]"
+      >
+        <a class="page-link" @click.prevent="selectPage(1)">1</a>
+      </li>
+      <li
+        class="page-item"
+        v-if="totalPagination > 5"
+        :class="[currentPageNum > 4 ? '' : 'd-none']"
+      >
+        <a class="page-link" @click.prevent="">...</a>
+      </li>
+      <li
+        v-for="(page, index) in returnPagination"
         :key="index + 1"
         class="page-item"
-        :class="index + 1 == currentPageNum ? 'active' : ''"
+        :class="
+          currentPageNum < 5 || currentPageNum > totalPagination - 4
+            ? returnPagination[index] == currentPageNum
+              ? 'active'
+              : ''
+            : index == 2
+            ? 'active'
+            : ''
+        "
       >
-        <a class="page-link" @click.prevent="selectPage(index + 1)">{{
-          index + 1
+        <a
+          class="page-link"
+          @click.prevent="selectPage(returnPagination[index])"
+          >{{ returnPagination[index] }}</a
+        >
+      </li>
+      <li
+        class="page-item"
+        v-if="totalPagination > 5"
+        :class="[currentPageNum < totalPagination - 3 ? '' : 'd-none']"
+      >
+        <a class="page-link">...</a>
+      </li>
+      <li
+        v-if="totalPagination > 5"
+        class="page-item"
+        :class="[currentPageNum < totalPagination - 3 ? '' : 'd-none']"
+      >
+        <a class="page-link" @click.prevent="selectPage(totalPagination)">{{
+          totalPagination
         }}</a>
       </li>
       <li class="page-item" v-if="totalPagination > 1">
@@ -100,6 +143,35 @@ export default {
           }
         }
       }
+    },
+  },
+  computed: {
+    // 計算（方法）：若總頁數大於 5 頁，則回傳局部頁面進行渲染
+    returnPagination() {
+      let partialPagination = [];
+
+      if (this.totalPagination > 5) {
+        let startIndex = 0;
+
+        if (this.currentPageNum < 5) {
+          startIndex = 1;
+        } else if (this.currentPageNum > this.totalPagination - 4) {
+          startIndex = this.totalPagination - 4;
+        } else {
+          startIndex = this.currentPageNum - 2;
+        }
+
+        for (let i = 0; i < 5; i++) {
+          partialPagination.push(startIndex);
+          startIndex++;
+        }
+      } else {
+        for (let i = 0; i < this.totalPagination; i++) {
+          partialPagination.push(i + 1);
+        }
+      }
+
+      return partialPagination;
     },
   },
   watch: {
