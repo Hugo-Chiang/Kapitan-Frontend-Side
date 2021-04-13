@@ -30,7 +30,7 @@ __後台__：
 
 技術：
 * HTML 5
-* CSS 3（Scss）
+* CSS 3（SCSS）
 * JavaScript
 * PHP
 * MySQL
