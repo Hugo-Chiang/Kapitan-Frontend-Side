@@ -162,6 +162,9 @@ export default {
           vm.memberInfo.propsObj = response.data;
           vm.memberInfo.nickname = response.data["MEMBER_NICKNAME"];
           vm.memberInfo.avatarUrl = response.data["MEMBER_AVATAR_URL"];
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：回到歡迎頁

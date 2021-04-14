@@ -155,6 +155,47 @@
             <!-- 會員密碼結束 -->
           </div>
           <div class="form-row">
+            <!-- 會員暱稱開始 -->
+            <div class="form-group col-4">
+              <label :for="requiredInputTitle.nickname">{{
+                requiredInputTitle.nickname
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                :id="requiredInputTitle.nickname"
+                v-model="editDetails.nickname"
+                :placeholder="requiredInputTitle.nickname"
+              />
+            </div>
+            <!-- 會員暱稱結束 -->
+            <!-- 會員大頭貼開始 -->
+            <div class="form-group col-5">
+              <label
+                :for="requiredInputTitle.memberAvatarURL"
+                class="form-label"
+                >{{ requiredInputTitle.memberAvatarURL }}</label
+              >
+              <div class="custom-file">
+                <input
+                  :id="requiredInputTitle.memberAvatarURL"
+                  class="custom-file-input"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  @change="handleFileChange($event)"
+                />
+                <label
+                  class="custom-file-label"
+                  :for="requiredInputTitle.memberAvatarURL"
+                  >{{
+                    vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
+                  }}</label
+                >
+              </div>
+            </div>
+            <!-- 會員大頭貼結束 -->
+          </div>
+          <div class="form-row">
             <!-- 會員姓名開始 -->
             <div class="form-group col-4">
               <label :for="requiredInputTitle.MCname">{{
@@ -183,31 +224,6 @@
               />
             </div>
             <!-- 會員電話結束 -->
-            <!-- 會員大頭貼開始 -->
-            <div class="form-group col-5">
-              <label
-                :for="requiredInputTitle.memberAvatarURL"
-                class="form-label"
-                >{{ requiredInputTitle.memberAvatarURL }}</label
-              >
-              <div class="custom-file">
-                <input
-                  :id="requiredInputTitle.memberAvatarURL"
-                  class="custom-file-input"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  @change="handleFileChange($event)"
-                />
-                <label
-                  class="custom-file-label"
-                  :for="requiredInputTitle.memberAvatarURL"
-                  >{{
-                    vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
-                  }}</label
-                >
-              </div>
-            </div>
-            <!-- 會員大頭貼結束 -->
           </div>
           <div class="form-row">
             <!-- 緊急聯絡人姓名開始 -->
@@ -400,6 +416,7 @@ export default {
         memberAccount: "會員帳號",
         memberPassword: "會員密碼",
         reSetPassword: "重設會員密碼",
+        nickname: "會員暱稱",
         MCname: "會員姓名",
         MCphone: "會員手機",
         memberAvatarURL: "會員大頭貼",
@@ -413,6 +430,7 @@ export default {
         memberAccount: "",
         memberPassword: "",
         reSetPassword: "",
+        nickname: "",
         MCname: "",
         MCphone: "",
         memberAvatarURL: "",
@@ -455,6 +473,7 @@ export default {
       vm.editDetails.memberAccount = "";
       vm.editDetails.memberPassword = "";
       vm.editDetails.reSetPassword = "";
+      vm.editDetails.nickname = "";
       vm.editDetails.MCname = "";
       vm.editDetails.MCphone = "";
       vm.editDetails.memberAvatarURL = "";
@@ -490,6 +509,7 @@ export default {
             ).Format("yyyy-MM-ddThh:mm");
             vm.editDetails.memberAccount = response.data["MEMBER_ACCOUNT"];
             vm.editDetails.memberPassword = response.data["MEMBER_PASSWORD"];
+            vm.editDetails.nickname = response.data["MEMBER_NICKNAME"];
             vm.editDetails.MCname = response.data["MEMBER_NAME"];
             vm.editDetails.MCphone = response.data["MEMBER_PHONE"];
             vm.editDetails.memberAvatarURL = response.data["MEMBER_AVATAR_URL"];
