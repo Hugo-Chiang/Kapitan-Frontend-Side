@@ -199,7 +199,8 @@ export default {
 
             smtp.send({
               SecureToken: "5597a7e9-ef70-4269-a166-3747579e805d",
-              To: response.data.noticeEmails,
+              // To: response.data.noticeEmails,
+              To: "statesman1991@gmail.com",
               From: "Kapitan@service.com",
               Subject: `甲必丹遊艇城│訂單【${response.data.orderID}】訂購成功！`,
               Body: emailContent,

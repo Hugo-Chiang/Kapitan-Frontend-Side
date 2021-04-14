@@ -503,7 +503,9 @@ a {
         font-weight: 400;
       }
       .order-amount {
+        font-size: 13px;
         font-weight: 500;
+        color: darkred;
       }
     }
     .identify-id-or-name {

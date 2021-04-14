@@ -39,7 +39,6 @@
             :id="'inline-checkbox-' + (index + 3)"
             :key="'inline-checkbox-' + (index + 3)"
             v-model="syncOrdererContactInfoArr[index]"
-            value="option1"
             @change="simulateBlurEvt(index)"
           />
           <label
@@ -69,7 +68,7 @@
                 :class="classes"
                 :placeholder="requiredInputTitle.MCname"
                 v-model="inputContantInfoArr[index].MCname"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -92,7 +91,7 @@
                 :class="classes"
                 placeholder="0900000000"
                 v-model="inputContantInfoArr[index].MCphone"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -110,11 +109,11 @@
                 class="form-control"
                 :class="classes"
                 :id="'input-main-email' + (index + 1)"
-                :name="requiredInputTitle.ECemeal"
+                :name="requiredInputTitle.MCemail"
                 :key="'input-main-email' + (index + 1)"
                 placeholder="Hello-World@email.com"
                 v-model="inputContantInfoArr[index].MCemail"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -141,7 +140,7 @@
                 :class="classes"
                 :placeholder="requiredInputTitle.ECname"
                 v-model="inputContantInfoArr[index].ECname"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -164,7 +163,7 @@
                 :class="classes"
                 placeholder="0900000000"
                 v-model="inputContantInfoArr[index].ECphone"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -186,7 +185,7 @@
                 :key="'input-sub-email' + (index + 2)"
                 placeholder="Hello-World@email.com"
                 v-model="inputContantInfoArr[index].ECemail"
-                @keyup="unsyncOrdererContactInfo(index)"
+                @input="$set(syncOrdererContactInfoArr, index, false)"
               />
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -223,7 +222,6 @@ export default {
   props: ["confirmProjectsArr", "requiredInputTitle", "currentPage"],
   components: { CartListItem },
   created() {
-    console.log(this.confirmProjectsArr);
     this.establishSyncOrdererContactInfoArr();
     this.$eventBus.$on("emitInputOrdererInfo", (infoObj) => {
       this.inputOrdererInfo = infoObj;
@@ -247,11 +245,6 @@ export default {
         });
       }
     },
-    // 方法：解除任一同步訂購資訊的 chexbox 時，同時解除「全部同步訂購資訊」的 chexbox
-    unsyncOrdererContactInfo(index) {
-      this.syncOrdererContactInfoArr[index] = false;
-      this.syncOrdererContactInfoAll = false;
-    },
     // 方法：個別方案模擬 blur 事件以觸發表單驗證
     simulateBlurEvt(index) {
       let targetProject = document.querySelectorAll(
@@ -274,7 +267,7 @@ export default {
     // 監看（方法）：選擇全部同步訂購資訊與否，將決定個別同步訂購資訊的 checkbox 勾選與否
     syncOrdererContactInfoAll(watchingBoolean) {
       const vm = this;
-      let ifAllSelected = this.syncOrdererContactInfoArr.every(
+      let ifAllSelected = vm.syncOrdererContactInfoArr.every(
         (boolean) => boolean == true
       );
 
@@ -295,35 +288,42 @@ export default {
       Projects.forEach((project, index) => vm.simulateBlurEvt(index));
     },
     // 監看（方法）：確認同步訂購資訊時，複製訂購資訊予「第三步：填寫聯絡資訊」的個別輸入欄
-    syncOrdererContactInfoArr(watchingArr) {
-      const vm = this;
+    syncOrdererContactInfoArr: {
+      handler(newArr) {
+        const vm = this;
+        let ifAllSelected = vm.syncOrdererContactInfoArr.every(
+          (boolean) => boolean == true
+        );
 
-      watchingArr.forEach(function (boolean, index) {
-        if (boolean) {
-          vm.$set(vm.inputContantInfoArr, index, {
-            ...vm.inputOrdererInfo,
-          });
-        } else {
-          vm.unsyncOrdererContactInfo(index);
+        if (ifAllSelected) vm.syncOrdererContactInfoAll = true;
+        else vm.syncOrdererContactInfoAll = false;
 
-          // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
-          let inputContactInfoStr = JSON.stringify(
-            vm.inputContantInfoArr[index]
-          );
-          let inputOrdererInfoStr = JSON.stringify(vm.inputOrdererInfo);
-
-          if (inputContactInfoStr == inputOrdererInfoStr) {
+        newArr.forEach(function (boolean, index) {
+          if (boolean) {
             vm.$set(vm.inputContantInfoArr, index, {
-              MCname: "",
-              MCphone: "",
-              MCemail: "",
-              ECname: "",
-              ECphone: "",
-              ECemail: "",
+              ...vm.inputOrdererInfo,
             });
+          } else {
+            // 增進使用者體驗：取消同步訂購資訊時，欄位內容完全沒有更改過才會清除
+            let inputContactInfoStr = JSON.stringify(
+              vm.inputContantInfoArr[index]
+            );
+            let inputOrdererInfoStr = JSON.stringify(vm.inputOrdererInfo);
+
+            if (inputContactInfoStr == inputOrdererInfoStr) {
+              vm.$set(vm.inputContantInfoArr, index, {
+                MCname: "",
+                MCphone: "",
+                MCemail: "",
+                ECname: "",
+                ECphone: "",
+                ECemail: "",
+              });
+            }
           }
-        }
-      });
+        });
+      },
+      deep: true,
     },
   },
 };
