@@ -209,7 +209,6 @@
                       >
                         帳號或密碼錯誤
                       </div>
-                      <!-- <a href="#" v-if="signInMode" class="card-link">忘記密碼？</a> -->
                     </div>
                     <!-- 動作區域結束 -->
                   </div>
