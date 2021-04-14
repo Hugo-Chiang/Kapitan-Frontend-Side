@@ -314,7 +314,7 @@ export default {
           // 遭遇失敗情境將
           if (this.situation.event.indexOf("失敗") != -1) {
             setTimeout(
-              // () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
+              () => this.callBy.$router.push({ name: "管理系統：會員管理" }),
               1000
             );
           }

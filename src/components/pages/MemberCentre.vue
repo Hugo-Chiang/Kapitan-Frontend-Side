@@ -18,7 +18,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                   <img
                     :src="
-                      memberInfo.avatarUrl == null
+                      memberInfo.avatarUrl == ''
                         ? GlobalVariables.cloudUrlprefix +
                           GlobalVariables.cloudNoAvatarUrl
                         : GlobalVariables.cloudUrlprefix + memberInfo.avatarUrl
@@ -196,6 +196,7 @@ export default {
       overflow: hidden;
       background-color: $sail;
       img {
+        width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center center;

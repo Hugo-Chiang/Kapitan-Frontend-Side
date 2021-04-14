@@ -283,7 +283,7 @@
             <div class="d-flex justify-content-center align-items-center">
               <img
                 :src="
-                  editDetails.memberAvatarURL == null
+                  editDetails.memberAvatarURL == ''
                     ? GlobalVariables.cloudUrlprefix +
                       GlobalVariables.cloudNoAvatarUrl
                     : GlobalVariables.cloudUrlprefix +
@@ -293,8 +293,6 @@
               />
             </div>
           </div>
-          <!-- <h6>重點紀錄</h6>
-          <div class="records"></div> -->
         </div>
       </div>
       <div class="row">
@@ -617,8 +615,6 @@ export default {
           false
         );
 
-        console.log(avatarFile);
-
         fileReader.readAsDataURL(avatarFile);
       }
     },
@@ -736,6 +732,7 @@ export default {
       overflow: hidden;
       background-color: #f1f1f1;
       img {
+        width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center center;
