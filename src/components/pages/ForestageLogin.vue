@@ -55,7 +55,7 @@
                               'is-invalid': loginData.repeatRegister,
                               shaking:
                                 loginData.signInFailedFeedback
-                                  .signInFailedAnime,
+                                  .IncorrectAccountPasswordAnime,
                             },
                           ]"
                           id="帳號"
@@ -114,7 +114,7 @@
                             {
                               shaking:
                                 loginData.signInFailedFeedback
-                                  .signInFailedAnime,
+                                  .IncorrectAccountPasswordAnime,
                             },
                           ]"
                           id="密碼"
@@ -204,10 +204,11 @@
                         class="mb-2"
                         v-if="
                           signInMode &&
-                          loginData.signInFailedFeedback.signInFailedWarning
+                          loginData.signInFailedFeedback
+                            .IncorrectAccountPassword
                         "
                       >
-                        帳號或密碼錯誤
+                        {{ loginData.signInFailedFeedback.signInFailedMessage }}
                       </div>
                     </div>
                     <!-- 動作區域結束 -->
@@ -240,8 +241,9 @@ export default {
           passwordChecked: "",
         },
         signInFailedFeedback: {
-          signInFailedWarning: false,
-          signInFailedAnime: false,
+          signInFailedMessage: "",
+          IncorrectAccountPassword: false,
+          IncorrectAccountPasswordAnime: false,
         },
       },
       // 提示視窗資料
@@ -323,6 +325,7 @@ export default {
     // 方法：登入與註冊的複合函式
     signInOrRegister() {
       this.$eventBus.$emit("emitModalData", this.modalData);
+      this.loginData.signInFailedFeedback.IncorrectAccountPasswordAnime = false;
 
       const signInAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/SignIn.php`;
       const registerAPI = `${process.env.REMOTE_HOST_PATH}/API/Forestage/Register.php`;
@@ -361,12 +364,17 @@ export default {
             vm.loginData.input.account = "";
             vm.loginData.input.password = "";
             vm.loginData.input.passwordChecked = "";
-            vm.loginData.signInFailedFeedback.signInFailedWarning = true;
+            vm.loginData.signInFailedFeedback.signInFailedMessage =
+              response.data.message;
 
-            if (this.signInMode) {
-              vm.loginData.signInFailedFeedback.signInFailedAnime = true;
+            let feedback =
+              vm.loginData.signInFailedFeedback.signInFailedMessage;
+
+            if (vm.signInMode && feedback == "帳號或密碼錯誤") {
+              vm.loginData.signInFailedFeedback.IncorrectAccountPassword = true;
+              vm.loginData.signInFailedFeedback.IncorrectAccountPasswordAnime = true;
               setTimeout(() => {
-                vm.loginData.signInFailedFeedback.signInFailedAnime = false;
+                vm.loginData.signInFailedFeedback.IncorrectAccountPasswordAnime = false;
               }, 1200);
             }
           }
@@ -386,7 +394,7 @@ export default {
       this.loginData.repeatRegister = false;
       this.loginData.passwordsUnequal = false;
       this.loginData.remeberMe = false;
-      this.loginData.signInFailedFeedback.signInFailedWarning = false;
+      this.loginData.signInFailedFeedback.IncorrectAccountPassword = false;
     },
   },
 };
