@@ -6,8 +6,8 @@
 
 ## 演示網址
 
-* 前台：https://fe-sp-0001-kapitan.herokuapp.com/#/
-* 後台：https://fe-sp-0001-kapitan.herokuapp.com/#/Admin
+* 前台（響應式）：https://fe-sp-0001-kapitan.herokuapp.com/#/
+* 後台（非響應式）：https://fe-sp-0001-kapitan.herokuapp.com/#/Admin
 
 （如需測試後台，請聯繫作者拿取「測試管理員」帳密並約定測試時間。「測試管理員」不能影響既有資料庫內容，新增項目會被強制冠上測試狀態，也只能刪改自己新增的測試項目。）
 
