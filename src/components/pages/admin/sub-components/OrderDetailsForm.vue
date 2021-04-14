@@ -504,6 +504,14 @@ export default {
         .post(queryAdminAuthAPI, session)
         .then((response) => {
           vm.adminLevel = response.data.adminLevel;
+
+          if (vm.inCreatingMode) {
+            if (vm.adminLevel > 2) {
+              vm.creatingDetails[0]["ORDER_DETAIL_STATUS"] = -1;
+            } else {
+              vm.creatingDetails[0]["ORDER_DETAIL_STATUS"] = 1;
+            }
+          }
         })
         .catch((error) => {
           console.log(error);

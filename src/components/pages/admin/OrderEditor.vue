@@ -178,7 +178,7 @@
                   :class="classes"
                   :id="requiredInputTitle.MCphone"
                   v-model="editDetails.MCphone"
-                  placeholder="0933128872"
+                  placeholder="0900000000"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -249,7 +249,7 @@
                   :class="classes"
                   :id="requiredInputTitle.ECphone"
                   v-model="editDetails.ECphone"
-                  placeholder="0933128872"
+                  placeholder="0900000000"
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -481,10 +481,10 @@ export default {
         .then((response) => {
           vm.adminLevel = response.data.adminLevel;
 
-          if (this.inCreatingMode) {
+          if (vm.inCreatingMode) {
             if (vm.adminLevel > 2) vm.editDetails.orderStatus = -1;
             else vm.editDetails.orderStatus = 1;
-            return vm.$http.post(queryCreatingIDAPI, this.currentManager);
+            return vm.$http.post(queryCreatingIDAPI, vm.currentManager);
           } else {
             vm.managingOrder = localStorage.getItem("managingOrder");
             return vm.$http.post(queryOrderDataAPI, vm.managingOrder);
@@ -494,7 +494,7 @@ export default {
           console.log(error);
         })
         .then((response) => {
-          if (this.inCreatingMode) {
+          if (vm.inCreatingMode) {
             vm.managingOrder = response.data;
             localStorage.setItem("managingOrder", vm.managingOrder);
           } else {
@@ -544,6 +544,10 @@ export default {
         .then((response) => {
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message = response.data;
+
+          if (vm.inCreatingMode) {
+            vm.initializeeditor();
+          }
         })
         .catch((error) => {
           vm.modalData.situation.event = "資料庫寫入失敗。";
