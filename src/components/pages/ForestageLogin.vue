@@ -202,10 +202,8 @@
                       <div
                         id="sign-in-failed-warning"
                         class="mb-2"
-                        v-if="
-                          signInMode &&
-                          loginData.signInFailedFeedback
-                            .IncorrectAccountPassword
+                        v-show="
+                          signInMode && loginData.signInFailedFeedback != ''
                         "
                       >
                         {{ loginData.signInFailedFeedback.signInFailedMessage }}
@@ -368,6 +366,7 @@ export default {
             vm.loginData.input.account = "";
             vm.loginData.input.password = "";
             vm.loginData.input.passwordChecked = "";
+            console.log(response.data);
             vm.loginData.signInFailedFeedback.signInFailedMessage =
               response.data.message;
 
