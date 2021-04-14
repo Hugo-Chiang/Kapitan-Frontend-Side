@@ -59,6 +59,7 @@
             <!-- （切換）基本資料開始 -->
             <MemberInfoEditor
               v-if="currentSubPage == '基本資料'"
+              :memberID="memberInfo.ID"
               :memberInfo="memberInfo.propsObj"
               @emitCloseEditor="backToWelcomePage"
               @emitUpdateFinished="queryMemberInfo"
@@ -147,8 +148,12 @@ export default {
       const session = this.GlobalFunctions.getKapitanSession("forestage");
       const vm = this;
 
+      let sendingObj = {
+        session: session,
+      };
+
       this.$http
-        .post(signInAuthenticationAPI, session)
+        .post(signInAuthenticationAPI, JSON.stringify(sendingObj))
         .then((response) => {
           if (response.data.sessionCheck) {
             vm.memberInfo.ID = response.data.signInedID;

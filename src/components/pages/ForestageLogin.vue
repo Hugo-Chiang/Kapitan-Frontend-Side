@@ -343,11 +343,15 @@ export default {
         .then((response) => {
           console.log(response.data);
           if (response.data.singInStatus) {
+            const memberID = response.data.memberID;
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
             const remeberMe = vm.loginData.remeberMe;
 
             document.cookie = `kapitanMembersSession="${session}"; expires="${
+              remeberMe ? expDate : ""
+            }"`;
+            document.cookie = `kapitanMemberID="${memberID}"; expires="${
               remeberMe ? expDate : ""
             }"`;
             vm.signIned = true;

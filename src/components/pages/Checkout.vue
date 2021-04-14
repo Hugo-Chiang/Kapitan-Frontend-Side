@@ -90,6 +90,11 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
+    this.GlobalFunctions.checkDuplicateLogin(
+      "forestage",
+      this.GlobalFunctions.getSignInedID("member")
+    );
+
     this.modalData.callBy = this;
     this.$eventBus.$on("emitModalValue", (value) => {
       this.modalData.emitValue = value;
@@ -106,8 +111,12 @@ export default {
       const session = this.GlobalFunctions.getKapitanSession("forestage");
       const vm = this;
 
+      let sendingObj = {
+        session: session,
+      };
+
       this.$http
-        .post(signInAuthenticationAPI, session)
+        .post(signInAuthenticationAPI, JSON.stringify(sendingObj))
         .then((response) => {
           if (response.data.sessionCheck) {
             vm.memberData.memberID = response.data.signInedID;

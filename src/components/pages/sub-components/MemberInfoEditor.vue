@@ -365,8 +365,10 @@ export default {
       },
     };
   },
-  props: ["memberInfo"],
+  props: ["memberID", "memberInfo"],
   created() {
+    this.GlobalFunctions.checkDuplicateLogin("forestage", this.memberID);
+
     this.modalData.callBy = this;
     this.$eventBus.$on("emitModalValue", (value) => {
       this.modalData.emitValue = value;

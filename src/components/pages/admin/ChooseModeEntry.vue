@@ -46,6 +46,7 @@ export default {
     };
   },
   created() {
+    // this.GlobalFunctions.checkDuplicateLogin("backstage");
     this.findOutCurrentManager();
   },
   methods: {

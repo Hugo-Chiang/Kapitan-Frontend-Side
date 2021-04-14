@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Vue from 'vue';
+import GlobalVariables from '@/library/variables.vue';
 import Router from 'vue-router';
 import Forestage from '@/components/Forestage'
 import Home from '@/components/pages/Home';
@@ -210,24 +211,28 @@ router.beforeEach((to, from, next) => {
         }
         else {
           localStorage.setItem('BackstageBlockBefore', to.path)
+          alert("您的登入驗證已失效。請再登入一次，謝謝！");
           next({ name: '管理系統：登入頁' });
         }
-      }).catch((response) => {
-        console.log(response);
+      }).catch((error) => {
+        console.log(error);
       })
     } else {
 
       let membersSession = getKapitanSession('forestage');
+      let sendingObj = {
+        session: membersSession,
+      };
 
-      axios.post(membersSignInAuthAPI, membersSession).then((response) => {
+      axios.post(membersSignInAuthAPI, JSON.stringify(sendingObj)).then((response) => {
         if (response.data.sessionCheck) {
           next();
         } else {
           localStorage.setItem('ForestageBlockBefore', to.path)
           next({ name: '登入註冊' });
         }
-      }).catch((response) => {
-        console.log(response);
+      }).catch((error) => {
+        console.log(error);
       })
 
       // 判斷所前往是不是結帳頁，會有不同的應對
@@ -243,7 +248,7 @@ router.beforeEach((to, from, next) => {
   } else {
 
     // 無論前後台，在有登入狀況下進入登入頁，都將被導回各自的首頁
-    if (to.path.indexOf('Admin') != -1) {
+    if (toBackstage) {
       let adminSession = getKapitanSession('backstage');
 
       if (to.path == '/Admin/SignIn') {
@@ -254,23 +259,26 @@ router.beforeEach((to, from, next) => {
               router.push({ name: '管理系統：首頁', });
             }, 500);
           }
-        }).catch((response) => {
-          console.log(response);
+        }).catch((error) => {
+          console.log(error);
         });
       }
     } else {
       if (to.path == '/Login') {
         let membersSession = getKapitanSession('forestage');
+        let sendingObj = {
+          session: membersSession,
+        };
 
-        axios.post(membersSignInAuthAPI, membersSession).then((response) => {
+        axios.post(membersSignInAuthAPI, JSON.stringify(sendingObj)).then((response) => {
           if (response.data.sessionCheck) {
             alert('你已登入。系統將引導您回首頁。');
             setTimeout(() => {
               router.push({ name: '首頁', });
             }, 500);
           }
-        }).catch((response) => {
-          console.log(response);
+        }).catch((error) => {
+          console.log(error);
         });
       }
     }
