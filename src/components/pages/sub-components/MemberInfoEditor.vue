@@ -3,291 +3,293 @@
     <h4 class="mb-4">基本資料</h4>
     <!-- 會員編輯區開始 -->
     <!-- 修改密碼開始 -->
-    <ValidationObserver v-slot="{ invalid }">
-      <div class="row">
-        <div class="col-12">
-          <h5 class="mb-4">
-            ▐ 重設密碼
-            <span
-              id="password-remark-trigger"
-              @mouseenter="reSetPasswordData.showRemark = true"
-              @mouseleave="reSetPasswordData.showRemark = false"
-              @click="
-                reSetPasswordData.showRemark = !reSetPasswordData.showRemark
-              "
-              >［?］</span
-            >
-            <span
-              id="password-remark"
-              class="position-absolute"
-              v-show="reSetPasswordData.showRemark"
-              >8到16位字符，至少1個大寫字母、1個小寫字母、1個數字。</span
-            >
-          </h5>
-          <div class="form-row">
-            <!-- 輸入原密碼開始 -->
-            <div class="form-group col-lg-3 col-sm-4 col-8">
-              <ValidationProvider
-                :rules="{ required: true }"
-                v-slot="{ errors, classes }"
+    <form>
+      <ValidationObserver v-slot="{ invalid }">
+        <div class="row">
+          <div class="col-12">
+            <h5 class="mb-4">
+              ▐ 重設密碼
+              <span
+                id="password-remark-trigger"
+                @mouseenter="reSetPasswordData.showRemark = true"
+                @mouseleave="reSetPasswordData.showRemark = false"
+                @click="
+                  reSetPasswordData.showRemark = !reSetPasswordData.showRemark
+                "
+                >［?］</span
               >
-                <label for="輸入原密碼">輸入原密碼</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  :class="reSetPasswordData.sensitive ? classes : ''"
-                  id="輸入原密碼"
-                  placeholder="輸入原密碼"
-                  v-model="reSetPasswordData.originalPassword"
-                  @input="reSetPasswordData.sensitive = true"
-                  @focus="reSetPasswordData.sensitive = true"
-                  @blur="reSetPasswordData.sensitive = true"
-                />
-                <span class="invalid-feedback">{{ errors[0] }}</span>
-              </ValidationProvider>
+              <span
+                id="password-remark"
+                class="position-absolute"
+                v-show="reSetPasswordData.showRemark"
+                >8到16位字符，至少1個大寫字母、1個小寫字母、1個數字。</span
+              >
+            </h5>
+            <div class="form-row">
+              <!-- 輸入原密碼開始 -->
+              <div class="form-group col-lg-3 col-sm-4 col-8">
+                <ValidationProvider
+                  :rules="{ required: true }"
+                  v-slot="{ errors, classes }"
+                >
+                  <label for="輸入原密碼">輸入原密碼</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    :class="reSetPasswordData.sensitive ? classes : ''"
+                    id="輸入原密碼"
+                    placeholder="輸入原密碼"
+                    v-model="reSetPasswordData.originalPassword"
+                    @input="reSetPasswordData.sensitive = true"
+                    @focus="reSetPasswordData.sensitive = true"
+                    @blur="reSetPasswordData.sensitive = true"
+                  />
+                  <span class="invalid-feedback">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+              <!-- 輸入原密碼結束 -->
             </div>
-            <!-- 輸入原密碼結束 -->
+            <div class="form-row">
+              <!-- 輸入新密碼開始 -->
+              <div class="form-group col-lg-3 col-sm-4 col-8">
+                <ValidationProvider
+                  :rules="{
+                    required: true,
+                    regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
+                  }"
+                  v-slot="{ errors, classes }"
+                >
+                  <label for="輸入新密碼">輸入新密碼</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    :class="reSetPasswordData.sensitive ? classes : ''"
+                    id="輸入新密碼"
+                    placeholder="輸入新密碼"
+                    v-model="reSetPasswordData.newPassword"
+                    @input="reSetPasswordData.sensitive = true"
+                    @focus="reSetPasswordData.sensitive = true"
+                    @blur="reSetPasswordData.sensitive = true"
+                  />
+                  <span class="invalid-feedback">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+              <!-- 輸入新密碼結束 -->
+              <!-- 確認新密碼開始 -->
+              <div class="form-froup col-lg-3 col-sm-4 col-8">
+                <ValidationProvider
+                  :rules="{
+                    required: true,
+                    regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
+                  }"
+                  v-slot="{ errors, classes }"
+                >
+                  <label for="確認新密碼">確認新密碼</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    :class="[
+                      reSetPasswordData.sensitive ? classes : '',
+                      { 'is-invalid': reSetPasswordData.passwordsUnequal },
+                    ]"
+                    id="確認新密碼"
+                    placeholder="請再輸入一次密碼"
+                    v-model="reSetPasswordData.passwordChecked"
+                    @input="comparisePassword"
+                    @focus="reSetPasswordData.sensitive = true"
+                    @blur="reSetPasswordData.sensitive = true"
+                  />
+                  <span
+                    class="invalid-feedback"
+                    :class="
+                      reSetPasswordData.passwordsUnequal
+                        ? 'd-inline-block'
+                        : 'd-none'
+                    "
+                    >確認密碼與輸入密碼不相等</span
+                  >
+                  <span
+                    class="invalid-feedback"
+                    v-show="!reSetPasswordData.passwordsUnequal"
+                    >{{ errors[0] }}</span
+                  >
+                </ValidationProvider>
+              </div>
+              <!-- 確認新密碼結束 -->
+              <!-- 修改密碼操作按鈕開始 -->
+              <div class="form-froup col-lg-3 col-sm-4">
+                <label for="修改密碼">&nbsp;</label>
+                <input
+                  type="button"
+                  id="修改密碼"
+                  class="btn btn-primary d-block"
+                  :class="{ 'invalid-btn': invalid }"
+                  value="修改密碼"
+                  :disabled="invalid || reSetPasswordData.passwordsUnequal"
+                  @click.prevent="reSetPassword"
+                  data-toggle="modal"
+                  data-target="#modal"
+                  data-backdrop="static"
+                />
+              </div>
+              <!-- 修改密碼操作按鈕結束 -->
+            </div>
           </div>
-          <div class="form-row">
-            <!-- 輸入新密碼開始 -->
-            <div class="form-group col-lg-3 col-sm-4 col-8">
-              <ValidationProvider
-                :rules="{
-                  required: true,
-                  regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
-                }"
-                v-slot="{ errors, classes }"
-              >
-                <label for="輸入新密碼">輸入新密碼</label>
+        </div>
+      </ValidationObserver>
+      <!-- 修改密碼結束 -->
+      <hr />
+      <ValidationObserver v-slot="{ invalid }">
+        <div class="row">
+          <div class="col-lg-12">
+            <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
+            <div class="form-row">
+              <!-- 會員暱稱開始 -->
+              <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
+                <label :for="requiredInputTitle.nickName">{{
+                  requiredInputTitle.nickName
+                }}</label>
                 <input
-                  type="password"
+                  type="text"
                   class="form-control"
-                  :class="reSetPasswordData.sensitive ? classes : ''"
-                  id="輸入新密碼"
-                  placeholder="輸入新密碼"
-                  v-model="reSetPasswordData.newPassword"
-                  @input="reSetPasswordData.sensitive = true"
-                  @focus="reSetPasswordData.sensitive = true"
-                  @blur="reSetPasswordData.sensitive = true"
+                  :id="requiredInputTitle.nickName"
+                  v-model="editDetails.nickName"
+                  :placeholder="'您的' + requiredInputTitle.nickName"
                 />
-                <span class="invalid-feedback">{{ errors[0] }}</span>
-              </ValidationProvider>
+              </div>
+              <!-- 會員暱稱結束 -->
+              <!-- 會員大頭貼開始 -->
+              <div class="form-group col-xl-3 col-md-4 col-sm-5 col-8">
+                <label
+                  :for="requiredInputTitle.memberAvatarURL"
+                  class="form-label"
+                  >{{ requiredInputTitle.memberAvatarURL }}</label
+                >
+                <div class="custom-file">
+                  <input
+                    :id="requiredInputTitle.memberAvatarURL"
+                    class="custom-file-input"
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    @change="handleFileChange($event)"
+                  />
+                  <label
+                    class="custom-file-label"
+                    :for="requiredInputTitle.memberAvatarURL"
+                    >{{
+                      vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
+                    }}</label
+                  >
+                </div>
+              </div>
+              <!-- 會員大頭貼結束 -->
             </div>
-            <!-- 輸入新密碼結束 -->
-            <!-- 確認新密碼開始 -->
-            <div class="form-froup col-lg-3 col-sm-4 col-8">
-              <ValidationProvider
-                :rules="{
-                  required: true,
-                  regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,
-                }"
-                v-slot="{ errors, classes }"
-              >
-                <label for="確認新密碼">確認新密碼</label>
+            <div class="form-row">
+              <!-- 會員姓名開始 -->
+              <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
+                <label :for="requiredInputTitle.MCname">{{
+                  requiredInputTitle.MCname
+                }}</label>
                 <input
-                  type="password"
+                  type="text"
                   class="form-control"
-                  :class="[
-                    reSetPasswordData.sensitive ? classes : '',
-                    { 'is-invalid': reSetPasswordData.passwordsUnequal },
-                  ]"
-                  id="確認新密碼"
-                  placeholder="請再輸入一次密碼"
-                  v-model="reSetPasswordData.passwordChecked"
-                  @input="comparisePassword"
-                  @focus="reSetPasswordData.sensitive = true"
-                  @blur="reSetPasswordData.sensitive = true"
+                  :id="requiredInputTitle.MCname"
+                  v-model="editDetails.MCname"
+                  :placeholder="'您的' + requiredInputTitle.MCname"
                 />
-                <span
-                  class="invalid-feedback"
-                  :class="
-                    reSetPasswordData.passwordsUnequal
-                      ? 'd-inline-block'
-                      : 'd-none'
-                  "
-                  >確認密碼與輸入密碼不相等</span
-                >
-                <span
-                  class="invalid-feedback"
-                  v-show="!reSetPasswordData.passwordsUnequal"
-                  >{{ errors[0] }}</span
-                >
-              </ValidationProvider>
+              </div>
+              <!-- 會員姓名結束 -->
+              <!-- 會員電話開始 -->
+              <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
+                <label :for="requiredInputTitle.MCphone">{{
+                  requiredInputTitle.MCphone
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :id="requiredInputTitle.MCphone"
+                  v-model="editDetails.MCphone"
+                  placeholder="0900000000"
+                />
+              </div>
+              <!-- 會員電話結束 -->
             </div>
-            <!-- 確認新密碼結束 -->
-            <!-- 修改密碼操作按鈕開始 -->
-            <div class="form-froup col-lg-3 col-sm-4">
-              <label for="修改密碼">&nbsp;</label>
+            <div class="form-row">
+              <!-- 緊急聯絡人姓名開始 -->
+              <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
+                <label :for="requiredInputTitle.ECname">{{
+                  requiredInputTitle.ECname
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :id="requiredInputTitle.ECname"
+                  v-model="editDetails.ECname"
+                  placeholder="聯絡人姓名"
+                />
+              </div>
+              <!-- 緊急聯絡人姓名結束 -->
+              <!-- 緊急聯絡人電話開始 -->
+              <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
+                <label :for="requiredInputTitle.ECphone">{{
+                  requiredInputTitle.ECphone
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :id="requiredInputTitle.ECphone"
+                  v-model="editDetails.ECphone"
+                  placeholder="0900000000"
+                />
+              </div>
+              <!-- 緊急聯絡人電話結束 -->
+              <!-- 緊急聯絡人電郵開始 -->
+              <div class="form-group col-lg-4 col-sm-4 col-8">
+                <label :for="requiredInputTitle.ECemail">{{
+                  requiredInputTitle.ECemail
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  :id="requiredInputTitle.ECemail"
+                  v-model="editDetails.ECemail"
+                  placeholder="Hello-World@email.com"
+                />
+              </div>
+              <!-- 緊急聯絡人電郵結束 -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- 修改個資操作按鈕開始 -->
+          <div class="form-froup col-xl-4 col-md-5 ml-sm-auto col-sm-6 col-8">
+            <div
+              class="action-buttons-block mr-xl-4 mr-0 mt-4 px-xl-4 pl-md-5 pr-md-4 pl-sm-5 pr-0 d-flex justify-content-sm-around align-items-center"
+            >
               <input
                 type="button"
-                id="修改密碼"
-                class="btn btn-primary d-block"
+                class="btn btn-primary mr-2"
                 :class="{ 'invalid-btn': invalid }"
-                value="修改密碼"
-                :disabled="invalid || reSetPasswordData.passwordsUnequal"
-                @click.prevent="reSetPassword"
+                value="修改個資"
+                :disabled="invalid"
+                @click.prevent="uploadImgAndUpdateData"
                 data-toggle="modal"
                 data-target="#modal"
                 data-backdrop="static"
               />
-            </div>
-            <!-- 修改密碼操作按鈕結束 -->
-          </div>
-        </div>
-      </div>
-    </ValidationObserver>
-    <!-- 修改密碼結束 -->
-    <hr />
-    <ValidationObserver v-slot="{ invalid }">
-      <div class="row">
-        <div class="col-lg-12">
-          <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
-          <div class="form-row">
-            <!-- 會員暱稱開始 -->
-            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
-              <label :for="requiredInputTitle.nickName">{{
-                requiredInputTitle.nickName
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.nickName"
-                v-model="editDetails.nickName"
-                :placeholder="'您的' + requiredInputTitle.nickName"
-              />
-            </div>
-            <!-- 會員暱稱結束 -->
-            <!-- 會員大頭貼開始 -->
-            <div class="form-group col-xl-3 col-md-4 col-sm-5 col-8">
-              <label
-                :for="requiredInputTitle.memberAvatarURL"
-                class="form-label"
-                >{{ requiredInputTitle.memberAvatarURL }}</label
+              <a
+                class="d-inline-block"
+                href=""
+                @click.prevent="$emit('emitCloseEditor')"
+                >不儲存關閉</a
               >
-              <div class="custom-file">
-                <input
-                  :id="requiredInputTitle.memberAvatarURL"
-                  class="custom-file-input"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  @change="handleFileChange($event)"
-                />
-                <label
-                  class="custom-file-label"
-                  :for="requiredInputTitle.memberAvatarURL"
-                  >{{
-                    vueCloudinaryData.filesData.avatar.name || "請選擇檔案"
-                  }}</label
-                >
-              </div>
             </div>
-            <!-- 會員大頭貼結束 -->
           </div>
-          <div class="form-row">
-            <!-- 會員姓名開始 -->
-            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
-              <label :for="requiredInputTitle.MCname">{{
-                requiredInputTitle.MCname
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.MCname"
-                v-model="editDetails.MCname"
-                :placeholder="'您的' + requiredInputTitle.MCname"
-              />
-            </div>
-            <!-- 會員姓名結束 -->
-            <!-- 會員電話開始 -->
-            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
-              <label :for="requiredInputTitle.MCphone">{{
-                requiredInputTitle.MCphone
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.MCphone"
-                v-model="editDetails.MCphone"
-                placeholder="0900000000"
-              />
-            </div>
-            <!-- 會員電話結束 -->
-          </div>
-          <div class="form-row">
-            <!-- 緊急聯絡人姓名開始 -->
-            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
-              <label :for="requiredInputTitle.ECname">{{
-                requiredInputTitle.ECname
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.ECname"
-                v-model="editDetails.ECname"
-                placeholder="聯絡人姓名"
-              />
-            </div>
-            <!-- 緊急聯絡人姓名結束 -->
-            <!-- 緊急聯絡人電話開始 -->
-            <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
-              <label :for="requiredInputTitle.ECphone">{{
-                requiredInputTitle.ECphone
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.ECphone"
-                v-model="editDetails.ECphone"
-                placeholder="0900000000"
-              />
-            </div>
-            <!-- 緊急聯絡人電話結束 -->
-            <!-- 緊急聯絡人電郵開始 -->
-            <div class="form-group col-lg-4 col-sm-4 col-8">
-              <label :for="requiredInputTitle.ECemail">{{
-                requiredInputTitle.ECemail
-              }}</label>
-              <input
-                type="text"
-                class="form-control"
-                :id="requiredInputTitle.ECemail"
-                v-model="editDetails.ECemail"
-                placeholder="Hello-World@email.com"
-              />
-            </div>
-            <!-- 緊急聯絡人電郵結束 -->
-          </div>
+          <!-- 修改個資操作按鈕結束 -->
         </div>
-      </div>
-      <div class="row">
-        <!-- 修改個資操作按鈕開始 -->
-        <div class="form-froup col-xl-4 col-md-5 ml-sm-auto col-sm-6 col-8">
-          <div
-            class="action-buttons-block mr-xl-4 mr-0 mt-4 px-xl-4 pl-md-5 pr-md-4 pl-sm-5 pr-0 d-flex justify-content-sm-around align-items-center"
-          >
-            <input
-              type="button"
-              class="btn btn-primary mr-2"
-              :class="{ 'invalid-btn': invalid }"
-              value="修改個資"
-              :disabled="invalid"
-              @click.prevent="uploadImgAndUpdateData"
-              data-toggle="modal"
-              data-target="#modal"
-              data-backdrop="static"
-            />
-            <a
-              class="d-inline-block"
-              href=""
-              @click.prevent="$emit('emitCloseEditor')"
-              >不儲存關閉</a
-            >
-          </div>
-        </div>
-        <!-- 修改個資操作按鈕結束 -->
-      </div>
-      <!-- 會員編輯區結束 -->
-    </ValidationObserver>
+        <!-- 會員編輯區結束 -->
+      </ValidationObserver>
+    </form>
   </div>
 </template>
 
