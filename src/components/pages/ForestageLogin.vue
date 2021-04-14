@@ -202,10 +202,8 @@
                       <div
                         id="sign-in-failed-warning"
                         class="mb-2"
-                        v-if="
-                          signInMode &&
-                          loginData.signInFailedFeedback
-                            .IncorrectAccountPassword
+                        v-show="
+                          signInMode && loginData.signInFailedFeedback != ''
                         "
                       >
                         {{ loginData.signInFailedFeedback.signInFailedMessage }}
@@ -343,11 +341,15 @@ export default {
         .then((response) => {
           console.log(response.data);
           if (response.data.singInStatus) {
+            const memberID = response.data.memberID;
             const session = response.data.session;
             const expDate = new Date(response.data.expDate);
             const remeberMe = vm.loginData.remeberMe;
 
             document.cookie = `kapitanMembersSession="${session}"; expires="${
+              remeberMe ? expDate : ""
+            }"`;
+            document.cookie = `kapitanMemberID="${memberID}"; expires="${
               remeberMe ? expDate : ""
             }"`;
             vm.signIned = true;
@@ -364,6 +366,7 @@ export default {
             vm.loginData.input.account = "";
             vm.loginData.input.password = "";
             vm.loginData.input.passwordChecked = "";
+            console.log(response.data);
             vm.loginData.signInFailedFeedback.signInFailedMessage =
               response.data.message;
 

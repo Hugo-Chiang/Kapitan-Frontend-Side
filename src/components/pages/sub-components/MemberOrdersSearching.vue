@@ -358,6 +358,7 @@ export default {
     Pagination,
   },
   created() {
+    this.GlobalFunctions.checkDuplicateLogin("forestage", this.memberID);
     this.queryMemberOrders();
   },
   methods: {
