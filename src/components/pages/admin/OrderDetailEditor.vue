@@ -25,8 +25,8 @@
           <th class="text-center" scope="col">方案名稱</th>
           <th class="text-center" scope="col">主要聯絡人姓名</th>
           <th class="text-center" scope="col">主要聯絡人手機</th>
-          <th class="text-center" scope="col">緊急聯絡人姓名</th>
-          <th class="text-center" scope="col">緊急聯絡人手機</th>
+          <th class="text-center" scope="col">預約日期</th>
+          <th class="text-center" scope="col">細項金額</th>
         </tr>
       </thead>
       <tbody>
@@ -43,21 +43,25 @@
           <th class="text-center" scope="row">
             {{ currentPageContentSerial[index] }}
           </th>
-          <td>{{ currentPageContentArr[index].ORDER_DETAIL_ID }}</td>
+          <td>{{ currentPageContentArr[index]["ORDER_DETAIL_ID"] }}</td>
           <td class="text-center">
-            {{ currentPageContentArr[index].PROJECT_NAME }}
+            {{ currentPageContentArr[index]["PROJECT_NAME"] }}
           </td>
           <td class="text-center">
-            {{ currentPageContentArr[index].ORDER_DETAIL_MC_NAME }}
+            {{ currentPageContentArr[index]["ORDER_DETAIL_MC_NAME"] }}
           </td>
           <td class="text-center">
-            {{ currentPageContentArr[index].ORDER_DETAIL_MC_PHONE }}
+            {{ currentPageContentArr[index]["ORDER_DETAIL_MC_PHONE"] }}
           </td>
           <td class="text-center">
-            {{ currentPageContentArr[index].ORDER_DETAIL_EC_NAME }}
+            {{ currentPageContentArr[index]["BOOKING_DATE"] }}
           </td>
           <td class="text-center">
-            {{ currentPageContentArr[index].ORDER_DETAIL_EC_PHONE }}
+            {{
+              currentPageContentArr[index]["ORDER_DETAIL_AMOUNT"]
+                | currency
+                | dollarSign
+            }}
           </td>
         </tr>
         <!-- 摺疊細項編輯器開始 -->

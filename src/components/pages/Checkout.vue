@@ -76,6 +76,11 @@ export default {
               break;
             case "重複訂購":
               this.propsMethods.deleteInvalidProjects(this.situation.data);
+              let confirmProjectsArr = JSON.parse(
+                localStorage.getItem("savingProjects")
+              );
+              if (confirmProjectsArr == null)
+                this.callBy.$router.push({ name: "購物車" });
               break;
           }
         },

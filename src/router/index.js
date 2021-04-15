@@ -205,7 +205,6 @@ router.beforeEach((to, from, next) => {
       let adminSession = getKapitanSession('backstage');
 
       axios.post(adminSignInAuthAPI, adminSession).then((response) => {
-        console.log(response);
         if (response.data.sessionCheck) {
           next();
         }
@@ -239,7 +238,6 @@ router.beforeEach((to, from, next) => {
 
       // 判斷所前往是不是結帳頁或方案頁，會有不同的應對
       if (to.path.indexOf('Checkout') != -1) {
-        console.log('yaya');
         if (localStorage.getItem("savingProjects") != null) next();
         else setTimeout(() => {
           router.push({ name: '首頁', });
