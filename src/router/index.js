@@ -216,6 +216,7 @@ router.beforeEach((to, from, next) => {
         }
       }).catch((error) => {
         console.log(error);
+        next(from);
       })
     } else {
 
@@ -233,10 +234,12 @@ router.beforeEach((to, from, next) => {
         }
       }).catch((error) => {
         console.log(error);
+        next(from);
       })
 
-      // 判斷所前往是不是結帳頁，會有不同的應對
+      // 判斷所前往是不是結帳頁或方案頁，會有不同的應對
       if (to.path.indexOf('Checkout') != -1) {
+        console.log('yaya');
         if (localStorage.getItem("savingProjects") != null) next();
         else setTimeout(() => {
           router.push({ name: '首頁', });
@@ -261,9 +264,12 @@ router.beforeEach((to, from, next) => {
           }
         }).catch((error) => {
           console.log(error);
+          next(from);
         });
       }
     } else {
+
+      // 若已登入，再次進登入頁將會被請回首頁
       if (to.path == '/Login') {
         let membersSession = getKapitanSession('forestage');
         let sendingObj = {
@@ -279,7 +285,27 @@ router.beforeEach((to, from, next) => {
           }
         }).catch((error) => {
           console.log(error);
+          next(from);
         });
+        // 若嘗試進入未開放的方案頁，將被阻擋
+      } else if (to.path.indexOf('Projects') != -1) {
+        let api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectVisible.php`;
+        let projectID = '';
+        let startIndex = to.path.indexOf('PJ');
+        projectID = to.path.substr(startIndex);
+
+        axios.post(api, projectID).then((response) => {
+          console.log(response.data);
+
+          if (response.data == 1) {
+            next();
+          } else {
+            next(from);
+          }
+        }).catch((error) => {
+          console.log(error);
+          next(from);
+        })
       }
     }
 

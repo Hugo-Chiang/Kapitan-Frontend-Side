@@ -25,7 +25,7 @@
       </h6>
       <div
         class="d-inline-block"
-        v-if="!inCreatingMode || breadCrumbData.currentPage != 2"
+        v-if="currentPath.indexOf('Project-Editor') == -1"
       >
         <div id="rechoose-mode-link" class="d-flex justify-content-end">
           <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
@@ -802,18 +802,19 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
+#rechoose-mode-link {
+  a {
+    color: black;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
 #project-details-page {
   height: 600px;
   .breadcrumb {
     padding: 0;
-  }
-  #rechoose-mode-link {
-    a {
-      color: black;
-      &:hover {
-        opacity: 0.7;
-      }
-    }
   }
   .query-resultsTable {
     tr {
