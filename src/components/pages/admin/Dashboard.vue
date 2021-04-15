@@ -103,8 +103,6 @@ export default {
     };
   },
   created() {
-    this.GlobalFunctions.checkDuplicateLogin("backstage");
-
     // 執行：根據 session 向後端詢問管理員的個資，以便做個性化渲染
     const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/AdminInfo.php`;
     const vm = this;
@@ -119,7 +117,7 @@ export default {
   methods: {
     // 方法：登出，清除 cookie 中的 session 並回到登入頁
     signOut() {
-      document.cookie = `kapitanSession= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `kapitanAdminSession= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
       setTimeout(() => {
         this.$router.push({ name: "管理系統：登入頁" });
       }, 1000);

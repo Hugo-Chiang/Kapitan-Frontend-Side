@@ -235,8 +235,12 @@ export default {
 
       vm.loginData.login = false;
 
+      let sendingObj = {
+        session: session,
+      };
+
       this.$http
-        .post(signInAuthenticationAPI, session)
+        .post(signInAuthenticationAPI, JSON.stringify(sendingObj))
         .then((response) => {
           if (response.data.sessionCheck) {
             vm.loginData.login = true;

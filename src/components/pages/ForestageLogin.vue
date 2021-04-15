@@ -339,7 +339,6 @@ export default {
       this.$http
         .post(api, JSON.stringify(this.loginData.input))
         .then((response) => {
-          console.log(response.data);
           if (response.data.singInStatus) {
             const memberID = response.data.memberID;
             const session = response.data.session;

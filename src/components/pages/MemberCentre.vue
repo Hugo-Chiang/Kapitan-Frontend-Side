@@ -18,7 +18,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                   <img
                     :src="
-                      memberInfo.avatarUrl == ''
+                      memberInfo.avatarUrl == null || ''
                         ? GlobalVariables.cloudUrlprefix +
                           GlobalVariables.cloudNoAvatarUrl
                         : GlobalVariables.cloudUrlprefix + memberInfo.avatarUrl

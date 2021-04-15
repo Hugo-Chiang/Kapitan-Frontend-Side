@@ -444,9 +444,6 @@ export default {
         let checkboxs = document.querySelectorAll(".category-checkbox");
         let selectedNum = this.filterData.selectedCategories.length;
 
-        console.log(selectedNum);
-        console.log(checkboxs.length);
-
         if (selectedNum == checkboxs.length) {
           this.filterData.selectedAll = true;
         } else {
