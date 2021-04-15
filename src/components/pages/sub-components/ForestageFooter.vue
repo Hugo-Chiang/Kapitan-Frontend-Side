@@ -259,7 +259,6 @@ export default {
         this.$http
           .post(api, vm.subscribeData.subscribeEmail)
           .then((response) => {
-            console.log(response.data);
             vm.modalData.situation.message = response.data.message;
 
             if (response.data.status) {

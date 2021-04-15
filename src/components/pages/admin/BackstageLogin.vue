@@ -110,8 +110,8 @@ export default {
             }, 1200);
           }
         })
-        .catch((response) => {
-          console.log(response);
+        .catch((error) => {
+          console.log(error);
         });
     },
   },

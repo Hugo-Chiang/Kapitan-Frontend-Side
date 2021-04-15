@@ -225,8 +225,6 @@ export default {
             }
           }
 
-          console.log(vm.allMembersArr);
-
           vm.allMembersArr.sort((a, b) => {
             return a["SORT_INDEX"] - b["SORT_INDEX"];
           });

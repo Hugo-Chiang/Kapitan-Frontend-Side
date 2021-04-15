@@ -418,8 +418,8 @@ export default {
 
           vm.allContentArr = vm.ordersArr;
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：根據選擇索引，打開訂單，以觀看更多訂單細項

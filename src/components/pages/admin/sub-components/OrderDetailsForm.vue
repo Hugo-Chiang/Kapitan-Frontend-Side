@@ -562,7 +562,6 @@ export default {
       vm.$http
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
-          console.log(response);
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message = response.data;
         })

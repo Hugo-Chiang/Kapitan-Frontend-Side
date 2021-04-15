@@ -295,8 +295,6 @@ router.beforeEach((to, from, next) => {
         projectID = to.path.substr(startIndex);
 
         axios.post(api, projectID).then((response) => {
-          console.log(response.data);
-
           if (response.data == 1) {
             next();
           } else {

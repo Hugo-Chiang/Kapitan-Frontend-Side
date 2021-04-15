@@ -530,10 +530,8 @@ export default {
       this.$http
         .post(api, memberAccount)
         .then((response) => {
-          console.log(response.data);
           let responseAccount = response.data["MEMBER_ACCOUNT"];
           let responseID = response.data["MEMBER_ID"];
-          console.log(responseID);
 
           if (this.inCreatingMode) {
             if (memberAccount == responseAccount) vm.repeatRegister = true;
@@ -600,7 +598,6 @@ export default {
 
             axios(requestObj)
               .then((response) => {
-                console.log(response.data);
                 vm.modalData.situation.event = "會員大頭貼上傳成功。";
                 vm.modalData.situation.message = `<p>會員大頭貼上傳成功！</p>`;
                 vm.editDetails.memberAvatarURL = response.data.public_id;

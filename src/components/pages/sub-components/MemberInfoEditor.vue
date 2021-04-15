@@ -477,7 +477,6 @@ export default {
 
             axios(requestObj)
               .then((response) => {
-                console.log(response.data);
                 vm.modalData.situation.event = "會員大頭貼上傳成功。";
                 vm.modalData.situation.message = `<p>會員大頭貼上傳成功！</p>`;
                 vm.editDetails.memberAvatarURL = response.data.public_id;
