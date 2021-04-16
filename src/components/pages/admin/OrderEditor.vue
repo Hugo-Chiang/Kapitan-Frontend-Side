@@ -116,7 +116,7 @@
             </div>
             <!-- 訂單未折扣總計結束 -->
             <!-- 訂單應折扣總額開始 -->
-            <div class="form-group col-3">
+            <div class="form-group col-3" v-show="false">
               <ValidationProvider
                 :rules="{ required: true }"
                 v-slot="{ errors, classes }"
@@ -417,7 +417,7 @@ export default {
       requiredInputTitle: {
         orderStatus: "訂單狀態",
         orderDate: "訂單日期",
-        orderTotalConsumption: "未折扣總計",
+        orderTotalConsumption: "訂單金額",
         orderTotalDiscount: "應折扣總額",
         MCname: "訂購人姓名",
         MCphone: "訂購人手機號碼",
@@ -431,7 +431,7 @@ export default {
         orderStatus: "",
         orderDate: "",
         orderTotalConsumption: "",
-        orderTotalDiscount: "",
+        orderTotalDiscount: 0,
         MCname: "",
         MCphone: "",
         MCemail: "",

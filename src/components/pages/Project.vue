@@ -194,8 +194,6 @@ export default {
   created() {
     window.scrollTo(0, 0);
 
-    console.log(this.$route.params.selectedProjectID);
-
     // 向後端請調本頁方案內容
     const api = `${process.env.REMOTE_HOST_PATH}/API/Forestage/QueryProjectContent.php`;
     const vm = this;

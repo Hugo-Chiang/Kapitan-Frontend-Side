@@ -25,7 +25,7 @@
       </h6>
       <div
         class="d-inline-block"
-        v-if="!inCreatingMode || breadCrumbData.currentPage != 2"
+        v-if="currentPath.indexOf('Project-Editor') == -1"
       >
         <div id="rechoose-mode-link" class="d-flex justify-content-end">
           <a href="" @click.prevent="$router.push('/Admin/Projects-Manager')"
@@ -536,7 +536,6 @@ export default {
       this.$http
         .post(api, vm.managingProjectID)
         .then((response) => {
-          console.log(response.data);
 
           vm.editDetails.projectStatus = response.data["PROJECT_STATUS"];
           vm.editDetails.projectName = response.data["PROJECT_NAME"];
@@ -557,10 +556,9 @@ export default {
           vm.editDetails.projectDepartureLocationDescription =
             response.data["LOCATION_DESCRIPTION"];
 
-          console.log(vm.editDetails);
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：紀錄觀察上傳檔案的內容
@@ -653,7 +651,6 @@ export default {
 
               axios(requestObj)
                 .then((response) => {
-                  console.log(response.data);
 
                   let public_id = response.data.public_id;
 
@@ -780,7 +777,6 @@ export default {
       axios(requestObj)
         .then((response) => {
           vm.editorPrompt = "編輯器圖片上傳成功！";
-          console.log(response);
           let url = response.data.secure_url;
           editor.insertEmbed(cursorLocation, "image", url);
         })
@@ -802,18 +798,19 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/scss/all.scss";
 
+#rechoose-mode-link {
+  a {
+    color: black;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
 #project-details-page {
   height: 600px;
   .breadcrumb {
     padding: 0;
-  }
-  #rechoose-mode-link {
-    a {
-      color: black;
-      &:hover {
-        opacity: 0.7;
-      }
-    }
   }
   .query-resultsTable {
     tr {

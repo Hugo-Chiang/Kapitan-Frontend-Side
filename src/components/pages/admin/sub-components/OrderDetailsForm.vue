@@ -371,7 +371,11 @@ export default {
                   ORDER_DETAIL_EC_EMAIL: "",
                   PROJECT_ID: "",
                   BOOKING_DATE: "",
-                  FK_ORDER_ID_for_ODD: "",
+                  FK_ORDER_ID_for_ODD:
+                    this.callBy.inCreatingMode &&
+                    this.callBy.currentPath.indexOf("Order-Creation") == -1
+                      ? this.callBy.creatingDetails[0]["FK_ORDER_ID_for_ODD"]
+                      : "",
                 },
               ];
             }
@@ -566,7 +570,6 @@ export default {
       vm.$http
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
-          console.log(response);
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message = response.data;
         })

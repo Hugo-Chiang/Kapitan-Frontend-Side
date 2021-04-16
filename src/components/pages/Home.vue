@@ -325,7 +325,6 @@ export default {
         let Xaxis = this.carouselData.carouselXaxisPixels * -1;
 
         for (const routerLink of routerLinks) {
-          console.log(Xaxis);
           routerLink.style.transform = `translate3d(${Xaxis}px, 0, 0)`;
         }
       }

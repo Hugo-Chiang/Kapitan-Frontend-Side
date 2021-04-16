@@ -232,8 +232,8 @@ export default {
             return a["SORT_INDEX"] - b["SORT_INDEX"];
           });
         })
-        .catch((respponse) => {
-          console.log(respponse);
+        .catch((error) => {
+          console.log(error);
         });
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容

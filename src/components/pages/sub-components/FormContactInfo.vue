@@ -230,8 +230,10 @@ export default {
   methods: {
     // 方法：建立「第三步：填寫聯絡資訊」同步訂購資訊用的工具陣列
     establishSyncOrdererContactInfoArr() {
-      let projectsNum = JSON.parse(localStorage.getItem("savingProjects"))
-        .length;
+      let projectsNum = 0;
+      if (JSON.parse(localStorage.getItem("savingProjects")) != null) {
+        projectsNum = JSON.parse(localStorage.getItem("savingProjects")).length;
+      }
 
       for (let i = 0; i < projectsNum; i++) {
         this.$set(this.syncOrdererContactInfoArr, i, false);
