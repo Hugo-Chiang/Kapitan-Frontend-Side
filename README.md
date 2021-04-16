@@ -1,6 +1,6 @@
 # 甲必丹遊艇網（Kapitan）
 
-本專案是一個透過 Vue Cli 2 建立的單頁應用，主題為販賣遊艇行程的電商網站，品牌名為甲必丹（Kapitan）。甲必丹擁有完整的前後台和資料庫，並架設在 Heroku 平台上。
+本專案是一個透過 Vue CLI 2 建立的單頁應用，主題為販賣遊艇行程的電商網站，品牌名為甲必丹（Kapitan）。甲必丹擁有完整的前後台和資料庫，並架設在 Heroku 平台上。
 
 這個儲存庫是甲必丹的前端內容。後端內容則請見：https://github.com/Hugo-Chiang/Backend-Side-Projects-0001-Kapitan
 
@@ -41,7 +41,7 @@ __後台__：
 * Bootstrap 4
 
 工具：
-* Vue Cli 2
+* Vue CLI 2 
 * MySQL Workbench
 
 ## 部署方式
