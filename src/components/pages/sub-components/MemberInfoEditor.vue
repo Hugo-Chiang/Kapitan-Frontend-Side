@@ -142,7 +142,9 @@
       <ValidationObserver v-slot="{ invalid }">
         <div class="row">
           <div class="col-lg-12">
-            <h5 class="mt-2 mb-4">▐ 編輯個資</h5>
+            <h5 class="mt-2 mb-4">
+              ▐ <span @click="autofilledmemberInfo">編輯</span>個資
+            </h5>
             <div class="form-row">
               <!-- 會員暱稱開始 -->
               <div class="form-group col-xl-2 col-md-3 col-sm-4 col-8">
@@ -430,6 +432,15 @@ export default {
             console.log(error);
           });
       }
+    },
+    // 方法：（演示用）自動填入會員資訊
+    autofilledmemberInfo() {
+      this.editDetails.nickName = "冷淡熊";
+      this.editDetails.MCname = "冷淡熊";
+      this.editDetails.MCphone = "0972196348";
+      this.editDetails.ECname = "諸葛村夫";
+      this.editDetails.ECphone = "0977463125";
+      this.editDetails.ECemail = "ZhugeLiang@qq.com";
     },
     // 方法：紀錄觀察上傳檔案的內容
     handleFileChange: function (e) {

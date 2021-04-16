@@ -7,7 +7,10 @@
       <span v-if="!inCreatingMode">
         正在編輯：{{ managingOrder }}號訂單的細項</span
       >
-      <span v-else> 正在新增：{{ creatingID }} 號訂單細項 </span>
+      <span v-else>
+        正在<span @click="autofilledOrderDetails">新增</span>：{{ creatingID }}
+        號訂單細項
+      </span>
     </h6>
     <!-- 細項表格開始 -->
     <table
@@ -77,6 +80,7 @@
           >
             <OrderDetailsForm
               v-show="inEditingIndex != -1"
+              ref="OrderDetailsForm"
               :inCreatingMode="inCreatingMode"
               :managingOrder="managingOrder"
               :currentPageContentArr.sync="currentPageContentArr"
@@ -222,6 +226,10 @@ export default {
             console.log(error);
           });
       }
+    },
+    // 方法：（演示用）自動填入訂單細項內容
+    autofilledOrderDetails() {
+      this.$refs.OrderDetailsForm.autofilledOrderDetails();
     },
     // 方法：獲得頁碼元件傳回的當前頁面內容
     getCurrentContentAnsSerial(arr, num) {

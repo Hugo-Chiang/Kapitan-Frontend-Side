@@ -371,6 +371,7 @@ export default {
                   ORDER_DETAIL_EC_EMAIL: "",
                   PROJECT_ID: "",
                   BOOKING_DATE: "",
+                  BOOKING_NUM_OF_PEOPLE: "",
                   FK_ORDER_ID_for_ODD:
                     this.callBy.inCreatingMode &&
                     this.callBy.currentPath.indexOf("Order-Creation") == -1
@@ -474,6 +475,7 @@ export default {
           ORDER_DETAIL_EC_EMAIL: "",
           PROJECT_ID: "",
           BOOKING_DATE: "",
+          BOOKING_NUM_OF_PEOPLE: "",
           FK_ORDER_ID_for_ODD:
             this.currentPath.indexOf("Order-Creation") != -1
               ? ""
@@ -520,6 +522,21 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    // 方法：（演示用）自動填入訂單細項內容
+    autofilledOrderDetails() {
+      this.creatingDetails[0]["ORDER_DETAIL_STATUS"] = 1;
+      this.creatingDetails[0]["ORDER_DETAIL_AMOUNT"] = 3996;
+      this.creatingDetails[0]["ORDER_DETAIL_MC_NAME"] = "關二哥";
+      this.creatingDetails[0]["ORDER_DETAIL_MC_PHONE"] = "0922123222";
+      this.creatingDetails[0]["ORDER_DETAIL_MC_EMAIL"] = "GuanYu@qq.com";
+      this.creatingDetails[0]["ORDER_DETAIL_EC_NAME"] = "張三爺";
+      this.creatingDetails[0]["ORDER_DETAIL_EC_PHONE"] = "0933321333";
+      this.creatingDetails[0]["ORDER_DETAIL_EC_EMAIL"] = "ZhangFei@qq.com";
+      this.creatingDetails[0]["PROJECT_ID"] = "PJ0000013";
+      this.creatingDetails[0]["BOOKING_DATE"] = "2021-06-14";
+      this.creatingDetails[0]["BOOKING_NUM_OF_PEOPLE"] = 3;
+      this.creatingDetails[0]["FK_ORDER_ID_for_ODD"] = "OD0000099";
     },
     // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {

@@ -7,9 +7,8 @@
     ></Breadcrumb>
     <!-- 麵包屑元件結束 -->
     <h6 class="mt-2 mb-4 mr-4 d-inline-block">
-      正在<span v-if="inCreatingMode">新增</span><span v-else>編輯</span>：{{
-        managingOrder
-      }}
+      正在<span v-if="inCreatingMode" @click="autofilledOrderData">新增</span
+      ><span v-else>編輯</span>：{{ managingOrder }}
       號訂單
       <span v-if="!inCreatingMode" class="delete-project-btn ml-1">
         <a
@@ -518,6 +517,20 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    // 方法：（演示用）自動填入訂單內容
+    autofilledOrderData() {
+      this.editDetails.orderStatus = 1;
+      this.editDetails.orderDate = "2021-04-25T08:00";
+      this.editDetails.orderTotalConsumption = 0;
+      this.editDetails.orderTotalDiscount = 0;
+      this.editDetails.MCname = "諸葛村夫";
+      this.editDetails.MCphone = "0988456888";
+      this.editDetails.MCemail = "ZhugeLiang@qq.com";
+      this.editDetails.ECname = "嘟嘟";
+      this.editDetails.ECphone = "0955789555";
+      this.editDetails.ECemail = "ZhouYu@qq.com";
+      this.editDetails.memberID = "MB0000006";
     },
     // 方法：更新訂單資料
     updateOrderData() {
