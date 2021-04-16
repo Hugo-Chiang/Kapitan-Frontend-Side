@@ -39,7 +39,7 @@
         ></div>
         <a
           :href="`https://www.google.com/maps/dir/${
-            userLocation.length == 0
+            userLocation == undefined || userLocation.length == 0
               ? ''
               : `${userLocation[0]},${userLocation[1]}`
           }/${departureLocationInfo.locationName}`"
@@ -98,7 +98,7 @@ export default {
   methods: {
     // 回呼函式：獲知使用者位置成功，將地點寫入 Data 供導航使用
     getUserLocationSucess(location) {
-      if (userLocation[0] == 0 || userLocation[1] == 0) {
+      if (this.userLocation[0] == 0 || this.userLocation[1] == 0) {
         this.userLocation = [];
       } else {
         this.userLocation = [
