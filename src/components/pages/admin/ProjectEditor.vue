@@ -8,9 +8,9 @@
     <!-- 麵包屑元件結束 -->
     <div class="d-flex justify-content-between">
       <h6 class="mt-2 mb-4 d-inline-block">
-        正在<span v-if="inCreatingMode">新增</span><span v-else>編輯</span>：{{
-          managingProjectID
-        }}
+        正在<span v-if="inCreatingMode" @click="autofilledProjectContent"
+          >新增</span
+        ><span v-else>編輯</span>：{{ managingProjectID }}
         方案
         <span v-if="!inCreatingMode" class="delete-project-btn ml-1">
           <a
@@ -528,6 +528,22 @@ export default {
           if (vm.inCreatingMode) vm.managingProjectID = response.data;
         });
     },
+    // 方法：（演示用）自動填入方案內容
+    autofilledProjectContent() {
+      this.editDetails.projectStatus = 1;
+      this.editDetails.projectName = "台南│這是一個演示方案";
+      this.editDetails.projectSummary =
+        "<ul><li>這是方案的第一個特點</li><li>這是方案的第二個特點</li><li>這是方案的第三個特點</li></ul>";
+      this.editDetails.projectDescription =
+        "<p>▲ 這裡放第一張圖</p><p>▲ 這裡放第二張圖</p><p>▲ 這裡放第三張圖</p>";
+      this.editDetails.projectPricePerPerson = 1680;
+      this.editDetails.projectMinNumOfPeople = 8;
+      this.editDetails.projectMaxNumOfPeople = 12;
+      this.editDetails.projectCategory = "CG0003";
+      this.editDetails.projectDepartureLocation = "LC0002";
+      this.editDetails.projectDepartureLocationDescription =
+        "<p>台南安平遊艇城，包含水域及陸域共占地12公頃，由會員制的遊艇會、海洋學院、海景餐廳、新加坡知名飯店集團-悅榕集團進駐之渡假村、泊位房產等海洋休閒項目組成，將成為台灣第一個，也是最大的遊艇生活重鎮，其中安平亞果遊艇碼頭的建置更讓許多船主、船艇玩家引頸期盼。</p><p>安平亞果遊艇碼頭位於台灣的第一個城市且充滿人文風情的古都安平，西南部沿岸綿延的海岸線，被港務局評比為最適合興建遊艇碼頭之地，特別是安平亞果遊艇碼頭旁依偎著漁光島，這座突出的小島成為天然的擋浪堤，提供碼頭絕佳的安全性，形成全台灣靜穩度最高的遊艇碼頭。</p>";
+    },
     // 方法：向後端查詢欲編輯項目的內容，以利進行雙向綁定編修
     queryProjectDetails() {
       const api = `${process.env.REMOTE_HOST_PATH}/API/Backstage/QueryProjectDetails.php`;
@@ -536,7 +552,6 @@ export default {
       this.$http
         .post(api, vm.managingProjectID)
         .then((response) => {
-
           vm.editDetails.projectStatus = response.data["PROJECT_STATUS"];
           vm.editDetails.projectName = response.data["PROJECT_NAME"];
           vm.editDetails.projectAvatarPublicID =
@@ -555,7 +570,6 @@ export default {
             response.data["LOCATION_ID"];
           vm.editDetails.projectDepartureLocationDescription =
             response.data["LOCATION_DESCRIPTION"];
-
         })
         .catch((error) => {
           console.log(error);
@@ -651,7 +665,6 @@ export default {
 
               axios(requestObj)
                 .then((response) => {
-
                   let public_id = response.data.public_id;
 
                   if (
