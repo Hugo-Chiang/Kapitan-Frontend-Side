@@ -107,6 +107,7 @@
                   :id="requiredInputTitle.orderTotalConsumption"
                   placeholder="例：30000"
                   v-model="editDetails.orderTotalConsumption"
+                  disabled
                 />
                 <span class="invalid-feedback">{{
                   errors[0]
@@ -429,7 +430,7 @@ export default {
       editDetails: {
         orderStatus: "",
         orderDate: "",
-        orderTotalConsumption: "",
+        orderTotalConsumption: 0,
         orderTotalDiscount: 0,
         MCname: "",
         MCphone: "",
@@ -555,6 +556,7 @@ export default {
       this.$http
         .post(api, JSON.stringify(sendingObj))
         .then((response) => {
+          console.log(response.data);
           vm.modalData.situation.event = "資料庫寫入成功。";
           vm.modalData.situation.message = response.data;
         })
