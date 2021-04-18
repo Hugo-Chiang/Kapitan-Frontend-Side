@@ -536,7 +536,13 @@ export default {
       this.creatingDetails[0]["PROJECT_ID"] = "PJ0000013";
       this.creatingDetails[0]["BOOKING_DATE"] = "2021-06-14";
       this.creatingDetails[0]["BOOKING_NUM_OF_PEOPLE"] = 3;
-      this.creatingDetails[0]["FK_ORDER_ID_for_ODD"] = "OD0000099";
+      if (this.currentPath.indexOf("Order-Creation") != -1) {
+        this.creatingDetails[0]["FK_ORDER_ID_for_ODD"] = "OD0000099";
+      } else {
+        this.creatingDetails[0][
+          "FK_ORDER_ID_for_ODD"
+        ] = this.creatingDetails[0]["FK_ORDER_ID_for_ODD"];
+      }
     },
     // 方法：將訂單項目更新數據寫入資料庫，並同步父層相關資料
     updateOrderDetails() {
