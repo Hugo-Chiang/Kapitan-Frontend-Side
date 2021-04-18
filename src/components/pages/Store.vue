@@ -187,7 +187,7 @@
                 <img
                   class="card-img-top"
                   :src="
-                    project['PROJECT_AVATAR_URL'] != null
+                    project['PROJECT_AVATAR_URL'] != ''
                       ? GlobalVariables.cloudUrlprefix +
                         project['PROJECT_AVATAR_URL']
                       : GlobalVariables.cloudUrlprefix +
