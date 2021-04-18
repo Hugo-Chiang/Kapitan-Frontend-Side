@@ -149,6 +149,26 @@ export default {
       this.$eventBus.$emit("emitCartUpdate", storageArrLen);
     },
   },
+  watch: {
+    // 監看（方法）：輸入超界數字將予以忽略
+    listItem: {
+      handler(newObj) {
+        let min = Number(this.listItem.bookingProjectMinNumOfPeople);
+        let max = Number(this.listItem.bookingProjectMaxNumOfPeople);
+
+        if (newObj.bookingProjectNumOfPeople > max) {
+          newObj.bookingProjectNumOfPeople = max;
+        } else if (newObj.bookingProjectNumOfPeople < min) {
+          newObj.bookingProjectNumOfPeople = min;
+        } else {
+          newObj.bookingProjectNumOfPeople = Number(
+            newObj.bookingProjectNumOfPeople
+          );
+        }
+      },
+      deep: true,
+    },
+  },
 };
 </script>
 

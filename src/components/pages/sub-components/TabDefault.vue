@@ -251,15 +251,31 @@ export default {
     // 監看（方法）：props 進來的方案內容有變時（即 Ajax 訪問完畢後），重新渲染選擇人數
     selectedProject: {
       handler(newObj) {
-        this.bookingData.bookingNumOfPeople =
-          newObj.selectedProjectContent.projectMinNumOfPeople;
-        this.minAndMaxNum.min =
-          newObj.selectedProjectContent.projectMinNumOfPeople;
-        this.minAndMaxNum.max =
-          newObj.selectedProjectContent.projectMaxNumOfPeople;
+        this.bookingData.bookingNumOfPeople = Number(
+          newObj.selectedProjectContent.projectMinNumOfPeople
+        );
+        this.minAndMaxNum.min = Number(
+          newObj.selectedProjectContent.projectMinNumOfPeople
+        );
+        this.minAndMaxNum.max = Number(
+          newObj.selectedProjectContent.projectMaxNumOfPeople
+        );
       },
       deep: true,
       immediate: true,
+    },
+    // 監看（方法）：輸入超界數字將予以忽略
+    bookingData: {
+      handler(newObj) {
+        if (newObj.bookingNumOfPeople > this.minAndMaxNum.max) {
+          newObj.bookingNumOfPeople = Number(this.minAndMaxNum.max);
+        } else if (newObj.bookingNumOfPeople < this.minAndMaxNum.min) {
+          newObj.bookingNumOfPeople = Number(this.minAndMaxNum.min);
+        } else {
+          newObj.bookingNumOfPeople = Number(newObj.bookingNumOfPeople);
+        }
+      },
+      deep: true,
     },
   },
 };

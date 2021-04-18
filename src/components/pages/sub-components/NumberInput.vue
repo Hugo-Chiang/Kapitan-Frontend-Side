@@ -20,10 +20,7 @@
       type="number"
       v-model="number"
       class="form-control text-center"
-      placeholder=""
-      aria-label=""
-      aria-describedby="basic-addon1"
-      @change="$emit('update:incomingValue', number)"
+      @input="$emit('update:incomingValue', Number(number))"
     />
     <!-- 數目欄位結束 -->
     <!-- 加號按鈕開始 -->
@@ -55,15 +52,26 @@ export default {
   },
   props: ["uniqueKey", "incomingValue", "minAndMaxNum"],
   created() {
-    this.number = this.incomingValue;
-    this.min = this.minAndMaxNum.min;
-    this.max = this.minAndMaxNum.max;
+    this.number = Number(this.incomingValue);
+    this.min = Number(this.minAndMaxNum.min);
+    this.max = Number(this.minAndMaxNum.max);
   },
   watch: {
+    // 監看（方法）：輸入超界數字將予以忽略
+    number() {
+      if (this.number > this.minAndMaxNum.max) {
+        this.number = Number(this.minAndMaxNum.max);
+      } else if (this.number < this.minAndMaxNum.min) {
+        this.number = Number(this.minAndMaxNum.min);
+      } else {
+        this.number = Number(this.number);
+      }
+    },
+    // 監看（方法）：複層
     incomingValue() {
-      this.number = this.incomingValue;
-      this.min = this.minAndMaxNum.min;
-      this.max = this.minAndMaxNum.max;
+      this.number = Number(this.incomingValue);
+      this.min = Number(this.minAndMaxNum.min);
+      this.max = Number(this.minAndMaxNum.max);
     },
   },
 };
